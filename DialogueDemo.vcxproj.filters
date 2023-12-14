@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Demo">
+      <UniqueIdentifier>{7443a11e-a9b8-481e-b818-ead3ae99fa8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source">
+      <UniqueIdentifier>{254660fe-9ef9-4ed6-93f0-f7f0b7c6b893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notepad++ Headers">
+      <UniqueIdentifier>{3748ec16-8109-4976-9ad2-3d15a7c59f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notepad++ Headers\DockingFeature">
+      <UniqueIdentifier>{9f890e2e-622f-499a-b1fa-4a019f89f63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Demo\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\plugintemplate\src\DockingFeature\Docking.h">
+      <Filter>Notepad++ Headers\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\DockingFeature\dockingResource.h">
+      <Filter>Notepad++ Headers\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\menuCmdID.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\Notepad_plus_msgs.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\PluginInterface.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\Sci_Position.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\plugintemplate\src\Scintilla.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="demo\Demo_Plugin.h">
+      <Filter>Source Files\Demo</Filter>
+    </ClInclude>
+    <ClInclude Include="demo\Goto_Dialogue.h">
+      <Filter>Source Files\Demo</Filter>
+    </ClInclude>
+    <ClInclude Include="demo\resource.h">
+      <Filter>Source Files\Demo\Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Callback_Context.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Docking_Dialogue_Interface.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Plugin.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="demo\Demo_Plugin.cpp">
+      <Filter>Source Files\Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="demo\Goto_Dialogue.cpp">
+      <Filter>Source Files\Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\dllmain.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\Docking_Dialogue_Interface.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\Plugin.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+    <None Include="post-build.ps1" />
+    <None Include="Readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="demo\icon1.ico">
+      <Filter>Source Files\Demo\Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="demo\DialogueDemo.rc">
+      <Filter>Source Files\Demo\Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

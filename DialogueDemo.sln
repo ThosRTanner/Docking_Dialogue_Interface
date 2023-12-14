@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34321.82
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DialogueDemo", "DialogueDemo.vcxproj", "{DFC99971-5B68-4B25-AF9A-A8559F474345}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|ARM.ActiveCfg = Release|ARM
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|ARM.Build.0 = Release|ARM
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|x64.ActiveCfg = Debug|x64
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|x64.Build.0 = Debug|x64
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|x86.ActiveCfg = Debug|Win32
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Debug|x86.Build.0 = Debug|Win32
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|ARM.ActiveCfg = Debug|ARM
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|ARM.Build.0 = Debug|ARM
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|x64.ActiveCfg = Release|x64
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|x64.Build.0 = Release|x64
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|x86.ActiveCfg = Release|Win32
+		{DFC99971-5B68-4B25-AF9A-A8559F474345}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4CF9F90C-5860-4988-BB46-31C187C7EB41}
+	EndGlobalSection
+EndGlobal
