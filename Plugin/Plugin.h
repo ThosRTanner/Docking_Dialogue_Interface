@@ -60,7 +60,7 @@ class Plugin
     {
         FuncItem item;
         item._cmdID = entry;
-        lstrcpyn(&item._itemName[0], message, sizeof(item._itemName));
+        lstrcpyn(&item._itemName[0], message, sizeof(item._itemName) / sizeof(wchar_t));
         item._pFunc = contexts[entry]->reserve(self, callback);
         item._init2Check = check;
         item._pShKey = key;
