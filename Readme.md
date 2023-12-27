@@ -36,7 +36,7 @@ The overall life story of your plugin is:
 
 Notepad++ queries your plugin for its name by calling `getName`. dllmain.cpp transfers control to this function in your class:
 
-`static TCHAR const *get_plugin_name() noexcept`
+`static wchar_t const *get_plugin_name() noexcept`
 
 It's arguably unnecessary boilerplate, but it keeps all your plugin related code in one class and cuts down the amount of stuff you need to copy and modify.
 
@@ -144,6 +144,10 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
    Gets your module handle.
 
+6. `int message_box(std::wstring const &message, UINT type) const noexcept;`
+
+    This is a wrapper round `::MessageBox`, and throws up a message box using your plugin name as the title.
+
 ## Processing scintilla notifications
 To be written
 
@@ -157,11 +161,19 @@ In your constructor, you must
 
 1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the `Docking_Dialogue_Interface` class will retain the window handle.
 
-*Important Note*: The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
+2. Do any window setup required (see note 2 below).
 
-2. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
+3. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
 
-3. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+4. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+
+*Important Notes*:
+1. The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
+
+2. Your `on_dialogue_message` method will not get called with the WM_INITDIALOG message. This is because at the point the message is received, your constructor hasn't finished, and thus there isn't a valid _this_.
+
+   Instead, you should put any initialisation code in your constructor before you call `register_dialogue`
+
 
 ### Docking_Dialog_Interface API
 
@@ -200,7 +212,7 @@ This handles the API with notepad++ and provides some default behaviour and some
      Return `std::nullopt` (to return `FALSE` to windows dialog processing), or a value to be set with `::SetWindowLongPtr` (in which case `TRUE` will be returned to windows).
      Note that some messages require you to return `FALSE` (`std::nullopt`) even if you do handle them.
 
-     `message`, `wParam` and `lParam` are the values passed to a `DLGPROC` function by windows
+     `message`, `wParam` and `lParam` are the values passed to a `DLGPROC` function by windows,
 
 #### (Protected) Utility Methods
 
@@ -243,3 +255,7 @@ This handles the API with notepad++ and provides some default behaviour and some
 1. `HWND GetDlgItem(int) const noexcept`
 
     Utility to get a dialogue item
+
+1. `int message_box(std::wstring const &message, UINT type) const noexcept;`
+
+    This is a wrapper round `::MessageBox`, and throws up a message box using your dialogue name as the title.

@@ -44,7 +44,7 @@ std::wstring get_module_name(HINSTANCE module_instance)
     return ::PathFindFileName(&temp[0]);
 }
 
-std::wstring get_plugin_name(HWND dialog_handle)
+std::wstring get_dialogue_name(HWND dialog_handle)
 {
     TCHAR temp[MAX_PATH] = {0};
     ::GetWindowText(dialog_handle, &temp[0], MAX_PATH);
@@ -59,7 +59,7 @@ Docking_Dialogue_Interface::Docking_Dialogue_Interface(
     plugin_(plugin),
     dialogue_window_(create_dialogue_window(dialogue_ID)),
     module_name_(get_module_name(plugin_->module())),
-    plugin_name_(get_plugin_name(dialogue_window_))
+    dialogue_name_(get_dialogue_name(dialogue_window_))
 {
     ::SetWindowLongPtr(
         dialogue_window_,
@@ -110,7 +110,7 @@ void Docking_Dialogue_Interface::register_dialogue(
     tTbData data{};
 
     data.hClient = dialogue_window_;
-    data.pszName = plugin_name_.c_str();
+    data.pszName = dialogue_name_.c_str();
     data.dlgID = menu_index;
 
     data.uMask = pos == Position::Floating ? DWS_DF_FLOATING
@@ -157,6 +157,15 @@ RECT Docking_Dialogue_Interface::getWindowRect() const noexcept
 HWND Docking_Dialogue_Interface::GetDlgItem(int item) const noexcept
 {
     return ::GetDlgItem(dialogue_window_, item);
+}
+
+int Docking_Dialogue_Interface::message_box(
+    std::wstring const &message, UINT type
+) const noexcept
+{
+    return ::MessageBox(
+        dialogue_window_, message.c_str(), dialogue_name_.c_str(), type
+    );
 }
 
 void Docking_Dialogue_Interface::on_display() noexcept
@@ -212,20 +221,15 @@ INT_PTR __stdcall Docking_Dialogue_Interface::process_dialogue_message(
     {
         try
         {
-            ::MessageBox(
-                window_handle,
+            instance->message_box(
                 static_cast<wchar_t *>(static_cast<_bstr_t>(e.what())),
-                instance->plugin_name_.c_str(),
                 MB_OK | MB_ICONERROR
             );
         }
         catch (std::exception const &)
         {
-            ::MessageBox(
-                window_handle,
-                L"Caught exception but cannot get reason",
-                instance->plugin_name_.c_str(),
-                MB_OK | MB_ICONERROR
+            instance->message_box(
+                L"Caught exception but cannot get reason", MB_OK | MB_ICONERROR
             );
         }
         return FALSE;

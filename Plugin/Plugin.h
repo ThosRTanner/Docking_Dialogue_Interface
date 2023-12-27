@@ -2,12 +2,15 @@
 
 #include "PluginInterface.h"
 
+#include <string>
+#include <string_view>
+#include <tuple>
 #include <vector>
 
 class Plugin
 {
   public:
-    Plugin(NppData const &) noexcept;
+    Plugin(NppData const &, std::wstring_view name);
 
     virtual ~Plugin();
 
@@ -60,12 +63,25 @@ class Plugin
     {
         FuncItem item;
         item._cmdID = entry;
-        lstrcpyn(&item._itemName[0], message, sizeof(item._itemName) / sizeof(wchar_t));
+        std::ignore = lstrcpyn(
+            &item._itemName[0],
+            message,
+            sizeof(item._itemName) / sizeof(wchar_t)
+        );
         item._pFunc = contexts[entry]->reserve(self, callback);
         item._init2Check = check;
         item._pShKey = key;
         return item;
     }
+
+    /** Throw up a message box
+     *
+     * The title will be the string passed in the class constructor
+     *
+     * This would take a wstring_view but there's no guarantee that that is null
+     * terminated.
+     */
+    int message_box(std::wstring const &message, UINT type) const noexcept;
 
   private:
     // Classes should override these methods.
@@ -92,4 +108,5 @@ class Plugin
 
     HINSTANCE module_;
     NppData npp_data_;
+    std::wstring name_;
 };

@@ -43,12 +43,13 @@ Callbacks::Contexts Callbacks::contexts = {
 #pragma warning(pop)
 };
 
-TCHAR const *Demo_Plugin::get_plugin_name() noexcept
+wchar_t const *Demo_Plugin::get_plugin_name() noexcept
 {
-    return TEXT("Demo Notepad++ plugin");
+    return L"Demo Notepad++ plugin";
 }
 
-Demo_Plugin::Demo_Plugin(NppData const &data) noexcept : Plugin(data)
+Demo_Plugin::Demo_Plugin(NppData const &data) noexcept :
+    Plugin(data, get_plugin_name())
 {
 }
 
@@ -63,11 +64,11 @@ Demo_Plugin::~Demo_Plugin()
 std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
 {
     static std::vector<FuncItem> res = {
-        MAKE_CALLBACK(Menu_Entry_Hello_File, L"Hello Notepad++", hello_file),
         MAKE_CALLBACK(
-            Menu_Entry_Hello_Message,
-            L"Hello (with floating dialogue)",
-            hello_message
+            Menu_Entry_Hello_File, L"Hello Notepad++ File", hello_file
+        ),
+        MAKE_CALLBACK(
+            Menu_Entry_Hello_Message, L"Hello Notepad++ Message", hello_message
         ),
         MAKE_CALLBACK(
             Menu_Entry_Goto_Dialogue, L"Goto docked dialogue", goto_dialogue
@@ -108,14 +109,9 @@ void Demo_Plugin::hello_file() const noexcept
     send_to_editor(SCI_SETTEXT, 0, "Hello, Notepad++!");
 }
 
-void Demo_Plugin::hello_message() const noexcept
+void Demo_Plugin::hello_message() const
 {
-    ::MessageBox(
-        NULL,
-        TEXT("Hello, Notepad++!"),
-        TEXT("Notepad++ Plugin Template"),
-        MB_OK
-    );
+    message_box(L"Hello, Notepad++!", MB_OK);
 }
 
 void Demo_Plugin::goto_dialogue()

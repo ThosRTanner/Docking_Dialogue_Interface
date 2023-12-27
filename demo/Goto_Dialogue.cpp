@@ -7,6 +7,8 @@
 #include <Windows.h>
 #include <WinUser.h>
 
+#include <sstream>
+
 Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
     Docking_Dialogue_Interface(IDD_GOTO_DIALOGUE, plugin)
 {
@@ -45,8 +47,27 @@ std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
                         - 1;
                     if (successful)
                     {
-                        plugin()->send_to_editor(SCI_ENSUREVISIBLE, line);
-                        plugin()->send_to_editor(SCI_GOTOLINE, line);
+                        LRESULT const lines =
+                            plugin()->send_to_editor(SCI_GETLINECOUNT);
+                        if (line < 0 || line >= lines)
+                        {
+                            std::wstringstream msg;
+                            msg << "Line must be between 1 and " << lines;
+                            message_box(
+                                msg.str(), MB_ICONEXCLAMATION | MB_OKCANCEL
+                            );
+                        }
+                        else
+                        {
+                            plugin()->send_to_editor(SCI_ENSUREVISIBLE, line);
+                            plugin()->send_to_editor(SCI_GOTOLINE, line);
+                        }
+                    }
+                    else
+                    {
+                        message_box(
+                            L"Not a valid line number", MB_ICONERROR | MB_OK
+                        );
                     }
                     return TRUE;
                 }

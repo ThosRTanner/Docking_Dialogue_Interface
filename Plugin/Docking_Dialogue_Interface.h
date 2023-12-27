@@ -29,10 +29,7 @@ typedef LONG_PTR LPARAM;
 // Forward declarations.
 class Plugin;
 
-/** This is designed as a base class, you cannot instantiate this.
- *
- * It is recommended that you use private or protected inheritance.
- */
+/** This provides an abstraction for creating a docking dialogue. */
 class Docking_Dialogue_Interface
 {
   public:
@@ -115,6 +112,15 @@ class Docking_Dialogue_Interface
     /** Utility to get a dialogue item */
     HWND GetDlgItem(int) const noexcept;
 
+    /** Throw up a message box
+     *
+     * The title will be the same as the docking dialogue title.
+     *
+     * This would take a string_view, but there's no guarantee that that is null
+     * terminated.
+     */
+    int message_box(std::wstring const &message, UINT type) const noexcept;
+
   private:
     /** Implement this if you have your own stuff to do when displaying */
     virtual void on_display() noexcept;
@@ -161,5 +167,5 @@ class Docking_Dialogue_Interface
     bool is_floating_ = true;
     bool is_hidden_ = false;
     std::wstring module_name_;
-    std::wstring plugin_name_;
+    std::wstring dialogue_name_;
 };

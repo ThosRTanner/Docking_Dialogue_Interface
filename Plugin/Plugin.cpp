@@ -4,7 +4,9 @@
 
 static Plugin *plugin;
 
-Plugin::Plugin(NppData const &data) noexcept : npp_data_(data)
+Plugin::Plugin(NppData const &data, std::wstring_view name) :
+    npp_data_(data),
+    name_(name)
 {
     GetModuleHandleEx(
         GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
@@ -39,6 +41,13 @@ LRESULT Plugin::send_to_editor(UINT Msg, WPARAM wParam, LPARAM lParam)
 HINSTANCE Plugin::module() const noexcept
 {
     return module_;
+}
+
+int Plugin::message_box(std::wstring const & message, UINT type) const noexcept
+{
+    return ::MessageBox(
+        get_notepad_window(), message.c_str(), name_.c_str(), type
+    );
 }
 
 void Plugin::on_notification(SCNotification const *)

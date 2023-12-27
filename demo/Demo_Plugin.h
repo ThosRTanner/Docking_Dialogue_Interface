@@ -26,7 +26,7 @@ class Demo_Plugin : public Plugin
 {
   public:
     /** Return the plugin name */
-    static TCHAR const *get_plugin_name() noexcept;
+    static wchar_t const *get_plugin_name() noexcept;
 
     /** The object is created when notepad++ initialises your plugin */
     Demo_Plugin(NppData const &) noexcept;
@@ -59,7 +59,7 @@ class Demo_Plugin : public Plugin
     //
 
     void hello_file() const noexcept;
-    void hello_message() const noexcept;
+    void hello_message() const;
     void goto_dialogue();
 
     std::unique_ptr<Goto_Dialogue> goto_dialogue_;
