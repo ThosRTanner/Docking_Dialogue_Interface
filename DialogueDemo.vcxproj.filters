@@ -62,6 +62,10 @@
     <ClInclude Include="Plugin\Plugin.h">
       <Filter>Source Files\Source</Filter>
     </ClInclude>
+    <ClInclude Include="Plugin\Modal_Dialogue_Interface.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Dialogue_Interface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo\Demo_Plugin.cpp">
@@ -78,6 +82,12 @@
     </ClCompile>
     <ClCompile Include="Plugin\Plugin.cpp">
       <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\Modal_Dialogue_Interface.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\Dialogue_Interface.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

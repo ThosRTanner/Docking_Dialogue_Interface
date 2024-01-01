@@ -28,7 +28,7 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
 }
 
 std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
-    UINT message, UINT_PTR wParam, LONG_PTR lParam
+    UINT message, WPARAM wParam, LPARAM lParam
 )
 {
     switch (message)
@@ -54,7 +54,7 @@ std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
                             std::wstringstream msg;
                             msg << "Line must be between 1 and " << lines;
                             message_box(
-                                msg.str(), MB_ICONEXCLAMATION | MB_OKCANCEL
+                                msg.str().c_str(), MB_ICONEXCLAMATION | MB_OKCANCEL
                             );
                         }
                         else

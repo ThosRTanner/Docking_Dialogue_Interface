@@ -95,7 +95,7 @@ PointerAlignment: Right
 QualifierAlignment: Right
 ReferenceAlignment: Right
 ReflowComments:  true
-SortIncludes:    CaseInsensitive
+SortIncludes:    CaseSensitive
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: true
 SpaceAfterTemplateKeyword: true

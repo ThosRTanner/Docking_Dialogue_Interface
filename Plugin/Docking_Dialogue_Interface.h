@@ -13,24 +13,20 @@
 
 #pragma once
 
+#include "Dialogue_Interface.h"
+
 #include <basetsd.h>
 
 #include <optional>
-#include <string>
 
 // Forward declarations from windows headers
-typedef struct tagRECT RECT;
-typedef struct HWND__ *HWND;
 typedef struct HICON__ *HICON;
-typedef unsigned int UINT;
-typedef UINT_PTR WPARAM;
-typedef LONG_PTR LPARAM;
 
 // Forward declarations.
 class Plugin;
 
 /** This provides an abstraction for creating a docking dialogue. */
-class Docking_Dialogue_Interface
+class Docking_Dialogue_Interface : public Dialogue_Interface
 {
   public:
     /** Create a docking dialogue.
@@ -88,39 +84,6 @@ class Docking_Dialogue_Interface
         wchar_t const *extra = nullptr
     ) noexcept;
 
-    /** Get hold of plugin object for useful boilerplate */
-    Plugin const *plugin() const noexcept
-    {
-        return plugin_;
-    }
-
-    /** Get hold of the current dialogue window handle */
-    HWND window() const noexcept
-    {
-        return dialogue_window_;
-    }
-
-    /** Requests a redraw */
-    void InvalidateRect(RECT const *rect = nullptr) const noexcept;
-
-    /** Utility to get the current client rectangle */
-    RECT getClientRect() const noexcept;
-
-    /** Utility to get the current window rectangle */
-    RECT getWindowRect() const noexcept;
-
-    /** Utility to get a dialogue item */
-    HWND GetDlgItem(int) const noexcept;
-
-    /** Throw up a message box
-     *
-     * The title will be the same as the docking dialogue title.
-     *
-     * This would take a string_view, but there's no guarantee that that is null
-     * terminated.
-     */
-    int message_box(std::wstring const &message, UINT type) const noexcept;
-
   private:
     /** Implement this if you have your own stuff to do when displaying */
     virtual void on_display() noexcept;
@@ -128,44 +91,18 @@ class Docking_Dialogue_Interface
     /** Implement this if you have your own stuff to do when hiding */
     virtual void on_hide() noexcept;
 
-    /** Implement this to handle messages.
-     *
-     * Return std::nullopt to (to return FALSE to windows dialog processing), or
-     * a value to be set with SetWindowLongPtr (in which case TRUE will be
-     * returned). Note that some messages require you to return FALSE
-     * (std::nullopt) even if you do handle them.
-     *
-     * If you don't handle the message, you MUST call the base class version of
-     * this.
-     *
-     * message, wParam and lParam are the values passed to
-     * process_dialogue_message by windows
-     */
-    virtual std::optional<LONG_PTR> on_dialogue_message(
-        UINT message, UINT_PTR wParam, LONG_PTR lParam
-    ) noexcept(false);
-
     /** Utility wrapper round SendMessage to send pointers to our self */
     void send_dialogue_info(int msg, int wParam = 0) noexcept;
 
-    /** Callback handler for messages */
-    static INT_PTR __stdcall process_dialogue_message(
-        HWND, UINT message, WPARAM, LPARAM
-    ) noexcept;
-
     /** Handler for unhandled messages */
-    std::optional<LONG_PTR> unhandled_dialogue_message(
-        UINT message, UINT_PTR wParam, LONG_PTR lParam
-    ) noexcept;
+    std::optional<LONG_PTR> on_unhandled_dialogue_message(
+        UINT message, WPARAM wParam, LPARAM lParam
+    ) noexcept override final;
 
     /** Called during construction to set up dialogue_window_ */
     HWND create_dialogue_window(int dialogID);
 
-    Plugin const *plugin_;
-    HWND dialogue_window_;
     int docked_pos_ = 0;
     bool is_floating_ = true;
     bool is_hidden_ = false;
-    std::wstring module_name_;
-    std::wstring dialogue_name_;
 };

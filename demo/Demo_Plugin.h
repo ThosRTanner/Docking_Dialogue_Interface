@@ -29,7 +29,7 @@ class Demo_Plugin : public Plugin
     static wchar_t const *get_plugin_name() noexcept;
 
     /** The object is created when notepad++ initialises your plugin */
-    Demo_Plugin(NppData const &) noexcept;
+    Demo_Plugin(NppData const &);
 
     ~Demo_Plugin();
 

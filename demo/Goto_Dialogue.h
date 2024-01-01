@@ -11,7 +11,7 @@ class Goto_Dialogue : public Docking_Dialogue_Interface
 
   private:
     std::optional<LONG_PTR> on_dialogue_message(
-        UINT message, UINT_PTR wParam, LONG_PTR lParam
+        UINT message, WPARAM wParam, LPARAM lParam
     ) override;
 
     void on_display() noexcept override

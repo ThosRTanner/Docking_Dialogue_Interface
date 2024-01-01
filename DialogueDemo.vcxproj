@@ -298,14 +298,18 @@
     <ClInclude Include="demo\Goto_Dialogue.h" />
     <ClInclude Include="demo\resource.h" />
     <ClInclude Include="Plugin\Callback_Context.h" />
+    <ClInclude Include="Plugin\Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Docking_Dialogue_Interface.h" />
+    <ClInclude Include="Plugin\Modal_Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Plugin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo\Demo_Plugin.cpp" />
     <ClCompile Include="demo\Goto_Dialogue.cpp" />
+    <ClCompile Include="Plugin\Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\dllmain.cpp" />
     <ClCompile Include="Plugin\Docking_Dialogue_Interface.cpp" />
+    <ClCompile Include="Plugin\Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
   </ItemGroup>
   <ItemGroup>

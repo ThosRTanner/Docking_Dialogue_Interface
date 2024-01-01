@@ -1,12 +1,13 @@
-# Notepad++ plugin with docking dialogue - base library and demo.
+# Notepad++ plugin with docking and modal dialogues - base library and demo.
 
 This is probably massively overengineered, but there's a lot of boilerplate in here. Heavy use is made of the Template Method design pattern, hopefully meaning there's only a few bits you'll need to implement yourself. Those bits you do need to implement are actually virtual private methods. Most of them have default empty methods, so you don't have to implement a lot of empty functions.
 
-You will require a compiler that supports C++ 17 or later and the latest Windows SDK (10.0.22621.0 at the time of writing) to build this, as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
+You will require a compiler that supports C++ 17 or later to use the library.
+
+In ordre to build the demo project, you will need the latest Windows SDK (10.0.22621.0 at the time of writing), as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
 
 **Important note**
-This is a work in progress and I will probably do force pushes to try and keep the history clean until I'm happy. Clone at your own risk.
-
+This is a work in progress. Clone at your own risk.
 
 ## Project Layout
 
@@ -154,83 +155,28 @@ To be written
 ## Processing notepad++ messages
 To be written
 
-## Creating a docking dialogue
-When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class.
+## Dialogue API
 
-In your constructor, you must
+This repo contains base classes for both docking dialogues (which can be docked to any side of the notepad++ window or be free floating) and model dialogues (the ones where you have to press OK or cancel before you can resume editing), which share a certain amount of common code.
 
-1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the `Docking_Dialogue_Interface` class will retain the window handle.
+In order to implement your class, you subclass the appropriate _xxx_Dialogue_Interface_ class and implement the `on_dialogue_message` virtual method in order to process messages.
 
-2. Do any window setup required (see note 2 below).
+*Important Note*
+Your `on_dialogue_message` method will get called with the `WM_INITDIALOG` message. However, be aware that your constructor may not have had all the members initialised at the point, so be very careful what you do in response.
 
-3. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
+### The Dialogue_Interface class
+document the constructor here
 
-4. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+##### (Private) Virtual methods you should implement
 
-*Important Notes*:
-1. The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
-
-2. Your `on_dialogue_message` method will not get called with the WM_INITDIALOG message. This is because at the point the message is received, your constructor hasn't finished, and thus there isn't a valid _this_.
-
-   Instead, you should put any initialisation code in your constructor before you call `register_dialogue`
-
-
-### Docking_Dialog_Interface API
-
-This handles the API with notepad++ and provides some default behaviour and some utility methods.
-
-#### Public methods
-
-1. `Docking_Dialogue_Interface(int dialogue_id, Plugin const *plugin)`
-
-   Constructor for the class.
-
-1. `void display() noexcept`
-
-    Call this to display the dialogue. If you have special actions to be take on display, implement `void on_display() noexcept override`
-
-1. `void hide() noexcept`
-
-    Call this to hide the dialogue. If you have special actions to be take on hiding, implement `void on_hide() noexcept override`
-
-1. `bool is_hidden() const noexcept`
-
-    Returns `true` if the dialogue is currently hidden.
-
-#### (Private) Virtual methods
-
-1. `virtual void on_display() noexcept;`
-
-    This is called whenever the dialogue is about to be displayed.
-
-1. `virtual void on_hide() noexcept;`
-
-    This is called whenever the dialogue is about to be hidden.
-
-1. `virtual std::optional<LONG_PTR> on_dialogue_message(UINT message, UINT_PTR wParam, LONG_PTR lParam)`
+1. `virtual std::optional<LONG_PTR> on_dialogue_message(UINT message, WPARAM wParam, LPARAM lParam)`
 
      Return `std::nullopt` (to return `FALSE` to windows dialog processing), or a value to be set with `::SetWindowLongPtr` (in which case `TRUE` will be returned to windows).
      Note that some messages require you to return `FALSE` (`std::nullopt`) even if you do handle them.
 
      `message`, `wParam` and `lParam` are the values passed to a `DLGPROC` function by windows,
 
-#### (Protected) Utility Methods
-
-1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept;`
-
-    `menu_index` is the menu entry number which causes this dialogue to be displayed. I strongly recommend you use an enum here so you can tie it up with the entries in the `FuncItem` table.
-
-    `position` defines where the dialogue will be placed the first time it is displayed by Notepad++. On subsequent runs, this value will be ignored. It may be one of
-
-        Dock_Left,
-        Dock_Right,
-        Dock_Top,
-        Dock_Bottom,
-        Floating
-
-    `icon`, if supplied, must be an icon which you have loaded. It will be displayed on the tab bar in the docking dialogue window.
-
-    `extra` is extra text to display in the title bar if required.
+### Utility (protected) methods you can call
 
 1. `Plugin const *plugin() const noexcept`
 
@@ -259,3 +205,74 @@ This handles the API with notepad++ and provides some default behaviour and some
 1. `int message_box(std::wstring const &message, UINT type) const noexcept;`
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your dialogue name as the title.
+
+### Creating a docking dialogue
+When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class.
+
+In your constructor, you must
+
+1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the `Docking_Dialogue_Interface` class will retain the window handle.
+
+2. Do any window setup required (see the important note above about `WM_INITDIALOG` and do it in the constructor, not in the `on_dialog_message` callback)
+
+3. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
+
+4. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+
+*Important Notes*:
+1. The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
+
+
+#### Docking_Dialog_Interface class
+
+This handles the API with notepad++ and provides some default behaviour and some utility methods.
+
+##### Public methods
+
+1. `Docking_Dialogue_Interface(int dialogue_id, Plugin const *plugin)`
+
+   Constructor for the class.
+
+1. `void display() noexcept`
+
+    Call this to display the dialogue. If you have special actions to be take on display, implement `void on_display() noexcept override`
+
+1. `void hide() noexcept`
+
+    Call this to hide the dialogue. If you have special actions to be take on hiding, implement `void on_hide() noexcept override`
+
+1. `bool is_hidden() const noexcept`
+
+    Returns `true` if the dialogue is currently hidden.
+
+##### (Private) Virtual methods
+
+1. `virtual void on_display() noexcept;`
+
+    This is called whenever the dialogue is about to be displayed.
+
+1. `virtual void on_hide() noexcept;`
+
+    This is called whenever the dialogue is about to be hidden.
+
+##### (Protected) Utility Methods
+
+1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept;`
+
+    `menu_index` is the menu entry number which causes this dialogue to be displayed. I strongly recommend you use an enum here so you can tie it up with the entries in the `FuncItem` table.
+
+    `position` defines where the dialogue will be placed the first time it is displayed by Notepad++. On subsequent runs, this value will be ignored. It may be one of
+
+        Dock_Left,
+        Dock_Right,
+        Dock_Top,
+        Dock_Bottom,
+        Floating
+
+    `icon`, if supplied, must be an icon which you have loaded. It will be displayed on the tab bar in the docking dialogue window.
+
+    `extra` is extra text to display in the title bar if required.
+
+## Modal dialogues
+
+Document

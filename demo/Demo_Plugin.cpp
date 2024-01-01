@@ -48,7 +48,7 @@ wchar_t const *Demo_Plugin::get_plugin_name() noexcept
     return L"Demo Notepad++ plugin";
 }
 
-Demo_Plugin::Demo_Plugin(NppData const &data) noexcept :
+Demo_Plugin::Demo_Plugin(NppData const &data) :
     Plugin(data, get_plugin_name())
 {
 }
