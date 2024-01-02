@@ -127,7 +127,7 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
    `LRESULT send_to_notepad(UINT message, WPARAM wParam, void const *buff) const noexcept`
 
-   Same, but avoids messy reinterpret_casts round a rather questionable API
+   Same, but avoids messy reinterpret_casts round the windows API
 
 3. `HWND get_scintilla_window() const noexcept`
 
@@ -139,7 +139,7 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
    `LRESULT send_to_editor(UINT message, WPARAM wParam, void const *buff) const noexcept`
 
-   Same, but avoids messy reinterpret_casts round a rather questionable API
+   Same, but avoids messy reinterpret_casts round the windows API
 
 5. `HINSTANCE module() const noexcept`
 
@@ -213,7 +213,7 @@ In your constructor, you must
 
 1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the `Docking_Dialogue_Interface` class will retain the window handle.
 
-2. Do any window setup required (see the important note above about `WM_INITDIALOG` and do it in the constructor, not in the `on_dialog_message` callback)
+2. Do any window setup required (see the important note above about `WM_INITDIALOG` and do the setup in the constructor, not in the `on_dialog_message` callback)
 
 3. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
 
@@ -259,7 +259,7 @@ This handles the API with notepad++ and provides some default behaviour and some
 
 1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept;`
 
-    `menu_index` is the menu entry number which causes this dialogue to be displayed. I strongly recommend you use an enum here so you can tie it up with the entries in the `FuncItem` table.
+    `menu_index` is the menu entry number which causes this dialogue to be displayed. I strongly recommend you use an `enum` here so you can tie it up with the entries in the `FuncItem` table. Note that Notepad++ appears to use this value when saving window states and you can get some quite unexpected results if the numbers don't match (or change)!
 
     `position` defines where the dialogue will be placed the first time it is displayed by Notepad++. On subsequent runs, this value will be ignored. It may be one of
 
@@ -275,4 +275,33 @@ This handles the API with notepad++ and provides some default behaviour and some
 
 ## Modal dialogues
 
-Document
+A modal dialogue doesn't return OK until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed so the your constructor needs to be implemented a little differently to that of a docking dialogue.
+
+You should do all the work you *can* do before calling the `create_dialogue_window` method. Any further work needs to be done in the `on_dialogue_message` callback function.
+
+### Modal_Dialogue_Interface class
+
+
+#### Public methods
+
+1. `INT_PTR get_result() const noexcept;`
+
+    This returns the result passed to the `EndDialog` method. *Note* Avoid returning 0 or -1 via `EndDialog` as they are indistinguishable from the values returned when the windows `DialogBox` function gets an error.
+
+#### Protected (utility) methods
+
+1. `void create_dialogue_window(int dialogID) noexcept;`
+
+    Create the dialogue - this function will not return until the user has closed the dialogue, at which point the result may be checked by calling `get_result()`
+
+1.  `BOOL EndDialog(INT_PTR retval) const noexcept;`
+
+    This is a wrapper round `::EndDialog`. Try not to call it with 0 or -1 - see above. Also, calling ith 0 will give you a compiler error, because C++ can't tell the difference between 0 and `nullptr`. Use 0LL if you must return 0.
+ 
+ 1. `BOOL EndDialog(void *retval) const noexcept;`
+ 
+    Wrapper round `::EndDialog` that avoids reinterpret_cast.
+
+1. `BOOL centre_dialogue() const noexcept;`
+
+    Centre the dialogue on the Notepad++ window
