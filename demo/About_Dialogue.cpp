@@ -15,10 +15,9 @@ About_Dialogue::~About_Dialogue() = default;
 
 std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
-)
+) noexcept
 {
     //Sadly this is not trivial and should probably be forced to be implemented somehow.
-    //Although we can always do the cancel button in the default.
     switch (message)
     {
         case WM_INITDIALOG:
@@ -26,35 +25,6 @@ std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
             centre_dialogue();
         }
         break;
-
-        case WM_COMMAND:
-            if (HIWORD(wParam) == BN_CLICKED)
-            {
-                switch (LOWORD(wParam))
-                {
-                    case IDOK:
-                    {
-                        EndDialog(1);
-                        return TRUE;
-                    }
-
-                    case IDCANCEL:
-                    {
-                        EndDialog(0LL);
-                        return TRUE;
-                    }
-                }
-            }
-            break;
-
-        case WM_SYSCOMMAND:
-            if (wParam == SC_CLOSE)
-            {
-                // cancel
-                EndDialog(0LL);
-                return TRUE;
-            }
-            break;
 
         default:
             break;

@@ -9,7 +9,7 @@
  typedef Callback_Context_Base<My_Plugin> Callbacks;
 
  template <> Callbacks::Contexts
-    Callbacks::contexts[] = {
+    Callbacks::contexts = {
         std::make_shared<Callback_Context<My_Plugin, 0>>(),
         std::make_shared<Callback_Context<My_Plugin, 1>>(),
         std::make_shared<Callback_Context<My_Plugin, 2>>(),

@@ -74,6 +74,7 @@ class Plugin
         return item;
     }
 
+    /** Wrapper around make_callback for separators */
     template <typename Callbacks, typename Class>
     FuncItem make_separator(int entry, Callbacks contexts, Class self)
     {

@@ -50,6 +50,43 @@ std::optional<LONG_PTR> Modal_Dialogue_Interface::on_unhandled_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
+    //This provides default handlers for OK, cancel, and close clicks.
+    switch (message)
+    {
+        case WM_COMMAND:
+            if (HIWORD(wParam) == BN_CLICKED)
+            {
+                switch (LOWORD(wParam))
+                {
+                    case IDOK:
+                    {
+                        EndDialog(Clicked_OK);
+                        return TRUE;
+                    }
+
+                    case IDCANCEL:
+                    {
+                        EndDialog(Clicked_Cancel);
+                        return TRUE;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+            break;
+
+        case WM_SYSCOMMAND:
+            if (wParam == SC_CLOSE)
+            {
+                EndDialog(Clicked_Close);
+                return TRUE;
+            }
+            break;
+
+        default:
+            break;
+    }
     return std::nullopt;
 }
 

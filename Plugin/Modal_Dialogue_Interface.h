@@ -40,6 +40,14 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
 
     virtual ~Modal_Dialogue_Interface() = 0;
 
+    /** Special return values for get_result if the default handler is used. */
+    enum Return_Values
+    {
+        Clicked_OK = -2,
+        Clicked_Cancel = -3,
+        Clicked_Close = -4
+    };
+
     auto get_result() const noexcept
     {
         return result_;
@@ -49,15 +57,17 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     /** You need to call this from your constructor */
     void create_modal_dialogue(int dialogID) noexcept;
 
-    /** Wrapper round ::EndDialog */
+    /** Wrapper round ::EndDialog
+     *
+     * Note: You should avoid returning 0 or -1 via this as windows returns 0 or
+     * -1 when the ::DialogBox call fails.
+     *
+     * Moreover, due to the vagaries of C++, if you want to return 0, you must
+     * return 0LL or sim, as 0 can be a null pointer or an int...
+     */
     BOOL EndDialog(INT_PTR retval) const noexcept;
 
-    /** Wrapper round ::EndDialog that takes a pointer
-     *
-     * Note: Due to the vagaries of the language, C++ compilers can't
-     * differentiate between 0 and nullptr. Pass 0LL if you really need to
-     * pass 0, or pass nullptr.
-     */
+    /** Wrapper round ::EndDialog that takes a pointer */
     BOOL EndDialog(void *retval) const noexcept
     {
 #pragma warning(suppress : 26490)

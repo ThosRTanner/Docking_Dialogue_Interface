@@ -13,5 +13,5 @@ class About_Dialogue : public Modal_Dialogue_Interface
   private:
     std::optional<LONG_PTR> on_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
-    ) override;
+    ) noexcept override;
 };

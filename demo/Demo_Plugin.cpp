@@ -139,12 +139,12 @@ void Demo_Plugin::about_dialogue() const
 {
     About_Dialogue dialogue(this);
     auto const res = dialogue.get_result();
-    if (res == 0)
+    if (res == About_Dialogue::Clicked_OK)
     {
-        message_box(L"Cancelled", MB_ICONEXCLAMATION | MB_ABORTRETRYIGNORE);
+        message_box(L"OK", MB_OK);
     }
     else
     {
-        message_box(L"OK", MB_OK);
+        message_box(L"Cancelled", MB_ICONEXCLAMATION | MB_ABORTRETRYIGNORE);
     }
 }

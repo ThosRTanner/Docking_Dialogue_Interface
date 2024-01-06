@@ -6,9 +6,6 @@ You will require a compiler that supports C++ 17 or later to use the library.
 
 In order to build the demo project, you will need the latest Windows SDK (10.0.22621.0 at the time of writing), as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
 
-**Important note**
-This is a work in progress. Clone at your own risk.
-
 ## Project Layout
 
 This comes WITHOUT a copy of the notepad++ here template (from https://github.com/npp-plugins/plugintemplate) because ultimately that would just be confusing. However, it assumes that the headers from there are available in your `-I` path. In this demo, it was cloned into the same parent directory as this project, so the project settings have `../plugintemplate/src` in the C++ include setting.
@@ -35,7 +32,7 @@ The overall life story of your plugin is:
 
 ## Giving notepad++ the name of your plugin.
 
-Notepad++ queries your plugin for its name by calling `getName`. dllmain.cpp transfers control to this function in your class:
+Notepad++ queries your plugin for its name by calling `getName`. `dllmain.cpp` transfers control to this function in your class:
 
 `static wchar_t const *get_plugin_name() noexcept`
 
@@ -50,7 +47,7 @@ Notepad++ queries your DLL for a list of function pointers. Using these to call 
 You'll need to provide a table like this:
 
 ```
-typedef Callback_Context_Base<Demo_Plugin> Callbacks;
+typedef Callback_Context_Base<My_Plugin> Callbacks;
 
 #define CALLBACK_ENTRY(N) { (N), std::make_shared<Callback_Context<My_Plugin, (N)>>() }
 
@@ -75,6 +72,9 @@ std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
             1, L"Entry 1", Callbacks::contexts, this, &My_Plugin::callback_1
         ),
         //...
+        //If you want to add separators, do so like this...
+        make_separator(item number, Callbacks::contexts, this),
+        //
         make_callback(
             last, L"Entry the last", Callbacks::contexts, this, &My_Plugin::callback_last
         )
@@ -83,10 +83,48 @@ std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
 };
 ```
 
-_Note_: Notepad++ expects at least one menu entry, and it will crash if you provide none.
+_Notes_:
+1. Notepad++ expects at least one menu entry, and it will crash if you provide none.
+1. The returned vector must not be destroyed till notepad++ exits. hence the use of `static`. You could achieve this in other ways of course.
 
 ## The `Plugin` base class
 This class provides a lot of boilerplate code and 3 virtual functions, the first of which you must implement. Default null implementations are supplied for the other two.
+
+### Public API
+
+Note that these are public mainly so that dialogue classes can get hold of useful functionality.
+
+1. `Plugin(NppData const &, std::wstring_view name)`
+
+    This takes the pointer to the notepad++ data which your constructor is passed, and the name of your plugin. This should be the same as your `get_name()` method returns.
+
+1. `HWND get_notepad_window() const noexcept`
+
+   Get hold of the notepad++ window handle. You probably won't need to use this.
+
+1. `LRESULT send_to_notepad(UINT message, WPARAM = 0, LPARAM = 0) const noexcept`
+
+   Send a message to notepad++
+
+   `LRESULT send_to_notepad(UINT message, WPARAM wParam, void const *buff) const noexcept`
+
+   Same, but avoids messy reinterpret_casts round the windows API
+
+1. `HWND get_scintilla_window() const noexcept`
+
+   Get the current scintilla window. You probably won't need to use this.
+
+1. `LRESULT send_to_editor(UINT message, WPARAM = 0, LPARAM = 0) const noexcept`
+
+   Send a message to the current editor window
+
+   `LRESULT send_to_editor(UINT message, WPARAM wParam, void const *buff) const noexcept`
+
+   Same, but avoids messy reinterpret_casts round the windows API
+
+1. `HINSTANCE module() const noexcept`
+
+   Gets your module handle.
 
 ### (Private) Virtual methods
 
@@ -105,37 +143,20 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
 ### (Protected) Utility methods.
 
-1. `HWND get_notepad_window() const noexcept`
-
-   Get hold of the notepad++ window handle. You probably won't need to use this.
-
-2. `LRESULT send_to_notepad(UINT message, WPARAM = 0, LPARAM = 0) const noexcept`
-
-   Send a message to notepad++
-
-   `LRESULT send_to_notepad(UINT message, WPARAM wParam, void const *buff) const noexcept`
-
-   Same, but avoids messy reinterpret_casts round the windows API
-
-3. `HWND get_scintilla_window() const noexcept`
-
-   Get the current scintilla window. You probably won't need to use this.
-
-4. `LRESULT send_to_editor(UINT message, WPARAM = 0, LPARAM = 0) const noexcept`
-
-   Send a message to the current editor window
-
-   `LRESULT send_to_editor(UINT message, WPARAM wParam, void const *buff) const noexcept`
-
-   Same, but avoids messy reinterpret_casts round the windows API
-
-5. `HINSTANCE module() const noexcept`
-
-   Gets your module handle.
-
-6. `int message_box(std::wstring const &message, UINT type) const noexcept`
+1. `int message_box(std::wstring const &message, UINT type) const noexcept`
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your plugin name as the title.
+
+2. `template <typename Callbacks, typename Class, typename Callback>
+    FuncItem make_callback(int entry, wchar_t const *message, Callbacks contexts, Class self,
+        Callback callback, bool check = false, ShortcutKey *key = nullptr)`
+
+    This is a utility function to aid setting up notepad++ menu definition. See above for usage.
+
+3. `template <typename Callbacks, typename Class>
+    FuncItem make_separator(int entry, Callbacks contexts, Class self)`
+
+    Simplified wrapper around `make_callback` for menu separators.
 
 ## Processing scintilla notifications
 To be written
@@ -195,6 +216,7 @@ document the constructor here
     This is a wrapper round `::MessageBox`, and throws up a message box using your dialogue name as the title.
 
 ### Creating a docking dialogue
+
 When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class.
 
 In your constructor, you must
@@ -209,7 +231,6 @@ In your constructor, you must
 
 *Important Notes*:
 1. The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
-
 
 #### Docking_Dialog_Interface class
 
@@ -269,6 +290,7 @@ You should do all the work you *can* do before calling the `create_dialogue_wind
 
 ### Modal_Dialogue_Interface class
 
+This class provides default handlers for 'OK', 'Cancel' and 'Close' buttons. These return `Clicked_OK`, `Clicked_Cancel` and `Clicked_Close` to the API (which are NOT 0 or -1 - see below). Of course, you do not have to use the default handler, and may handle the events yourself in the `on_dialogue_message` function.
 
 #### Public methods
 
@@ -284,7 +306,7 @@ You should do all the work you *can* do before calling the `create_dialogue_wind
 
 1.  `BOOL EndDialog(INT_PTR retval) const noexcept;`
 
-    This is a wrapper round `::EndDialog`. Try not to call it with 0 or -1 - see above. Also, calling ith 0 will give you a compiler error, because C++ can't tell the difference between 0 and `nullptr`. Use 0LL if you must return 0.
+    This is a wrapper round `::EndDialog`. Try not to call it with 0 or -1 - see above. Be warned that calling this with 0 will give you a compiler error, because C++ can't tell the difference between 0 and `nullptr`. Use 0LL if you must return 0 (but see above on that approach).
  
  1. `BOOL EndDialog(void *retval) const noexcept;`
  
