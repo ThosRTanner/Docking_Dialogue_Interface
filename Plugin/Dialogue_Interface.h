@@ -70,13 +70,11 @@ class Dialogue_Interface
      */
     int message_box(wchar_t const *message, UINT type) const noexcept;
 
-    /** Callback handler for messages
-     *
-     * Currently protected to it can be referenced from the dialogue creation.
-     */
-    static INT_PTR __stdcall process_dialogue_message(
-        HWND, UINT message, WPARAM, LPARAM
-    ) noexcept;
+    /** Creates a non-modal dialogue */
+    HWND create_dialogue(int dialogue) noexcept;
+
+    /** Create a modal dialogue */
+    INT_PTR create_modal_dialogue(int dialogue) noexcept;
 
   private:
     /** Implement this to handle messages.
@@ -99,6 +97,11 @@ class Dialogue_Interface
     /** Handler for unhandled messages */
     virtual std::optional<LONG_PTR> on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
+    ) noexcept;
+
+    /** Callback handler for messages */
+    static INT_PTR __stdcall process_dialogue_message(
+        HWND, UINT message, WPARAM, LPARAM
     ) noexcept;
 
     Plugin const *plugin_;

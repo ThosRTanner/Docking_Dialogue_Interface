@@ -294,6 +294,7 @@
     <ClInclude Include="..\plugintemplate\src\PluginInterface.h" />
     <ClInclude Include="..\plugintemplate\src\Scintilla.h" />
     <ClInclude Include="..\plugintemplate\src\Sci_Position.h" />
+    <ClInclude Include="demo\About_Dialogue.h" />
     <ClInclude Include="demo\Demo_Plugin.h" />
     <ClInclude Include="demo\Goto_Dialogue.h" />
     <ClInclude Include="demo\resource.h" />
@@ -304,6 +305,7 @@
     <ClInclude Include="Plugin\Plugin.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="demo\About_Dialogue.cpp" />
     <ClCompile Include="demo\Demo_Plugin.cpp" />
     <ClCompile Include="demo\Goto_Dialogue.cpp" />
     <ClCompile Include="Plugin\Dialogue_Interface.cpp" />

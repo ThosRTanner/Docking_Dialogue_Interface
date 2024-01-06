@@ -74,6 +74,12 @@ class Plugin
         return item;
     }
 
+    template <typename Callbacks, typename Class>
+    FuncItem make_separator(int entry, Callbacks contexts, Class self)
+    {
+        return make_callback(entry, L"---", contexts, self, nullptr);
+    }
+
     /** Throw up a message box
      *
      * The title will be the string passed in the class constructor

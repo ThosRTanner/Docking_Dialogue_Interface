@@ -17,6 +17,7 @@
 
 #include "Demo_Plugin.h"
 
+#include "About_Dialogue.h"
 #include "Goto_Dialogue.h"
 
 #include "Plugin/Callback_Context.h"
@@ -39,7 +40,10 @@ Callbacks::Contexts Callbacks::contexts = {
 #pragma warning(disable : 26426)
     CALLBACK_ENTRY(Menu_Entry_Hello_File),
     CALLBACK_ENTRY(Menu_Entry_Hello_Message),
-    CALLBACK_ENTRY(Menu_Entry_Goto_Dialogue)
+    CALLBACK_ENTRY(Menu_Entry_Separator_1),
+    CALLBACK_ENTRY(Menu_Entry_Goto_Dialogue),
+    CALLBACK_ENTRY(Menu_Entry_Separator_2),
+    CALLBACK_ENTRY(Menu_Entry_About_Dialogue)
 #pragma warning(pop)
 };
 
@@ -48,8 +52,7 @@ wchar_t const *Demo_Plugin::get_plugin_name() noexcept
     return L"Demo Notepad++ plugin";
 }
 
-Demo_Plugin::Demo_Plugin(NppData const &data) :
-    Plugin(data, get_plugin_name())
+Demo_Plugin::Demo_Plugin(NppData const &data) : Plugin(data, get_plugin_name())
 {
 }
 
@@ -61,6 +64,9 @@ Demo_Plugin::~Demo_Plugin()
 #define MAKE_CALLBACK(entry, text, method) \
     make_callback(entry, text, Callbacks::contexts, this, &Demo_Plugin::method)
 
+#define MAKE_SEPARATOR(entry) \
+    make_separator(entry, Callbacks::contexts, this)
+
 std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
 {
     static std::vector<FuncItem> res = {
@@ -70,8 +76,13 @@ std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
         MAKE_CALLBACK(
             Menu_Entry_Hello_Message, L"Hello Notepad++ Message", hello_message
         ),
+        MAKE_SEPARATOR(Menu_Entry_Separator_1),
         MAKE_CALLBACK(
             Menu_Entry_Goto_Dialogue, L"Goto docked dialogue", goto_dialogue
+        ),
+        MAKE_SEPARATOR(Menu_Entry_Separator_2),
+        MAKE_CALLBACK(
+            Menu_Entry_About_Dialogue, L"About modal dialogue", about_dialogue
         )
     };
     return res;
@@ -122,4 +133,18 @@ void Demo_Plugin::goto_dialogue()
             std::make_unique<Goto_Dialogue>(Menu_Entry_Goto_Dialogue, this);
     }
     goto_dialogue_->display();
+}
+
+void Demo_Plugin::about_dialogue() const
+{
+    About_Dialogue dialogue(this);
+    auto const res = dialogue.get_result();
+    if (res == 0)
+    {
+        message_box(L"Cancelled", MB_ICONEXCLAMATION | MB_ABORTRETRYIGNORE);
+    }
+    else
+    {
+        message_box(L"OK", MB_OK);
+    }
 }

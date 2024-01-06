@@ -47,7 +47,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
 
   protected:
     /** You need to call this from your constructor */
-    void create_dialogue_window(int dialogID) noexcept;
+    void create_modal_dialogue(int dialogID) noexcept;
 
     /** Wrapper round ::EndDialog */
     BOOL EndDialog(INT_PTR retval) const noexcept;
@@ -72,6 +72,9 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     std::optional<LONG_PTR> on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
+
+    /** Hide the other creation method */
+    using Dialogue_Interface::create_dialogue;
 
     INT_PTR result_;
 };

@@ -4,7 +4,7 @@ This is probably massively overengineered, but there's a lot of boilerplate in h
 
 You will require a compiler that supports C++ 17 or later to use the library.
 
-In ordre to build the demo project, you will need the latest Windows SDK (10.0.22621.0 at the time of writing), as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
+In order to build the demo project, you will need the latest Windows SDK (10.0.22621.0 at the time of writing), as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
 
 **Important note**
 This is a work in progress. Clone at your own risk.
@@ -29,7 +29,7 @@ The overall life story of your plugin is:
 1. Notepad++ calls the `setInfo` function, and the main code will construct an instance of your class, passing a reference to the supplied `NppData` object.
 1. Notepad++ calls the `getFuncsArray` function. The main code will then call the `on_get_menu_entries` method of your class (see below)
 1. Messages and notifications are sent to your plugin via the `on_message` and `on_notification` methods.
-   1. You should probably ignore the `NPPM_SHUTDOWN` message. Among other things it is not safe to delete the class object until notepad++ exits because it still accesses the memory allocated for the module name in `TbData` after it sends the message, and it makes more sense to clean up resources in your destructor.
+   1. You should probably ignore the `NPPM_SHUTDOWN` message. Among other things it is not safe to delete the class object until Notepad++ exits because it still accesses the memory allocated for the module name in `TbData` after it sends the message, and it makes more sense to clean up resources in your destructor.
 1. Notepad++ exits.
    1. The runtime library deletes the instance of your class, and so your destructor is called.
 
@@ -58,7 +58,7 @@ template <> Callbacks::Contexts Callbacks::contexts = {
     CALLBACK_ENTRY(0),
     CALLBACK_ENTRY(1),
     ...
-    CALLBACK_ENTRY(last menu entry - 1)
+    CALLBACK_ENTRY(last)
 };
 ```
 
@@ -69,26 +69,14 @@ std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
 {
     static std::vector<FuncItem> res = {
         make_callback(
-            0,
-            L"Entry 0",
-            Callbacks::contexts,
-            this,
-            &My_Plugin::callback_0
+            0, L"Entry 0", Callbacks::contexts, this, &My_Plugin::callback_0
         ),
         make_callback(
-            1,
-            L"Entry 1",
-            Callbacks::contexts,
-            this,
-            &My_Plugin::callback_1
+            1, L"Entry 1", Callbacks::contexts, this, &My_Plugin::callback_1
         ),
         //...
         make_callback(
-            Last_Menu_Entry - 1,
-            L"Entry the last",
-            Callbacks::contexts,
-            this,
-            &My_Plugin::callback_last
+            last, L"Entry the last", Callbacks::contexts, this, &My_Plugin::callback_last
         )
     };
     return res;
@@ -106,11 +94,11 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
    See above
 
-2. `virtual void on__process_notification(SCNotification const *)`
+2. `virtual void on_process_notification(SCNotification const *)`
 
    Implement this to handle notifications from scintilla if required.
 
-3. `virtual LRESULT on__process_message(UINT message, WPARAM, LPARAM)`
+3. `virtual LRESULT on_process_message(UINT message, WPARAM, LPARAM)`
 
    Implement this to handle messages from notepad++ if required.
    _Note_ I cannot find any examples of how to use these messages in notepad++.
@@ -145,7 +133,7 @@ This class provides a lot of boilerplate code and 3 virtual functions, the first
 
    Gets your module handle.
 
-6. `int message_box(std::wstring const &message, UINT type) const noexcept;`
+6. `int message_box(std::wstring const &message, UINT type) const noexcept`
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your plugin name as the title.
 
@@ -247,17 +235,17 @@ This handles the API with notepad++ and provides some default behaviour and some
 
 ##### (Private) Virtual methods
 
-1. `virtual void on_display() noexcept;`
+1. `virtual void on_display() noexcept`
 
     This is called whenever the dialogue is about to be displayed.
 
-1. `virtual void on_hide() noexcept;`
+1. `virtual void on_hide() noexcept`
 
     This is called whenever the dialogue is about to be hidden.
 
 ##### (Protected) Utility Methods
 
-1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept;`
+1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept`
 
     `menu_index` is the menu entry number which causes this dialogue to be displayed. I strongly recommend you use an `enum` here so you can tie it up with the entries in the `FuncItem` table. Note that Notepad++ appears to use this value when saving window states and you can get some quite unexpected results if the numbers don't match (or change)!
 
@@ -275,7 +263,7 @@ This handles the API with notepad++ and provides some default behaviour and some
 
 ## Modal dialogues
 
-A modal dialogue doesn't return OK until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed so the your constructor needs to be implemented a little differently to that of a docking dialogue.
+A modal dialogue doesn't return until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed so the your constructor needs to be implemented a little differently to that of a docking dialogue.
 
 You should do all the work you *can* do before calling the `create_dialogue_window` method. Any further work needs to be done in the `on_dialogue_message` callback function.
 
@@ -290,7 +278,7 @@ You should do all the work you *can* do before calling the `create_dialogue_wind
 
 #### Protected (utility) methods
 
-1. `void create_dialogue_window(int dialogID) noexcept;`
+1. `void create_modal_dialogue(int dialogID) noexcept;`
 
     Create the dialogue - this function will not return until the user has closed the dialogue, at which point the result may be checked by calling `get_result()`
 

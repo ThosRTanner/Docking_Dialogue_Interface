@@ -42,7 +42,7 @@ Docking_Dialogue_Interface::Docking_Dialogue_Interface(
 ) :
     Dialogue_Interface(plugin)
 {
-    create_dialogue_window(dialogue_ID);
+    create_dialogue(dialogue_ID);
     send_dialogue_info(NPPM_MODELESSDIALOG, MODELESSDIALOGADD);
 }
 
@@ -173,16 +173,9 @@ std::optional<LONG_PTR> Docking_Dialogue_Interface::on_unhandled_dialogue_messag
     return std::nullopt;
 }
 
-HWND Docking_Dialogue_Interface::create_dialogue_window(int dialogID)
+HWND Docking_Dialogue_Interface::create_dialogue(int dialogID)
 {
-#pragma warning(suppress : 26490)
-    HWND const dialogue_window{::CreateDialogParam(
-        plugin()->module(),
-        MAKEINTRESOURCE(dialogID),
-        plugin()->get_notepad_window(),
-        process_dialogue_message,
-        reinterpret_cast<LPARAM>(this)
-    )};
+    HWND const dialogue_window{Dialogue_Interface::create_dialogue(dialogID)};
     if (dialogue_window == nullptr)
     {
         char buff[2048];

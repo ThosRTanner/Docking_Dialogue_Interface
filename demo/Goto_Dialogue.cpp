@@ -4,8 +4,8 @@
 
 #include "resource.h"
 
-#include <Windows.h>
 #include <WinUser.h>
+#include <Windows.h>
 
 #include <sstream>
 
@@ -26,6 +26,8 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
         L"Some extra text"
     );
 }
+
+Goto_Dialogue::~Goto_Dialogue() = default;
 
 std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
@@ -54,7 +56,8 @@ std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
                             std::wstringstream msg;
                             msg << "Line must be between 1 and " << lines;
                             message_box(
-                                msg.str().c_str(), MB_ICONEXCLAMATION | MB_OKCANCEL
+                                msg.str().c_str(),
+                                MB_ICONEXCLAMATION | MB_OKCANCEL
                             );
                         }
                         else
@@ -82,4 +85,9 @@ std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
             break;
     }
     return std::nullopt;
+}
+
+void Goto_Dialogue::on_display() noexcept
+{
+    // Empty function just so you can put a breakpoint on it!
 }

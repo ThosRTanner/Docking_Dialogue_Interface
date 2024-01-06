@@ -42,7 +42,10 @@ class Demo_Plugin : public Plugin
     {
         Menu_Entry_Hello_File,
         Menu_Entry_Hello_Message,
-        Menu_Entry_Goto_Dialogue
+        Menu_Entry_Separator_1,
+        Menu_Entry_Goto_Dialogue,
+        Menu_Entry_Separator_2,
+        Menu_Entry_About_Dialogue
     };
 
   private:
@@ -61,6 +64,7 @@ class Demo_Plugin : public Plugin
     void hello_file() const noexcept;
     void hello_message() const;
     void goto_dialogue();
+    void about_dialogue() const;
 
     std::unique_ptr<Goto_Dialogue> goto_dialogue_;
 };

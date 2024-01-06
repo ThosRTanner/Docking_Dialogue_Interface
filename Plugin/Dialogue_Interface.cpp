@@ -86,6 +86,30 @@ int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
     );
 }
 
+HWND Dialogue_Interface::create_dialogue(int dialogue) noexcept
+{
+#pragma warning(suppress : 26490)
+    return ::CreateDialogParam(
+        plugin()->module(),
+        MAKEINTRESOURCE(dialogue),
+        plugin()->get_notepad_window(),
+        process_dialogue_message,
+        reinterpret_cast<LPARAM>(this)
+    );
+}
+
+INT_PTR Dialogue_Interface::create_modal_dialogue(int dialogue) noexcept
+{
+#pragma warning(suppress : 26490)
+    return ::DialogBoxParam(
+        plugin()->module(),
+        MAKEINTRESOURCE(dialogue),
+        plugin()->get_notepad_window(),
+        process_dialogue_message,
+        reinterpret_cast<LPARAM>(this)
+    );
+}
+
 std::optional<LONG_PTR> Dialogue_Interface::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept(false)
@@ -144,8 +168,9 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
         auto retval = instance->on_dialogue_message(message, wParam, lParam);
         if (! retval)
         {
-            retval =
-                instance->on_unhandled_dialogue_message(message, wParam, lParam);
+            retval = instance->on_unhandled_dialogue_message(
+                message, wParam, lParam
+            );
         }
         if (retval)
         {

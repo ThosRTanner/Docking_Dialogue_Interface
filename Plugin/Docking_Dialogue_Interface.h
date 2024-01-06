@@ -100,7 +100,10 @@ class Docking_Dialogue_Interface : public Dialogue_Interface
     ) noexcept override final;
 
     /** Called during construction to set up dialogue_window_ */
-    HWND create_dialogue_window(int dialogID);
+    HWND create_dialogue(int dialogID);
+
+    /** Hide the other creation method */
+    using Dialogue_Interface::create_modal_dialogue;
 
     int docked_pos_ = 0;
     bool is_floating_ = true;

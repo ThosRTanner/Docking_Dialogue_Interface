@@ -53,15 +53,9 @@ std::optional<LONG_PTR> Modal_Dialogue_Interface::on_unhandled_dialogue_message(
     return std::nullopt;
 }
 
-void Modal_Dialogue_Interface::create_dialogue_window(int dialogID) noexcept
+void Modal_Dialogue_Interface::create_modal_dialogue(int dialogID) noexcept
 {
     HWND focus = ::GetFocus();
-    result_ = ::DialogBoxParam(
-        plugin()->module(),
-        MAKEINTRESOURCE(dialogID),
-        plugin()->get_notepad_window(),
-        process_dialogue_message,
-        reinterpret_cast<LPARAM>(this)
-    );
+    result_ = Dialogue_Interface::create_modal_dialogue(dialogID);
     ::SetFocus(focus);
 }
