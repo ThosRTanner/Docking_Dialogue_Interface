@@ -2,6 +2,7 @@
 
 #include "PluginInterface.h"
 
+#include <memory>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -55,30 +56,36 @@ class Plugin
 
   protected:
     /** Utility function to aid setting up notepad++ menu definition */
-    template <typename Callbacks, typename Class, typename Callback>
+    template <
+        typename Callbacks, typename Context, typename Class, typename Callback>
     FuncItem make_callback(
-        int entry, wchar_t const *message, Callbacks contexts, Class self,
-        Callback callback, bool check = false, ShortcutKey *key = nullptr
+        int entry, wchar_t const *message, Callbacks &contexts, Context context,
+        Class self, Callback callback, bool checked = false,
+        ShortcutKey *key = nullptr
     )
     {
+        contexts[entry] = std::make_unique<Context>(context);
+        //In C++20 this could be made a little easier to read.
         FuncItem item;
-        item._cmdID = entry;
         std::ignore = lstrcpyn(
             &item._itemName[0],
             message,
             sizeof(item._itemName) / sizeof(wchar_t)
         );
         item._pFunc = contexts[entry]->reserve(self, callback);
-        item._init2Check = check;
+        item._cmdID = entry;
+        item._init2Check = checked;
         item._pShKey = key;
         return item;
     }
 
     /** Wrapper around make_callback for separators */
-    template <typename Callbacks, typename Class>
-    FuncItem make_separator(int entry, Callbacks contexts, Class self)
+    template <typename Callbacks, typename Context, typename Class>
+    FuncItem make_separator(
+        int entry, Callbacks &contexts, Context context, Class self
+    )
     {
-        return make_callback(entry, L"---", contexts, self, nullptr);
+        return make_callback(entry, L"---", contexts, context, self, nullptr);
     }
 
     /** Throw up a message box
@@ -117,3 +124,27 @@ class Plugin
     NppData npp_data_;
     std::wstring name_;
 };
+
+#define DEFINE_PLUGIN_MENU_CALLBACKS(class)         \
+    typedef Callback_Context_Base<class> Callbacks; \
+    template <>                                     \
+    Callbacks::Contexts Callbacks::contexts = {}
+
+// Warning - this won't work if you have /Zc:preprocessor set
+// Could try __VA_OPT__ and C++20
+
+#define PLUGIN_MENU_MAKE_CALLBACK(class, entry, text, method, ...) \
+    make_callback(                                                 \
+        entry,                                                     \
+        text,                                                      \
+        Callbacks::contexts,                                       \
+        Callback_Context<class, entry>(),                          \
+        this,                                                      \
+        &class::method,                                            \
+        __VA_ARGS__                                                \
+    )
+
+#define PLUGIN_MENU_MAKE_SEPARATOR(class, entry)                           \
+    make_separator(                                                        \
+        entry, Callbacks::contexts, Callback_Context<class, entry>(), this \
+    )

@@ -17,11 +17,11 @@ std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
-    //Sadly this is not trivial and should probably be forced to be implemented somehow.
     switch (message)
     {
         case WM_INITDIALOG:
         {
+            //Possibly this should be default behaviour?
             centre_dialogue();
         }
         break;

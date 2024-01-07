@@ -44,44 +44,33 @@ Notepad++ queries your DLL for a list of function pointers. Using these to call 
 
 (If you're interested in how this works, see http://p-nand-q.com/programming/cplusplus/using_member_functions_with_c_function_pointers.html )
 
-You'll need to provide a table like this:
+In order to make this work, 3 macros have been provided to make it easier to set things up consistently.
+
+The first thing you need to do is to set up the context map.
 
 ```
-typedef Callback_Context_Base<My_Plugin> Callbacks;
-
-#define CALLBACK_ENTRY(N) { (N), std::make_shared<Callback_Context<My_Plugin, (N)>>() }
-
-template <> Callbacks::Contexts Callbacks::contexts = {
-    CALLBACK_ENTRY(0),
-    CALLBACK_ENTRY(1),
-    ...
-    CALLBACK_ENTRY(last)
-};
+DEFINE_PLUGIN_MENU_CALLBACKS(My_Plugin);
 ```
 
-and provide this function in your class (you may want to use macros here, considering the level of boilerplate):
+You need to define an enumeration in your class for the menu entries, and then can implement the `on_get_menu_entries` method in your class like this:
 
 ```
 std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
 {
     static std::vector<FuncItem> res = {
-        make_callback(
-            0, L"Entry 0", Callbacks::contexts, this, &My_Plugin::callback_0
-        ),
-        make_callback(
-            1, L"Entry 1", Callbacks::contexts, this, &My_Plugin::callback_1
-        ),
+        PLUGIN_MENU_MAKE_CALLBACK(My_Plugin, Entry_0, L"Entry 0", callback_0),
+        PLUGIN_MENU_MAKE_CALLBACK(My_Plugin, Entry_1, L"Entry 1", callback_1),
         //...
         //If you want to add separators, do so like this...
-        make_separator(item number, Callbacks::contexts, this),
+        PLUGIN_MENU_MAKE_SEPARATOR(My_Plugin, Entry_2),
         //
-        make_callback(
-            last, L"Entry the last", Callbacks::contexts, this, &My_Plugin::callback_last
-        )
+        PLUGIN_MENU_MAKE_CALLBACK(My_Plugin, Entry_Last, L"Entry the last", callback_last)
     };
     return res;
 };
 ```
+
+You can also set the `init2Check` (which causes the menu item to get a check mark against it), and shortcut key as arguments to the macro. For most situations, you'll probably want to add your own macro because typing all those `My_Plugin, `s can get tedious.
 
 _Notes_:
 1. Notepad++ expects at least one menu entry, and it will crash if you provide none.
@@ -147,16 +136,18 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your plugin name as the title.
 
-2. `template <typename Callbacks, typename Class, typename Callback>
-    FuncItem make_callback(int entry, wchar_t const *message, Callbacks contexts, Class self,
-        Callback callback, bool check = false, ShortcutKey *key = nullptr)`
+2. `template <typename Callbacks, typename Context, typename Class, typename Callback>
+    FuncItem make_callback(
+        int entry, wchar_t const *message, Callbacks &contexts, Context context,
+        Class self, Callback callback, bool check = false, ShortcutKey *key = nullptr
+    )`
 
-    This is a utility function to aid setting up notepad++ menu definition. See above for usage.
+    This is a utility function to aid setting up notepad++ menu definition. You are strongly advised to use the `PLUGIN_MENU_MAKE_CALLBACK` macro for this.
 
-3. `template <typename Callbacks, typename Class>
-    FuncItem make_separator(int entry, Callbacks contexts, Class self)`
+3. `template <typename Callbacks, typename Context, typename Class>
+    FuncItem make_separator(int entry, Callbacks &contexts, Context context, Class self)`
 
-    Simplified wrapper around `make_callback` for menu separators.
+    Simplified wrapper around `make_callback` for menu separators. You are strongly advised to use the `PLUGIN_MENU_MAKE_SEPARATOR` macro for this.
 
 ## Processing scintilla notifications
 To be written

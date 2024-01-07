@@ -2,22 +2,18 @@
 
 /** This contains a class which permits easy (ish) setup of callbacks.
  *
- * To use it you have to create an array of callbacks like this (and
+ * To use it you have to create a static map of an array of callbacks like this (and
  * sadly it must be a static)
  *
-
- typedef Callback_Context_Base<My_Plugin> Callbacks;
-
- template <> Callbacks::Contexts
-    Callbacks::contexts = {
-        std::make_shared<Callback_Context<My_Plugin, 0>>(),
-        std::make_shared<Callback_Context<My_Plugin, 1>>(),
-        std::make_shared<Callback_Context<My_Plugin, 2>>(),
-        std::make_shared<Callback_Context<My_Plugin, 3>>(),
-        std::make_shared<Callback_Context<My_Plugin, 4>>()};
-
  *
- * and then populate as necessary with
+ * typedef Callback_Context_Base<My_Plugin> Callbacks;
+ * template <> Callbacks::Contexts Callbacks::contexts = {};
+ *
+ * Then set up as many contexts as you'll need with
+ *
+ * contexts[id] = std::make_unique<Callback_Context<My_Plugin, id>>()
+ *
+ * and populate contexts as necessary with
  *
  * callback_fn = Callbacks::contexts[entry]->reserve(this, callback);
  *
@@ -123,9 +119,7 @@ class Callback_Context_Base
     };
 
   public:
-    // I would use a unique_ptr here, but you can't use that with initialiser
-    // lists.
-    typedef std::unordered_map<int, std::shared_ptr<Callback_Context_Base>>
+    typedef std::unordered_map<int, std::unique_ptr<Callback_Context_Base>>
         Contexts;
     static Contexts contexts;
 };

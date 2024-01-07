@@ -26,26 +26,7 @@
 
 #include <memory>
 
-typedef Callback_Context_Base<Demo_Plugin> Callbacks;
-
-#define CALLBACK_ENTRY(N)                                                     \
-    {                                                                         \
-        Demo_Plugin::N,                                                       \
-            std::make_shared<Callback_Context<Demo_Plugin, Demo_Plugin::N>>() \
-    }
-
-template <>
-Callbacks::Contexts Callbacks::contexts = {
-#pragma warning(push)
-#pragma warning(disable : 26426)
-    CALLBACK_ENTRY(Menu_Entry_Hello_File),
-    CALLBACK_ENTRY(Menu_Entry_Hello_Message),
-    CALLBACK_ENTRY(Menu_Entry_Separator_1),
-    CALLBACK_ENTRY(Menu_Entry_Goto_Dialogue),
-    CALLBACK_ENTRY(Menu_Entry_Separator_2),
-    CALLBACK_ENTRY(Menu_Entry_About_Dialogue)
-#pragma warning(pop)
-};
+DEFINE_PLUGIN_MENU_CALLBACKS(Demo_Plugin);
 
 wchar_t const *Demo_Plugin::get_plugin_name() noexcept
 {
@@ -61,20 +42,20 @@ Demo_Plugin::~Demo_Plugin()
     // Remember to deallocate any assigned memory here.
 }
 
-#define MAKE_CALLBACK(entry, text, method) \
-    make_callback(entry, text, Callbacks::contexts, this, &Demo_Plugin::method)
-
-#define MAKE_SEPARATOR(entry) \
-    make_separator(entry, Callbacks::contexts, this)
-
 std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
 {
+#define MAKE_CALLBACK(entry, text, method, ...) \
+    PLUGIN_MENU_MAKE_CALLBACK(Demo_Plugin, entry, text, method, __VA_ARGS__)
+#define MAKE_SEPARATOR(entry) PLUGIN_MENU_MAKE_SEPARATOR(Demo_Plugin, entry)
+
+    static ShortcutKey f5 = {true, false, true, VK_F5};
+
     static std::vector<FuncItem> res = {
         MAKE_CALLBACK(
             Menu_Entry_Hello_File, L"Hello Notepad++ File", hello_file
         ),
         MAKE_CALLBACK(
-            Menu_Entry_Hello_Message, L"Hello Notepad++ Message", hello_message
+            Menu_Entry_Hello_Message, L"Hello Notepad++ Message", hello_message, false, &f5
         ),
         MAKE_SEPARATOR(Menu_Entry_Separator_1),
         MAKE_CALLBACK(
