@@ -1,3 +1,16 @@
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// at your option any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #pragma once
 
 #include <basetsd.h>
@@ -70,16 +83,22 @@ class Dialogue_Interface
      */
     int message_box(wchar_t const *message, UINT type) const noexcept;
 
-    /** Creates a non-modal dialogue */
-    HWND create_dialogue(int dialogue) noexcept;
+    /** Creates a non-modal dialogue.
+     *
+     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can hide it.
+     */
+    virtual HWND create_dialogue(int dialogue);
 
-    /** Create a modal dialogue */
-    INT_PTR create_modal_dialogue(int dialogue) noexcept;
+    /** Create a modal dialogue.
+     *
+     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can hide it.
+     */
+    virtual INT_PTR create_modal_dialogue(int dialogue) noexcept;
 
   private:
     /** Implement this to handle messages.
      *
-     * Return std::nullopt to (to return FALSE to windows dialog processing), or
+     * Return std::nullopt to return FALSE to windows dialog processing, or
      * a value to be set with SetWindowLongPtr (in which case TRUE will be
      * returned). Note that some messages require you to return FALSE
      * (std::nullopt) even if you do handle them.

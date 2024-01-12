@@ -11,37 +11,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "About_Dialogue.h"
+#include "Non_Modal_Dialogue_Interface.h"
 
-#include "resource.h"
+#include "Plugin.h"
 
-#include <windows.h>
-//#include <WinUser.h>
-
-About_Dialogue::About_Dialogue(Plugin const *plugin) :
-    Modal_Dialogue_Interface(plugin)
+Non_Modal_Dialogue_Interface::Non_Modal_Dialogue_Interface(
+    int dialogue_ID, Plugin const *plugin
+) :
+    Non_Modal_Dialogue_Base(dialogue_ID, plugin)
 {
-    create_modal_dialogue(IDD_ABOUT_DIALOG);
 }
 
-About_Dialogue::~About_Dialogue() = default;
+Non_Modal_Dialogue_Interface::~Non_Modal_Dialogue_Interface()
+{
+}
 
-std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
+std::optional<LONG_PTR>
+Non_Modal_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
-    switch (message)
-    {
-        case WM_INITDIALOG:
-        {
-            //Possibly this should be default behaviour?
-            centre_dialogue();
-        }
-        break;
-
-        default:
-            break;
-    }
-
     return std::nullopt;
 }

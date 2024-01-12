@@ -77,6 +77,7 @@ _Notes_:
 1. The returned vector must not be destroyed till notepad++ exits. hence the use of `static`. You could achieve this in other ways of course.
 
 ## The `Plugin` base class
+
 This class provides a lot of boilerplate code and 3 virtual functions, the first of which you must implement. Default null implementations are supplied for the other two.
 
 ### Public API
@@ -150,24 +151,33 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
     Simplified wrapper around `make_callback` for menu separators. You are strongly advised to use the `PLUGIN_MENU_MAKE_SEPARATOR` macro for this.
 
 ## Processing scintilla notifications
+
 To be written
 
 ## Processing notepad++ messages
+
 To be written
 
-## Dialogue API
+## Dialogue APIs
 
-This repo contains base classes for both docking dialogues (which can be docked to any side of the notepad++ window or be free floating) and model dialogues (the ones where you have to press OK or cancel before you can resume editing), which share a certain amount of common code.
+This repo contains base classes for docking dialogues (which can be docked to any side of the notepad++ window or be free floating), non-modal (or modeless) dialogues, and modal dialogues (the ones where you have to press OK or cancel before you can resume editing), which all share a certain amount of common code.
 
 In order to implement your class, you subclass the appropriate _xxx_Dialogue_Interface_ class and implement the `on_dialogue_message` virtual method in order to process messages.
 
 *Important Note*
 Your `on_dialogue_message` method will get called with the `WM_INITDIALOG` message. However, be aware that your constructor may not have had all the members initialised at the point, so be very careful what you do in response.
 
-### The Dialogue_Interface class
-document the constructor here
+### The Dialogue_Interface base class
 
-##### (Private) Virtual methods you should implement
+This is a base class to all of the dialogue classes, and so all the protected methods can be used.
+
+#### Public API
+
+1. `Dialogue_Interface(Plugin const *)`
+
+    Stashes a pointer to the plugin class and gets hold of the current module name.
+
+##### (Private) Virtual Methods you should implement
 
 1. `virtual std::optional<LONG_PTR> on_dialogue_message(UINT message, WPARAM wParam, LPARAM lParam)`
 
@@ -176,7 +186,7 @@ document the constructor here
 
      `message`, `wParam` and `lParam` are the values passed to a `DLGPROC` function by windows,
 
-### Utility (protected) methods you can call
+### (Protected) Utility Methods
 
 1. `Plugin const *plugin() const noexcept`
 
@@ -206,32 +216,46 @@ document the constructor here
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your dialogue name as the title.
 
-### Creating a docking dialogue
+### Creating a non modal (aka modeless) dialogue - the Non_Modal_Dialogue_Interface class
 
-When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class.
+When you want to create a non-modal dialogue, you should create a subclass of the `Non_Modal_Dialogue_Interface` class. This contains the necessary calls to notepad++ to ensure it knows to send your dialogue keystrokes and such.
+
+In your constructor, you must
+
+1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the base class will retain the window handle.
+
+1. Do any window setup required (see the important note above about `WM_INITDIALOG` and do the setup in the constructor, not in the `on_dialog_message` callback)
+
+1. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+
+#### Public Methods
+
+1. `Non_Modal_Dialogue_Interface(int dialogue_id, Plugin const *plugin)`
+
+   Constructor for the class. The dialogue ID is the appropriate identifier from `resource.h`.
+
+### Creating docking dialogue - the Docking_Dialogue_Interface class
+
+When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class. A docking dialogue is pretty much a modeless dialogue, except it is able to be docked in the main notepad++ window (in the same way as e.g. the results of the find dialogue).
 
 In your constructor, you must
 
 1. Call the base class constructor with the ID of the dialogue (i.e. the ID from resource.h), and a pointer to your main plugin instance. Your dialogue will be created as part of this, and the `Docking_Dialogue_Interface` class will retain the window handle.
 
-2. Do any window setup required (see the important note above about `WM_INITDIALOG` and do the setup in the constructor, not in the `on_dialog_message` callback)
+1. Do any window setup required (see the important note above about `WM_INITDIALOG` and do the setup in the constructor, not in the `on_dialog_message` callback)
 
-3. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
+1. Call `register_dialogue` in order to tell notepad++ that your new dialogue is ready to be used.
 
-4. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
+1. Your class will start receiving messages to process via `on_dialogue_message` (if you have implemented it).
 
 *Important Notes*:
 1. The actual dialogue you create needs to have a caption bar with a title if you want Notepad++ to save the state between sessions.
 
-#### Docking_Dialog_Interface class
-
-This handles the API with notepad++ and provides some default behaviour and some utility methods.
-
-##### Public methods
+#### Public Methods
 
 1. `Docking_Dialogue_Interface(int dialogue_id, Plugin const *plugin)`
 
-   Constructor for the class.
+   Constructor for the class. The dialogue ID is the appropriate identifier from `resource.h`.
 
 1. `void display() noexcept`
 
@@ -245,7 +269,7 @@ This handles the API with notepad++ and provides some default behaviour and some
 
     Returns `true` if the dialogue is currently hidden.
 
-##### (Private) Virtual methods
+#### (Private) Virtual Methods
 
 1. `virtual void on_display() noexcept`
 
@@ -255,7 +279,7 @@ This handles the API with notepad++ and provides some default behaviour and some
 
     This is called whenever the dialogue is about to be hidden.
 
-##### (Protected) Utility Methods
+#### (Protected) Utility Methods
 
 1. `void register_dialogue(int menu_index, Position position, HICON icon = nullptr, wchar_t const *extra = nullptr) noexcept`
 
@@ -273,23 +297,25 @@ This handles the API with notepad++ and provides some default behaviour and some
 
     `extra` is extra text to display in the title bar if required.
 
-## Modal dialogues
+### Modal dialogues - the Modal_Dialogue_Interface class
 
 A modal dialogue doesn't return until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed so the your constructor needs to be implemented a little differently to that of a docking dialogue.
 
 You should do all the work you *can* do before calling the `create_dialogue_window` method. Any further work needs to be done in the `on_dialogue_message` callback function.
 
-### Modal_Dialogue_Interface class
+The class provides default handlers for 'OK', 'Cancel' and 'Close' buttons. These return `Clicked_OK`, `Clicked_Cancel` and `Clicked_Close` to the API (which are NOT 0 or -1 - see below). Of course, you do not have to use the default handler, and may handle the events yourself in the `on_dialogue_message` function.
 
-This class provides default handlers for 'OK', 'Cancel' and 'Close' buttons. These return `Clicked_OK`, `Clicked_Cancel` and `Clicked_Close` to the API (which are NOT 0 or -1 - see below). Of course, you do not have to use the default handler, and may handle the events yourself in the `on_dialogue_message` function.
+#### Public Methods
 
-#### Public methods
+1. `Modal_Dialogue_Interface(Plugin const *)
+
+    The constructor. This just takes a pointer to the plugin class. It doesn't take a dialogue id, you need to pass that into `create_modal_dialogue`.
 
 1. `INT_PTR get_result() const noexcept;`
 
     This returns the result passed to the `EndDialog` method. *Note* Avoid returning 0 or -1 via `EndDialog` as they are indistinguishable from the values returned when the windows `DialogBox` function gets an error.
 
-#### Protected (utility) methods
+#### (Protected) Utility Methods
 
 1. `void create_modal_dialogue(int dialogID) noexcept;`
 

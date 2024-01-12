@@ -302,6 +302,8 @@
     <ClInclude Include="Plugin\Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Docking_Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Modal_Dialogue_Interface.h" />
+    <ClInclude Include="Plugin\Non_Modal_Dialogue_Base.h" />
+    <ClInclude Include="Plugin\Non_Modal_Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Plugin.h" />
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +314,8 @@
     <ClCompile Include="Plugin\dllmain.cpp" />
     <ClCompile Include="Plugin\Docking_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Modal_Dialogue_Interface.cpp" />
+    <ClCompile Include="Plugin\Non_Modal_Dialogue_Base.cpp" />
+    <ClCompile Include="Plugin\Non_Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
   </ItemGroup>
   <ItemGroup>

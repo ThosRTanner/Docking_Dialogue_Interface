@@ -22,33 +22,15 @@
 
 #include <WinUser.h>
 
-#include <stdexcept>
-#include <system_error>
-
-namespace
-{
-
-std::wstring get_dialogue_name(HWND dialog_handle)
-{
-    TCHAR temp[MAX_PATH] = {0};
-    ::GetWindowText(dialog_handle, &temp[0], MAX_PATH);
-    return &temp[0];
-}
-
-}    // namespace
-
 Docking_Dialogue_Interface::Docking_Dialogue_Interface(
     int dialogue_ID, Plugin const *plugin
 ) :
-    Dialogue_Interface(plugin)
+    Non_Modal_Dialogue_Base(dialogue_ID, plugin)
 {
-    create_dialogue(dialogue_ID);
-    send_dialogue_info(NPPM_MODELESSDIALOG, MODELESSDIALOGADD);
 }
 
 Docking_Dialogue_Interface::~Docking_Dialogue_Interface()
 {
-    send_dialogue_info(NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE);
 }
 
 void Docking_Dialogue_Interface::display() noexcept
@@ -114,14 +96,7 @@ void Docking_Dialogue_Interface::on_hide() noexcept
 {
 }
 
-void Docking_Dialogue_Interface::send_dialogue_info(
-    int msg, int wParam
-) noexcept
-{
-    plugin()->send_to_notepad(msg, wParam, window());
-}
-
-std::optional<LONG_PTR> Docking_Dialogue_Interface::on_unhandled_dialogue_message(
+std::optional<LONG_PTR> Docking_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
     UINT message, WPARAM, LPARAM lParam
 ) noexcept
 {
@@ -171,37 +146,4 @@ std::optional<LONG_PTR> Docking_Dialogue_Interface::on_unhandled_dialogue_messag
             break;
     }
     return std::nullopt;
-}
-
-HWND Docking_Dialogue_Interface::create_dialogue(int dialogID)
-{
-    HWND const dialogue_window{Dialogue_Interface::create_dialogue(dialogID)};
-    if (dialogue_window == nullptr)
-    {
-        char buff[2048];
-        auto const err = GetLastError();
-        try
-        {
-            std::snprintf(
-                &buff[0],
-                sizeof(buff),
-                "Could not create dialogue: %s",
-                std::generic_category().message(err).c_str()
-            );
-        }
-        catch (std::exception const &e)
-        {
-#pragma warning(suppress : 26447)    // MS Bug with e.what() decl
-            std::snprintf(
-                &buff[0],
-                sizeof(buff),
-                "Could not create dialogue: Error code %08x then got %s",
-                err,
-                e.what()
-            );
-        }
-
-        throw std::runtime_error(&buff[0]);
-    }
-    return dialogue_window;
 }

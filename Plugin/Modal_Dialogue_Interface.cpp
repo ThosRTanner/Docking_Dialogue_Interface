@@ -90,9 +90,10 @@ std::optional<LONG_PTR> Modal_Dialogue_Interface::on_unhandled_dialogue_message(
     return std::nullopt;
 }
 
-void Modal_Dialogue_Interface::create_modal_dialogue(int dialogID) noexcept
+INT_PTR Modal_Dialogue_Interface::create_modal_dialogue(int dialogID) noexcept
 {
     HWND focus = ::GetFocus();
     result_ = Dialogue_Interface::create_modal_dialogue(dialogID);
     ::SetFocus(focus);
+    return result_;
 }

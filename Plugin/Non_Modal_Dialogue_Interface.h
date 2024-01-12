@@ -1,0 +1,54 @@
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// at your option any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#pragma once
+
+#include "Non_Modal_Dialogue_Base.h"
+
+#include <basetsd.h>
+
+#include <optional>
+
+// Forward declarations.
+class Plugin;
+
+/** This provides an abstraction for creating a non modal non docking dialogue.
+ * 
+ */
+class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
+{
+  public:
+    /** Create a docking dialogue.
+     *
+     * dialogue_id is the resource number of the dialogue
+     */
+    Non_Modal_Dialogue_Interface(int dialogue_id, Plugin const *plugin);
+
+    Non_Modal_Dialogue_Interface(Non_Modal_Dialogue_Interface const &) = delete;
+    Non_Modal_Dialogue_Interface(Non_Modal_Dialogue_Interface &&) = delete;
+    Non_Modal_Dialogue_Interface &
+    operator=(Non_Modal_Dialogue_Interface const &) = delete;
+    Non_Modal_Dialogue_Interface &operator=(Non_Modal_Dialogue_Interface &&) =
+        delete;
+
+    virtual ~Non_Modal_Dialogue_Interface() = 0;
+
+  private:
+    /** Handler for unhandled messages
+     *
+     * Needs to exist so it can be final.
+     */
+    std::optional<LONG_PTR> on_unhandled_non_modal_dialogue_message(
+        UINT message, WPARAM wParam, LPARAM lParam
+    ) noexcept override final;
+};

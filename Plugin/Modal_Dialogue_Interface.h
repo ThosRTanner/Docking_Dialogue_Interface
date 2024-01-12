@@ -55,7 +55,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
 
   protected:
     /** You need to call this from your constructor */
-    void create_modal_dialogue(int dialogID) noexcept;
+    INT_PTR create_modal_dialogue(int dialogID) noexcept final;
 
     /** Wrapper round ::EndDialog
      *

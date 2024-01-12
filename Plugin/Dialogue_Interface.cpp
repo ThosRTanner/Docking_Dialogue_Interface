@@ -1,3 +1,16 @@
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// at your option any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "Dialogue_Interface.h"
 
 #include "Plugin.h"
@@ -5,6 +18,9 @@
 #include <ShlwApi.h>
 #include <WinUser.h>
 #include <comutil.h>
+
+#include <stdexcept>
+#include <system_error>
 
 #ifdef _DEBUG
 #pragma comment(lib, "comsuppwd.lib")
@@ -86,16 +102,44 @@ int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
     );
 }
 
-HWND Dialogue_Interface::create_dialogue(int dialogue) noexcept
+HWND Dialogue_Interface::create_dialogue(int dialogue) noexcept(false)
 {
 #pragma warning(suppress : 26490)
-    return ::CreateDialogParam(
+    auto dialogue_window = ::CreateDialogParam(
         plugin()->module(),
         MAKEINTRESOURCE(dialogue),
         plugin()->get_notepad_window(),
         process_dialogue_message,
         reinterpret_cast<LPARAM>(this)
     );
+    if (dialogue_window == nullptr)
+    {
+        char buff[2048];
+        auto const err = GetLastError();
+        try
+        {
+            std::snprintf(
+                &buff[0],
+                sizeof(buff),
+                "Could not create dialogue: %s",
+                std::generic_category().message(err).c_str()
+            );
+        }
+        catch (std::exception const &e)
+        {
+#pragma warning(suppress : 26447)    // MS Bug with e.what() decl
+            std::snprintf(
+                &buff[0],
+                sizeof(buff),
+                "Could not create dialogue: Error code %08x then got %s",
+                err,
+                e.what()
+            );
+        }
+
+        throw std::runtime_error(&buff[0]);
+    }
+    return dialogue_window;
 }
 
 INT_PTR Dialogue_Interface::create_modal_dialogue(int dialogue) noexcept

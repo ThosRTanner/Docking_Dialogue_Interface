@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "Dialogue_Interface.h"
+#include "Non_Modal_Dialogue_Interface.h"
 
 #include <basetsd.h>
 
@@ -26,7 +26,7 @@ typedef struct HICON__ *HICON;
 class Plugin;
 
 /** This provides an abstraction for creating a docking dialogue. */
-class Docking_Dialogue_Interface : public Dialogue_Interface
+class Docking_Dialogue_Interface : public Non_Modal_Dialogue_Base
 {
   public:
     /** Create a docking dialogue.
@@ -91,19 +91,10 @@ class Docking_Dialogue_Interface : public Dialogue_Interface
     /** Implement this if you have your own stuff to do when hiding */
     virtual void on_hide() noexcept;
 
-    /** Utility wrapper round SendMessage to send pointers to our self */
-    void send_dialogue_info(int msg, int wParam = 0) noexcept;
-
     /** Handler for unhandled messages */
-    std::optional<LONG_PTR> on_unhandled_dialogue_message(
+    std::optional<LONG_PTR> on_unhandled_non_modal_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
-
-    /** Called during construction to set up dialogue_window_ */
-    HWND create_dialogue(int dialogID);
-
-    /** Hide the other creation method */
-    using Dialogue_Interface::create_modal_dialogue;
 
     int docked_pos_ = 0;
     bool is_floating_ = true;
