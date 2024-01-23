@@ -75,7 +75,13 @@ class Dialogue_Interface
     RECT getParentRect() const noexcept;
 
     /** Utility to get a dialogue item */
-    HWND GetDlgItem(int) const noexcept;
+    HWND GetDlgItem(int, HWND window = nullptr) const noexcept;
+
+    /** Get text of item */
+    std::wstring get_window_text(int, HWND window = nullptr) const;
+
+    /** Set the focus to the given item */
+    void SetFocus(int) const;
 
     /** Throw up a message box
      *
@@ -87,7 +93,7 @@ class Dialogue_Interface
      *
      * Note: This is virtual so that the xxxx_Dialogue_Interface classes can hide it.
      */
-    virtual HWND create_dialogue(int dialogue);
+    virtual HWND create_dialogue(int dialogue, HWND parent);
 
     /** Create a modal dialogue.
      *

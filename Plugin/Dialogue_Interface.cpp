@@ -89,9 +89,24 @@ RECT Dialogue_Interface::getParentRect() const noexcept
     return rc;
 }
 
-HWND Dialogue_Interface::GetDlgItem(int item) const noexcept
+HWND Dialogue_Interface::GetDlgItem(int item, HWND window) const noexcept
 {
-    return ::GetDlgItem(dialogue_window_, item);
+    return ::GetDlgItem(window == nullptr ? dialogue_window_ : window, item);
+}
+
+std::wstring Dialogue_Interface::get_window_text(int item, HWND window) const
+{
+    auto handle = GetDlgItem(item, window);
+    int length = GetWindowTextLength(handle) + 1;
+    std::vector<wchar_t> buffer;
+    buffer.resize(length);
+    length = GetWindowText(handle, &buffer[0], length);
+    return std::wstring(&*buffer.begin(), length);
+}
+
+void Dialogue_Interface::SetFocus(int item) const
+{
+    ::SetFocus(GetDlgItem(item));
 }
 
 int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
@@ -102,13 +117,13 @@ int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
     );
 }
 
-HWND Dialogue_Interface::create_dialogue(int dialogue) noexcept(false)
+HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(false)
 {
 #pragma warning(suppress : 26490)
     auto dialogue_window = ::CreateDialogParam(
         plugin()->module(),
         MAKEINTRESOURCE(dialogue),
-        plugin()->get_notepad_window(),
+        parent == nullptr ? plugin()->get_notepad_window() : parent,
         process_dialogue_message,
         reinterpret_cast<LPARAM>(this)
     );
@@ -210,17 +225,17 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
     try
     {
         auto retval = instance->on_dialogue_message(message, wParam, lParam);
-        if (! retval)
+        if (not retval.has_value())
         {
             retval = instance->on_unhandled_dialogue_message(
                 message, wParam, lParam
             );
         }
-        if (retval)
+        if (retval.has_value())
         {
-            SetWindowLongPtr(window_handle, DWLP_MSGRESULT, *retval);
+            SetWindowLongPtr(window_handle, DWLP_MSGRESULT, retval.value());
         }
-        return static_cast<bool>(retval);
+        return retval.has_value();
     }
     catch (std::exception const &e)
     {

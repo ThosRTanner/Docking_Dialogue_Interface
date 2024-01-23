@@ -16,9 +16,9 @@
 #include "Plugin.h"
 
 Non_Modal_Dialogue_Interface::Non_Modal_Dialogue_Interface(
-    int dialogue_ID, Plugin const *plugin
+    int dialogue_ID, Plugin const *plugin, HWND parent
 ) :
-    Non_Modal_Dialogue_Base(dialogue_ID, plugin)
+    Non_Modal_Dialogue_Base(dialogue_ID, plugin, parent)
 {
 }
 

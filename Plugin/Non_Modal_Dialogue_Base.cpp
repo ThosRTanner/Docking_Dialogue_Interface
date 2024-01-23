@@ -18,11 +18,11 @@
 #include <Notepad_plus_msgs.h>
 
 Non_Modal_Dialogue_Base::Non_Modal_Dialogue_Base(
-    int dialogue_ID, Plugin const *plugin
+    int dialogue_ID, Plugin const *plugin, HWND parent
 ) :
     Dialogue_Interface(plugin)
 {
-    create_dialogue(dialogue_ID);
+    create_dialogue(dialogue_ID, parent);
     send_dialogue_info(NPPM_MODELESSDIALOG, MODELESSDIALOGADD);
 }
 

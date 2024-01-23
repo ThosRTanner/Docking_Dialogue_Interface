@@ -52,7 +52,7 @@ The first thing you need to do is to set up the context map.
 DEFINE_PLUGIN_MENU_CALLBACKS(My_Plugin);
 ```
 
-You need to define an enumeration in your class for the menu entries, and then can implement the `on_get_menu_entries` method in your class like this:
+You need to define an enumeration in your class for the menu entries, and then you can implement the `on_get_menu_entries` method in your class like this:
 
 ```
 std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
@@ -70,7 +70,7 @@ std::vector<FuncItem> &My_Plugin::on_get_menu_entries()
 };
 ```
 
-You can also set the `init2Check` (which causes the menu item to get a check mark against it), and shortcut key as arguments to the macro. For most situations, you'll probably want to add your own macro because typing all those `My_Plugin, `s can get tedious.
+You can also set the `init2Check` flag (which causes the menu item to get a check mark against it), and shortcut key as arguments to the macro. For most situations, you'll probably want to add your own macro because typing all those `My_Plugin, `s can get tedious.
 
 _Notes_:
 1. Notepad++ expects at least one menu entry, and it will crash if you provide none.
@@ -188,6 +188,8 @@ This is a base class to all of the dialogue classes, and so all the protected me
 
 ### (Protected) Utility Methods
 
+Most of these are wrappers round windows functions (or macros) of the same or similar name.
+
 1. `Plugin const *plugin() const noexcept`
 
     Get hold of plugin object for useful boilerplate
@@ -208,9 +210,17 @@ This is a base class to all of the dialogue classes, and so all the protected me
 
     Utility to get the current window rectangle
     
-1. `HWND GetDlgItem(int) const noexcept`
+1. `HWND GetDlgItem(int, HWND = nullptr) const noexcept`
 
-    Utility to get a dialogue item
+    Utility to get a dialogue item. Normally the item would be from your own window, in which case there's no need to pass a window handle, but if you need to get hold of something from another window, you can pass the window handle in.
+
+1. `std::wstring get_window_text(int, HWND window = nullptr) const`
+
+    A wrapper round `GetWindowText` which gets the text of the specified item in the window. Normally the item would be from your own window, in which case there's no need to pass a window handle, but if you need to get hold of something from another window, you can pass the window handle in.
+
+1. `void SetFocus(int) const`
+
+    Sets the focus to the given item.
 
 1. `int message_box(std::wstring const &message, UINT type) const noexcept;`
 
@@ -230,13 +240,13 @@ In your constructor, you must
 
 #### Public Methods
 
-1. `Non_Modal_Dialogue_Interface(int dialogue_id, Plugin const *plugin)`
+1. `Non_Modal_Dialogue_Interface(int dialogue_id, Plugin const *plugin, HWND parent = nullptr)`
 
-   Constructor for the class. The dialogue ID is the appropriate identifier from `resource.h`.
+   Constructor for the class. The dialogue ID is the appropriate identifier from `resource.h`. You can optionally pass the handle to a parent window.
 
 ### Creating docking dialogue - the Docking_Dialogue_Interface class
 
-When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class. A docking dialogue is pretty much a modeless dialogue, except it is able to be docked in the main notepad++ window (in the same way as e.g. the results of the find dialogue).
+When you want to create a docking dialogue, you should create a subclass of the `Docking_Dialogue_Interface` class. A docking dialogue is pretty much a modeless dialogue, except it is able to be docked in the main notepad++ window (in the same way as e.g. the results of the find dialogue). Note that the parent window is always the notepad++ window so there's no parameter for that.
 
 In your constructor, you must
 
