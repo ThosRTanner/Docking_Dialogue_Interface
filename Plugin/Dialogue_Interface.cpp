@@ -21,6 +21,7 @@
 
 #include <stdexcept>
 #include <system_error>
+#include <vector>
 
 #ifdef _DEBUG
 #pragma comment(lib, "comsuppwd.lib")
@@ -34,14 +35,14 @@ namespace
 
 std::wstring get_module_name(HINSTANCE module_instance)
 {
-    TCHAR temp[MAX_PATH] = {0};
+    wchar_t temp[MAX_PATH] = {0};
     ::GetModuleFileName(module_instance, &temp[0], MAX_PATH);
     return ::PathFindFileName(&temp[0]);
 }
 
 std::wstring get_dialogue_name(HWND dialog_handle)
 {
-    TCHAR temp[MAX_PATH] = {0};
+    wchar_t temp[MAX_PATH] = {0};
     ::GetWindowText(dialog_handle, &temp[0], MAX_PATH);
     return &temp[0];
 }
@@ -100,11 +101,11 @@ std::wstring Dialogue_Interface::get_window_text(int item, HWND window) const
     int length = GetWindowTextLength(handle) + 1;
     std::vector<wchar_t> buffer;
     buffer.resize(length);
-    length = GetWindowText(handle, &buffer[0], length);
+    length = GetWindowText(handle, &*buffer.begin(), length);
     return std::wstring(&*buffer.begin(), length);
 }
 
-void Dialogue_Interface::SetFocus(int item) const
+void Dialogue_Interface::SetFocus(int item) const noexcept
 {
     ::SetFocus(GetDlgItem(item));
 }
@@ -117,7 +118,9 @@ int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
     );
 }
 
-HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(false)
+HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
+    false
+)
 {
 #pragma warning(suppress : 26490)
     auto dialogue_window = ::CreateDialogParam(
@@ -169,14 +172,38 @@ INT_PTR Dialogue_Interface::create_modal_dialogue(int dialogue) noexcept
     );
 }
 
-std::optional<LONG_PTR> Dialogue_Interface::on_dialogue_message(
+void Dialogue_Interface::add_item_callback(
+    int item, Item_Callback_Function callback_func
+)
+{
+    HWND handle = GetDlgItem(item);
+    if (callbacks_[handle].empty())
+    {
+        ::SetWindowLongPtr(
+            handle,
+            GWLP_USERDATA,
+#pragma warning(suppress : 26490)
+            reinterpret_cast<LONG_PTR>(this)
+        );
+    }
+#pragma warning(suppress : 26490)
+    auto const old_proc = SetWindowLongPtr(
+        handle,
+        GWLP_WNDPROC,
+        reinterpret_cast<LONG_PTR>(process_subclassed_message)
+    );
+    Callback_Info info{old_proc, callback_func};
+    callbacks_[handle].push_back(info);
+}
+
+std::optional<INT_PTR> Dialogue_Interface::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept(false)
 {
     return std::nullopt;
 }
 
-std::optional<LONG_PTR> Dialogue_Interface::on_unhandled_dialogue_message(
+std::optional<INT_PTR> Dialogue_Interface::on_unhandled_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
@@ -250,6 +277,45 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
         {
             instance->message_box(
                 L"Caught exception but cannot get reason", MB_OK | MB_ICONERROR
+            );
+        }
+        return FALSE;
+    }
+}
+
+LRESULT CALLBACK Dialogue_Interface::process_subclassed_message(
+    HWND handle, UINT message, WPARAM wParam, LPARAM lParam
+) noexcept
+{
+#pragma warning(suppress : 26490)
+    auto const instance = reinterpret_cast<Dialogue_Interface *>(
+        ::GetWindowLongPtr(handle, GWLP_USERDATA)
+    );
+    try
+    {
+        Callback_Info info = instance->callbacks_.at(handle).back();
+        auto res = (info.callback_func)(handle, message, wParam, lParam);
+        if (res.has_value())
+        {
+            return res.value();
+        }
+#pragma warning(suppress : 26490)
+        return (*reinterpret_cast<WNDPROC>(info.old_proc))(handle, message, wParam, lParam);
+    }
+    catch (std::exception const &e)
+    {
+        try
+        {
+            instance->message_box(
+                static_cast<wchar_t *>(static_cast<_bstr_t>(e.what())),
+                MB_OK | MB_ICONERROR
+            );
+        }
+        catch (std::exception const &)
+        {
+            instance->message_box(
+                L"Caught exception but cannot get reason",
+                MB_OK | MB_ICONERROR
             );
         }
         return FALSE;

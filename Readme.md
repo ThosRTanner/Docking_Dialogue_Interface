@@ -226,6 +226,16 @@ Most of these are wrappers round windows functions (or macros) of the same or si
 
     This is a wrapper round `::MessageBox`, and throws up a message box using your dialogue name as the title.
 
+1. `void add_item_callback(int item, Item_Callback_Function callback_func)`
+    This allows you to "subclass" (the phrase windows uses) a window element, to intercept events on it.
+
+    Item_Callback_Function is typedefed as follows
+
+    `typedef std::function<std::optional<LRESULT>(HWND, UINT, WPARAM, LPARAM)> Item_Callback_Function`
+
+    This behaves in much the same way as `on_dialogue_message`, in that you return `std::nullopt` if you've not handled the callback.
+
+
 ### Creating a non modal (aka modeless) dialogue - the Non_Modal_Dialogue_Interface class
 
 When you want to create a non-modal dialogue, you should create a subclass of the `Non_Modal_Dialogue_Interface` class. This contains the necessary calls to notepad++ to ensure it knows to send your dialogue keystrokes and such.

@@ -15,8 +15,11 @@
 
 #include <basetsd.h>
 
+#include <functional>
+#include <list>
 #include <optional>
 #include <string>
+#include <unordered_map>
 
 // Forward declarations from windows headers. Sorry.
 typedef struct tagRECT RECT;
@@ -24,6 +27,8 @@ typedef struct HWND__ *HWND;
 typedef unsigned int UINT;
 typedef UINT_PTR WPARAM;
 typedef LONG_PTR LPARAM;
+typedef LONG_PTR LRESULT;
+typedef void *HANDLE;
 
 class Plugin;
 
@@ -81,7 +86,7 @@ class Dialogue_Interface
     std::wstring get_window_text(int, HWND window = nullptr) const;
 
     /** Set the focus to the given item */
-    void SetFocus(int) const;
+    void SetFocus(int) const noexcept;
 
     /** Throw up a message box
      *
@@ -91,15 +96,23 @@ class Dialogue_Interface
 
     /** Creates a non-modal dialogue.
      *
-     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can hide it.
+     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can
+     * hide it.
      */
     virtual HWND create_dialogue(int dialogue, HWND parent);
 
     /** Create a modal dialogue.
      *
-     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can hide it.
+     * Note: This is virtual so that the xxxx_Dialogue_Interface classes can
+     * hide it.
      */
     virtual INT_PTR create_modal_dialogue(int dialogue) noexcept;
+
+    typedef std::function<std::optional<LRESULT>(HWND, UINT, WPARAM, LPARAM)>
+        Item_Callback_Function;
+
+    /** Allows you to subclass a window element, to intercept events on it */
+    void add_item_callback(int item, Item_Callback_Function callback_func);
 
   private:
     /** Implement this to handle messages.
@@ -115,12 +128,12 @@ class Dialogue_Interface
      * message, wParam and lParam are the values passed to
      * process_dialogue_message by windows
      */
-    virtual std::optional<LONG_PTR> on_dialogue_message(
+    virtual std::optional<INT_PTR> on_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept(false);
 
     /** Handler for unhandled messages */
-    virtual std::optional<LONG_PTR> on_unhandled_dialogue_message(
+    virtual std::optional<INT_PTR> on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept;
 
@@ -129,8 +142,20 @@ class Dialogue_Interface
         HWND, UINT message, WPARAM, LPARAM
     ) noexcept;
 
+    static LRESULT process_subclassed_message(
+        HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam
+    ) noexcept;
+
     Plugin const *plugin_;
     std::wstring module_name_;
     HWND dialogue_window_;
     std::wstring dialogue_name_;
+
+    struct Callback_Info
+    {
+        LONG_PTR old_proc;
+        Item_Callback_Function callback_func;
+    };
+
+    std::unordered_map<HANDLE, std::list<Callback_Info>> callbacks_;
 };
