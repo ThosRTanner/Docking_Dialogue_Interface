@@ -18,8 +18,13 @@
 #include <ShlwApi.h>
 #include <WinUser.h>
 #include <comutil.h>
+#include <errhandlingapi.h>
+#include <libloaderapi.h>
 
+#include <cstdio>
+#include <exception>
 #include <stdexcept>
+#include <string>
 #include <system_error>
 #include <vector>
 

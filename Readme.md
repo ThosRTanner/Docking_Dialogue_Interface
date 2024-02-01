@@ -229,11 +229,11 @@ Most of these are wrappers round windows functions (or macros) of the same or si
 1. `void add_item_callback(int item, Item_Callback_Function callback_func)`
     This allows you to "subclass" (the phrase windows uses) a window element, to intercept events on it.
 
-    Item_Callback_Function is typedefed as follows
+    Item_Callback_Function is defined as:
 
     `typedef std::function<std::optional<LRESULT>(HWND, UINT, WPARAM, LPARAM)> Item_Callback_Function`
 
-    This behaves in much the same way as `on_dialogue_message`, in that you return `std::nullopt` if you've not handled the callback.
+    This behaves in much the same way as `on_dialogue_message`, in that you return `std::nullopt` if you've not handled the callback. Note that because it is a std::function, if you're using a class instance method, you will need to wrap it with std::bind and 4 placeholders...
 
 
 ### Creating a non modal (aka modeless) dialogue - the Non_Modal_Dialogue_Interface class
