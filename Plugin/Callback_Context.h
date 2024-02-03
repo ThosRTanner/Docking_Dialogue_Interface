@@ -48,8 +48,8 @@ class Callback_Context_Base
 
   public:
     Callback_Context_Base(PFUNCPLUGINCMD callback) noexcept :
-        instance_(NULL),
-        method_(NULL),
+        instance_(nullptr),
+        method_(nullptr),
         callback_(callback)
     {
     }
@@ -64,7 +64,7 @@ class Callback_Context_Base
     {
         if (instance_ != nullptr)
         {
-            return NULL;
+            return nullptr;
         }
 
         instance_ = instance;
@@ -107,7 +107,7 @@ class Callback_Context_Base
     void free() noexcept
     {
         instance_ = nullptr;
-        // not clearing method_: it won't be used, since instance_ is NULL
+        // not clearing method_: it won't be used, since instance_ is nullptr
         // and so this entry is marked as free
     }
 

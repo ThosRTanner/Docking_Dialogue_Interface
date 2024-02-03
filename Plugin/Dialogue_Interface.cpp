@@ -65,7 +65,7 @@ Dialogue_Interface::~Dialogue_Interface()
 {
     // Stop process_dialogue_message from doing anything, since it calls a
     // virtual method which won't be there.
-    ::SetWindowLongPtr(dialogue_window_, GWLP_USERDATA, NULL);
+    ::SetWindowLongPtr(dialogue_window_, GWLP_USERDATA, 0);
     ::DestroyWindow(dialogue_window_);
 }
 
