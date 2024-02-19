@@ -33,6 +33,14 @@ class Plugin
     Plugin &operator=(Plugin const &) = delete;
     Plugin &operator=(Plugin &&) = delete;
 
+    /** Get the module handle */
+    HINSTANCE module() const noexcept
+    {
+        return module_;
+    }
+
+    // Notepad++ wrappers
+
     /** Get the notepad++ window */
     HWND get_notepad_window() const noexcept
     {
@@ -51,6 +59,14 @@ class Plugin
         return send_to_notepad(message, wParam, reinterpret_cast<LPARAM>(buff));
     }
 
+    /** Get the config directory */
+    std::wstring get_config_dir() const;
+
+    /** Get the current document path */
+    std::wstring get_document_path() const;
+
+    // Scintilla wrappers
+
     /** Get the current scintilla window */
     HWND get_scintilla_window() const noexcept;
 
@@ -64,8 +80,11 @@ class Plugin
         return send_to_editor(message, wParam, reinterpret_cast<LPARAM>(buff));
     }
 
-    /** Get the module handle */
-    HINSTANCE module() const noexcept;
+    /** Get the contents of the current document */
+    std::string get_document_text() const;
+
+    /** Get the contents of the specified line in the current document */
+    std::string get_line_text(int line) const;
 
   protected:
     /** Utility function to aid setting up notepad++ menu definition */

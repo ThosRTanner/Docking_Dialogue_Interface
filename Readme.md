@@ -88,6 +88,10 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 
     This takes the pointer to the notepad++ data which your constructor is passed, and the name of your plugin. This should be the same as your `get_name()` method returns.
 
+1. `HINSTANCE module() const noexcept`
+
+   Gets your module handle.
+
 1. `HWND get_notepad_window() const noexcept`
 
    Get hold of the notepad++ window handle. You probably won't need to use this.
@@ -99,6 +103,14 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
    `LRESULT send_to_notepad(UINT message, WPARAM wParam, void const *buff) const noexcept`
 
    Same, but avoids messy reinterpret_casts round the windows API
+    
+1. `std::wstring get_config_dir() const`
+
+    Get the notepad++ config directory.
+
+1. `std::wstring get_document_path() const`
+
+    Get the current document path.
 
 1. `HWND get_scintilla_window() const noexcept`
 
@@ -112,9 +124,13 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 
    Same, but avoids messy reinterpret_casts round the windows API
 
-1. `HINSTANCE module() const noexcept`
+1. `std::string get_document_text() const`
 
-   Gets your module handle.
+    Get the contents of the current document
+
+1. `std::string get_line_text(int line) const`
+
+    Get the contents of the specified line in the current document
 
 ### (Private) Virtual methods
 
@@ -347,7 +363,7 @@ The class provides default handlers for 'OK', 'Cancel' and 'Close' buttons. Thes
  
  1. `BOOL EndDialog(void *retval) const noexcept;`
  
-    Wrapper round `::EndDialog` that avoids reinterpret_cast.
+    Wrapper round `::EndDialog` that avoids reinterpret_cast. However, it is probably better to return `Clicked_OK` and provide another method in your class to return complex data.
 
 1. `BOOL centre_dialogue() const noexcept;`
 

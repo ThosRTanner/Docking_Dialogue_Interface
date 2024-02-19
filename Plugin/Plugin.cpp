@@ -13,7 +13,12 @@
 
 #include "Plugin.h"
 
+#include "Notepad_plus_msgs.h"
+
 #include "libloaderapi.h"
+
+#include <memory>
+#include <vector>
 
 static Plugin *plugin;
 
@@ -38,6 +43,33 @@ LRESULT Plugin::send_to_notepad(UINT message, WPARAM wParam, LPARAM lParam)
     return ::SendMessage(npp_data_._nppHandle, message, wParam, lParam);
 }
 
+std::wstring Plugin::get_config_dir() const
+{
+    auto const len = send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, 0, nullptr);
+#if __cplusplus >= 202002L
+    auto buff{std::make_unique_for_overwrite<wchar_t[]>(lengthDoc + 1)};
+#else
+#pragma warning(suppress : 26409 26414)
+    std::unique_ptr<wchar_t[]> buff{new wchar_t[len + 1]};
+#endif
+    send_to_notepad(
+        NPPM_GETPLUGINSCONFIGDIR, len * sizeof(wchar_t), buff.get()
+    );
+    return std::wstring(buff.get(), len);
+}
+
+std::wstring Plugin::get_document_path() const
+{
+#if __cplusplus >= 202002L
+    auto buff{std::make_unique_for_overwrite<wchar_t[]>(MAX_PATH)};
+#else
+#pragma warning(suppress : 26409 26414)
+    std::unique_ptr<wchar_t[]> buff{new wchar_t[MAX_PATH]};
+#endif
+    send_to_notepad(NPPM_GETFULLCURRENTPATH, 0, buff.get());
+    return std::wstring(buff.get());
+}
+
 HWND Plugin::get_scintilla_window() const noexcept
 {
     LRESULT const view = send_to_notepad(NPPM_GETCURRENTVIEW);
@@ -51,9 +83,30 @@ LRESULT Plugin::send_to_editor(UINT Msg, WPARAM wParam, LPARAM lParam)
     return SendMessage(get_scintilla_window(), Msg, wParam, lParam);
 }
 
-HINSTANCE Plugin::module() const noexcept
+std::string Plugin::get_document_text() const
 {
-    return module_;
+    LRESULT const length = send_to_editor(SCI_GETLENGTH);
+#if __cplusplus >= 202002L
+    auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
+#else
+#pragma warning(suppress : 26409 26414)
+    std::unique_ptr<char[]> buff{new char[length + 1]};
+#endif
+    send_to_editor(SCI_GETTEXT, length, buff.get());
+    return std::string(buff.get(), length);
+}
+
+std::string Plugin::get_line_text(int line) const
+{
+    LRESULT const length = send_to_editor(SCI_LINELENGTH, line);
+#if __cplusplus >= 202002L
+    auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
+#else
+#pragma warning(suppress : 26409 26414)
+    std::unique_ptr<char[]> buff{new char[length + 1]};
+#endif
+    send_to_editor(SCI_GETLINE, line, buff.get());
+    return std::string(buff.get(), length);
 }
 
 int Plugin::message_box(std::wstring const & message, UINT type) const noexcept
@@ -82,7 +135,7 @@ extern "C"
 #pragma comment(linker, "/EXPORT:getFuncsArray=" __FUNCDNAME__)
         auto &res = plugin->on_get_menu_entries();
         *nbF = static_cast<int>(res.size());
-        return &res[0];
+        return &*res.begin();
     }
 
     void Plugin::beNotified(SCNotification *notification)
