@@ -312,14 +312,22 @@
   <ItemGroup>
     <ClCompile Include="demo\About_Dialogue.cpp" />
     <ClCompile Include="demo\Demo_Plugin.cpp" />
+    <ClCompile Include="demo\dllmain.cpp" />
     <ClCompile Include="demo\Goto_Dialogue.cpp" />
     <ClCompile Include="Plugin\Dialogue_Interface.cpp" />
-    <ClCompile Include="Plugin\dllmain.cpp" />
     <ClCompile Include="Plugin\Docking_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Base.cpp" />
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
+    <None Include="Template\dllmain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

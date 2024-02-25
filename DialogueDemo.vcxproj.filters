@@ -21,6 +21,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Template">
+      <UniqueIdentifier>{fe0129bc-5ee8-4172-9ff4-a3ae995e572b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\plugintemplate\src\DockingFeature\Docking.h">
@@ -85,9 +88,6 @@
     <ClCompile Include="demo\Goto_Dialogue.cpp">
       <Filter>Source Files\Demo</Filter>
     </ClCompile>
-    <ClCompile Include="Plugin\dllmain.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Plugin\Docking_Dialogue_Interface.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
@@ -107,13 +107,19 @@
       <Filter>Source Files\Source</Filter>
     </ClCompile>
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Base.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="demo\dllmain.cpp">
+      <Filter>Source Files\Demo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
     <None Include="post-build.ps1" />
     <None Include="Readme.md" />
+    <None Include="Template\dllmain.cpp">
+      <Filter>Source Files\Template</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="demo\icon1.ico">

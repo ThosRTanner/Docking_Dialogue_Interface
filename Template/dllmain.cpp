@@ -15,8 +15,8 @@
 #include "PluginInterface.h"
 
 // Modify these 2 lines as appropriate for your plugin.
-#include "../demo/Demo_Plugin.h"
-typedef Demo_Plugin Npp_Plugin;
+#include "My_Plugin.h"
+typedef My_Plugin Npp_Plugin;
 
 #include <memory>
 

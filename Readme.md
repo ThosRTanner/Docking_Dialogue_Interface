@@ -12,7 +12,7 @@ This comes WITHOUT a copy of the notepad++ here template (from https://github.co
 
 ## Creating the basic plugin
 
-Take a copy of `dllmain.cpp` from the `Plugin` directory and modify it to use your header and class name (at around line 18).
+Take a copy of `dllmain.cpp` from the `Template` directory and modify it to use your header and class name (at around line 18).
 
 Create your plugin by making a class which inherits from the `Plugin` class.
 
