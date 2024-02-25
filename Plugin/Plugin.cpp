@@ -14,8 +14,10 @@
 #include "Plugin.h"
 
 #include "Notepad_plus_msgs.h"
+#include "Scintilla.h"
 
-#include "libloaderapi.h"
+#include <WinUser.h>
+#include <libloaderapi.h>
 
 #include <memory>
 #include <vector>
