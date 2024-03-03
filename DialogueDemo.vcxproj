@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -158,7 +158,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -181,7 +181,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -221,7 +221,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -244,7 +244,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -277,7 +277,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>.;../plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -290,17 +290,17 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\plugintemplate\src\DockingFeature\Docking.h" />
-    <ClInclude Include="..\plugintemplate\src\DockingFeature\dockingResource.h" />
-    <ClInclude Include="..\plugintemplate\src\menuCmdID.h" />
-    <ClInclude Include="..\plugintemplate\src\Notepad_plus_msgs.h" />
-    <ClInclude Include="..\plugintemplate\src\PluginInterface.h" />
-    <ClInclude Include="..\plugintemplate\src\Scintilla.h" />
-    <ClInclude Include="..\plugintemplate\src\Sci_Position.h" />
     <ClInclude Include="demo\About_Dialogue.h" />
     <ClInclude Include="demo\Demo_Plugin.h" />
     <ClInclude Include="demo\Goto_Dialogue.h" />
     <ClInclude Include="demo\resource.h" />
+    <ClInclude Include="plugintemplate\src\DockingFeature\Docking.h" />
+    <ClInclude Include="plugintemplate\src\DockingFeature\dockingResource.h" />
+    <ClInclude Include="plugintemplate\src\menuCmdID.h" />
+    <ClInclude Include="plugintemplate\src\Notepad_plus_msgs.h" />
+    <ClInclude Include="plugintemplate\src\PluginInterface.h" />
+    <ClInclude Include="plugintemplate\src\Scintilla.h" />
+    <ClInclude Include="plugintemplate\src\Sci_Position.h" />
     <ClInclude Include="Plugin\Callback_Context.h" />
     <ClInclude Include="Plugin\Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Docking_Dialogue_Interface.h" />
