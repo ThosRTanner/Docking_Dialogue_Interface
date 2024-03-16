@@ -19,9 +19,11 @@
 
 #include "Plugin/Callback_Context.h"
 
+#include "Scintilla.h"
 #include "menuCmdID.h"
 
 #include <memory>
+#include <vector>
 
 DEFINE_PLUGIN_MENU_CALLBACKS(Demo_Plugin);
 
