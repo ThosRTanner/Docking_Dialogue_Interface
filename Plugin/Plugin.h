@@ -21,6 +21,8 @@
 #include <tuple>
 #include <vector>
 
+class SCNotification;
+
 class Plugin
 {
   public:

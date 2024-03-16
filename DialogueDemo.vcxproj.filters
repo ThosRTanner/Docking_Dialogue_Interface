@@ -26,27 +26,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\plugintemplate\src\DockingFeature\Docking.h">
-      <Filter>Notepad++ Headers\DockingFeature</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\DockingFeature\dockingResource.h">
-      <Filter>Notepad++ Headers\DockingFeature</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\menuCmdID.h">
-      <Filter>Notepad++ Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\Notepad_plus_msgs.h">
-      <Filter>Notepad++ Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\PluginInterface.h">
-      <Filter>Notepad++ Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\Sci_Position.h">
-      <Filter>Notepad++ Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\plugintemplate\src\Scintilla.h">
-      <Filter>Notepad++ Headers</Filter>
-    </ClInclude>
     <ClInclude Include="demo\Demo_Plugin.h">
       <Filter>Source Files\Demo</Filter>
     </ClInclude>
@@ -79,6 +58,27 @@
     </ClInclude>
     <ClInclude Include="Plugin\Non_Modal_Dialogue_Base.h">
       <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\menuCmdID.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\Notepad_plus_msgs.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\PluginInterface.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\Sci_Position.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\Scintilla.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\DockingFeature\Docking.h">
+      <Filter>Notepad++ Headers\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\src\DockingFeature\dockingResource.h">
+      <Filter>Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
