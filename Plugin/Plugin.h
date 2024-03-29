@@ -15,13 +15,15 @@
 
 #include "PluginInterface.h"
 
+#include <windows.h>
+
+#include <cwchar>
 #include <memory>
 #include <string>
 #include <string_view>
-#include <tuple>
 #include <vector>
 
-class SCNotification;
+struct SCNotification;
 
 class Plugin
 {
@@ -99,13 +101,9 @@ class Plugin
     )
     {
         contexts[entry] = std::make_unique<Context>(context);
-        //In C++20 this could be made a little easier to read.
+        // In C++20 this could be made a little easier to read.
         FuncItem item;
-        std::ignore = lstrcpyn(
-            &item._itemName[0],
-            message,
-            sizeof(item._itemName) / sizeof(wchar_t)
-        );
+        wcsncpy_s(item._itemName, message, wcslen(message));
         item._pFunc = contexts[entry]->reserve(self, callback);
         item._cmdID = entry;
         item._init2Check = checked;
@@ -174,7 +172,7 @@ class Plugin
         Callbacks::contexts,                                       \
         Callback_Context<class, entry>(),                          \
         this,                                                      \
-        &class::method,                                            \
+        &class ::method,                                           \
         __VA_ARGS__                                                \
     )
 

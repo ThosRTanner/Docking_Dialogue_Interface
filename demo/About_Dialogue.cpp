@@ -16,7 +16,8 @@
 #include "resource.h"
 
 #include <windows.h>
-//#include <WinUser.h>
+
+#include <optional>
 
 About_Dialogue::About_Dialogue(Plugin const *plugin) :
     Modal_Dialogue_Interface(plugin)
@@ -26,7 +27,7 @@ About_Dialogue::About_Dialogue(Plugin const *plugin) :
 
 About_Dialogue::~About_Dialogue() = default;
 
-std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
+About_Dialogue::Message_Return About_Dialogue::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
@@ -34,7 +35,7 @@ std::optional<LONG_PTR> About_Dialogue::on_dialogue_message(
     {
         case WM_INITDIALOG:
         {
-            //Possibly this should be default behaviour?
+            // Possibly this should be default behaviour?
             centre_dialogue();
         }
         break;

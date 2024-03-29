@@ -12,11 +12,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-#include "PluginInterface.h"
-
 // Modify these 2 lines as appropriate for your plugin.
 #include "My_Plugin.h"
 typedef My_Plugin Npp_Plugin;
+
+#include "PluginInterface.h"
+
+#include <minwindef.h>
 
 #include <memory>
 

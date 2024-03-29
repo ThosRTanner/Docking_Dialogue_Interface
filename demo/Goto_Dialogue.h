@@ -25,7 +25,7 @@ class Goto_Dialogue : public Docking_Dialogue_Interface
     ~Goto_Dialogue();
 
   private:
-    std::optional<LONG_PTR> on_dialogue_message(
+    Message_Return on_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) override;
 

@@ -15,9 +15,7 @@
 
 #include "Dialogue_Interface.h"
 
-#include <basetsd.h>
-
-#include <optional>
+#include "Min_Win_Defs.h"
 
 // Forward declarations.
 class Plugin;
@@ -30,7 +28,9 @@ class Non_Modal_Dialogue_Base : public Dialogue_Interface
      *
      * dialogue_id is the resource number of the dialogue
      */
-    Non_Modal_Dialogue_Base(int dialogue_id, Plugin const *plugin, HWND parent = nullptr);
+    Non_Modal_Dialogue_Base(
+        int dialogue_id, Plugin const *plugin, HWND parent = nullptr
+    );
 
     Non_Modal_Dialogue_Base(Non_Modal_Dialogue_Base const &) = delete;
     Non_Modal_Dialogue_Base(Non_Modal_Dialogue_Base &&) = delete;
@@ -46,12 +46,12 @@ class Non_Modal_Dialogue_Base : public Dialogue_Interface
 
   private:
     /** Implement this to handle other unhandled messages */
-    virtual std::optional<LONG_PTR> on_unhandled_non_modal_dialogue_message(
+    virtual Message_Return on_unhandled_non_modal_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept;
 
     /** Handler for unhandled messages */
-    std::optional<LONG_PTR> on_unhandled_dialogue_message(
+    Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
 

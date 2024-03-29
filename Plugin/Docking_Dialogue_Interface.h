@@ -13,16 +13,11 @@
 
 #pragma once
 
-#include "Non_Modal_Dialogue_Interface.h"
+#include "Non_Modal_Dialogue_Base.h"
 
-#include <basetsd.h>
+#include "Min_Win_Defs.h"
 
-#include <optional>
-
-// Forward declarations from windows headers
-typedef struct HICON__ *HICON;
-
-// Forward declarations.
+// Forward refs
 class Plugin;
 
 /** This provides an abstraction for creating a docking dialogue. */
@@ -92,7 +87,7 @@ class Docking_Dialogue_Interface : public Non_Modal_Dialogue_Base
     virtual void on_hide() noexcept;
 
     /** Handler for unhandled messages */
-    std::optional<LONG_PTR> on_unhandled_non_modal_dialogue_message(
+    Message_Return on_unhandled_non_modal_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
 

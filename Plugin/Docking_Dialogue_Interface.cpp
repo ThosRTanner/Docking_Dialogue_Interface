@@ -20,7 +20,9 @@
 #include "DockingFeature/dockingResource.h"
 #include "Notepad_plus_msgs.h"
 
-#include <WinUser.h>
+#include <windows.h>
+
+#include <optional>
 
 Docking_Dialogue_Interface::Docking_Dialogue_Interface(
     int dialogue_ID, Plugin const *plugin
@@ -96,7 +98,8 @@ void Docking_Dialogue_Interface::on_hide() noexcept
 {
 }
 
-std::optional<LONG_PTR> Docking_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
+Docking_Dialogue_Interface::Message_Return
+Docking_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
     UINT message, WPARAM, LPARAM lParam
 ) noexcept
 {

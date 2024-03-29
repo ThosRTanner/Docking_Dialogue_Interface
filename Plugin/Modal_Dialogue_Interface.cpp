@@ -14,9 +14,9 @@
 
 #include "Modal_Dialogue_Interface.h"
 
-#include "Plugin/Plugin.h"
+#include <windows.h>
 
-#include <WinUser.h>
+#include <optional>
 
 Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const *plugin) :
     Dialogue_Interface(plugin),
@@ -40,17 +40,20 @@ BOOL Modal_Dialogue_Interface::centre_dialogue() const noexcept
     int const height = rect.bottom - rect.top;
 
     RECT const rect_npp = getParentRect();
-    int const x = ((rect_npp.right - rect_npp.left) - width) / 2 + rect_npp.left;
-    int const y = ((rect_npp.bottom - rect_npp.top) - height) / 2 + rect_npp.top;
+    int const x =
+        ((rect_npp.right - rect_npp.left) - width) / 2 + rect_npp.left;
+    int const y =
+        ((rect_npp.bottom - rect_npp.top) - height) / 2 + rect_npp.top;
 
     return ::MoveWindow(window(), x, y, width, height, TRUE);
 }
 
-std::optional<LONG_PTR> Modal_Dialogue_Interface::on_unhandled_dialogue_message(
+Modal_Dialogue_Interface::Message_Return
+Modal_Dialogue_Interface::on_unhandled_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
-    //This provides default handlers for OK, cancel, and close clicks.
+    // This provides default handlers for OK, cancel, and close clicks.
     switch (message)
     {
         case WM_COMMAND:

@@ -12,10 +12,12 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-#include "PluginInterface.h"
-
 #include "Demo_Plugin.h"
 typedef Demo_Plugin Npp_Plugin;
+
+#include "PluginInterface.h"
+
+#include <windows.h>
 
 #include <memory>
 

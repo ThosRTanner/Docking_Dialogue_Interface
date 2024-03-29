@@ -15,8 +15,8 @@
 
 /** This contains a class which permits easy (ish) setup of callbacks.
  *
- * To use it you have to create a static map of an array of callbacks like this (and
- * sadly it must be a static)
+ * To use it you have to create a static map of an array of callbacks like this
+ * (and sadly it must be a static)
  *
  *
  * typedef Callback_Context_Base<My_Plugin> Callbacks;
@@ -36,9 +36,11 @@
  *
  * Callbacks::contexts[entry]->free(this, callback);
  */
-
 #include <memory>
 #include <unordered_map>
+
+//Stolen from PluginInterface.h
+typedef void(__cdecl *PFUNCPLUGINCMD)();
 
 template <class Callback_Class>
 class Callback_Context_Base
@@ -48,9 +50,9 @@ class Callback_Context_Base
 
   public:
     Callback_Context_Base(PFUNCPLUGINCMD callback) noexcept :
+        callback_(callback),
         instance_(nullptr),
-        method_(nullptr),
-        callback_(callback)
+        method_(nullptr)
     {
     }
 
@@ -89,7 +91,7 @@ class Callback_Context_Base
     /** This is for setting up menu separators.
      *
      * It is a bit of a crock. It always returns nullptr, so you can't actually
-     * tell if it worked or not. It does however reserve a slot if succesful.
+     * tell if it worked or not. It does however reserve a slot if successful.
      */
     PFUNCPLUGINCMD reserve(Callback_Class *instance, nullptr_t method) noexcept
     {

@@ -16,13 +16,15 @@
 #include "Plugin.h"
 
 #include <ShlwApi.h>
-#include <WinUser.h>
+#include <basetsd.h>
 #include <comutil.h>
 #include <errhandlingapi.h>
 #include <libloaderapi.h>
+#include <windows.h>
 
 #include <cstdio>
 #include <exception>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <system_error>
@@ -154,7 +156,7 @@ HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
             std::snprintf(
                 &buff[0],
                 sizeof(buff),
-                "Could not create dialogue: Error code %08x then got %s",
+                "Could not create dialogue: Error code %08lx then got %s",
                 err,
                 e.what()
             );
@@ -201,14 +203,15 @@ void Dialogue_Interface::add_item_callback(
     callbacks_[handle].push_back(info);
 }
 
-std::optional<INT_PTR> Dialogue_Interface::on_dialogue_message(
+Dialogue_Interface::Message_Return Dialogue_Interface::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept(false)
 {
     return std::nullopt;
 }
 
-std::optional<INT_PTR> Dialogue_Interface::on_unhandled_dialogue_message(
+Dialogue_Interface::Message_Return
+Dialogue_Interface::on_unhandled_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
@@ -305,7 +308,9 @@ LRESULT CALLBACK Dialogue_Interface::process_subclassed_message(
             return res.value();
         }
 #pragma warning(suppress : 26490)
-        return (*reinterpret_cast<WNDPROC>(info.old_proc))(handle, message, wParam, lParam);
+        return (*reinterpret_cast<WNDPROC>(info.old_proc))(
+            handle, message, wParam, lParam
+        );
     }
     catch (std::exception const &e)
     {
@@ -319,8 +324,7 @@ LRESULT CALLBACK Dialogue_Interface::process_subclassed_message(
         catch (std::exception const &)
         {
             instance->message_box(
-                L"Caught exception but cannot get reason",
-                MB_OK | MB_ICONERROR
+                L"Caught exception but cannot get reason", MB_OK | MB_ICONERROR
             );
         }
         return FALSE;

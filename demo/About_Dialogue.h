@@ -14,6 +14,7 @@
 #pragma once
 #include "Plugin/Modal_Dialogue_Interface.h"
 
+// Forward references
 class Plugin;
 
 class About_Dialogue : public Modal_Dialogue_Interface
@@ -24,7 +25,7 @@ class About_Dialogue : public Modal_Dialogue_Interface
     ~About_Dialogue();
 
   private:
-    std::optional<LONG_PTR> on_dialogue_message(
+    Message_Return on_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override;
 };

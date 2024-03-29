@@ -13,13 +13,15 @@
 
 #include "Goto_Dialogue.h"
 
-#include "Plugin/Plugin.h"
-
 #include "resource.h"
 
-#include <WinUser.h>
-#include <Windows.h>
+#include "Plugin/Plugin.h"
 
+#include "Scintilla.h"
+
+#include <windows.h>
+
+#include <optional>
 #include <sstream>
 
 Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
@@ -42,7 +44,7 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
 
 Goto_Dialogue::~Goto_Dialogue() = default;
 
-std::optional<LONG_PTR> Goto_Dialogue::on_dialogue_message(
+Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 )
 {
