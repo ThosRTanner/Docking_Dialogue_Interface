@@ -15,7 +15,11 @@
 
 #include "Plugin.h"
 
-#include <Notepad_plus_msgs.h>
+#include "Notepad_plus_msgs.h"
+
+#include <windows.h>
+
+#include <optional>
 
 Non_Modal_Dialogue_Base::Non_Modal_Dialogue_Base(
     int dialogue_ID, Plugin const *plugin, HWND parent
@@ -36,7 +40,7 @@ void Non_Modal_Dialogue_Base::send_dialogue_info(int msg, int wParam) noexcept
     plugin()->send_to_notepad(msg, wParam, window());
 }
 
-std::optional<LONG_PTR>
+Non_Modal_Dialogue_Base::Message_Return
 Non_Modal_Dialogue_Base::on_unhandled_non_modal_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
@@ -44,7 +48,8 @@ Non_Modal_Dialogue_Base::on_unhandled_non_modal_dialogue_message(
     return std::nullopt;
 }
 
-std::optional<LONG_PTR> Non_Modal_Dialogue_Base::on_unhandled_dialogue_message(
+Non_Modal_Dialogue_Base::Message_Return
+Non_Modal_Dialogue_Base::on_unhandled_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {

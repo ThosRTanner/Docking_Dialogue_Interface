@@ -16,10 +16,11 @@
 #include "Notepad_plus_msgs.h"
 #include "Scintilla.h"
 
-#include <WinUser.h>
 #include <libloaderapi.h>
+#include <windows.h>
 
 #include <memory>
+#include <string>
 #include <vector>
 
 static Plugin *plugin;
@@ -111,7 +112,7 @@ std::string Plugin::get_line_text(int line) const
     return std::string(buff.get(), length);
 }
 
-int Plugin::message_box(std::wstring const & message, UINT type) const noexcept
+int Plugin::message_box(std::wstring const &message, UINT type) const noexcept
 {
     return ::MessageBox(
         get_notepad_window(), message.c_str(), name_.c_str(), type
@@ -134,7 +135,9 @@ extern "C"
 {
     FuncItem *Plugin::getFuncsArray(int *nbF)
     {
+#ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:getFuncsArray=" __FUNCDNAME__)
+#endif
         auto &res = plugin->on_get_menu_entries();
         *nbF = static_cast<int>(res.size());
         return &*res.begin();
@@ -142,13 +145,17 @@ extern "C"
 
     void Plugin::beNotified(SCNotification *notification)
     {
+#ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:beNotified=" __FUNCDNAME__)
+#endif
         plugin->on_notification(notification);
     }
 
     LRESULT Plugin::messageProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
+#ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:messageProc=" __FUNCDNAME__)
+#endif
         return plugin->on_message(message, wParam, lParam);
     }
 }

@@ -13,7 +13,9 @@
 
 #include "Non_Modal_Dialogue_Interface.h"
 
-#include "Plugin.h"
+#include <optional>
+
+class Plugin;
 
 Non_Modal_Dialogue_Interface::Non_Modal_Dialogue_Interface(
     int dialogue_ID, Plugin const *plugin, HWND parent
@@ -26,7 +28,7 @@ Non_Modal_Dialogue_Interface::~Non_Modal_Dialogue_Interface()
 {
 }
 
-std::optional<LONG_PTR>
+Non_Modal_Dialogue_Interface::Message_Return
 Non_Modal_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept

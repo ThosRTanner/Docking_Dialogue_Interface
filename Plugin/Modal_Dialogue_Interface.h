@@ -15,12 +15,9 @@
 
 #include "Dialogue_Interface.h"
 
+#include "Min_Win_Defs.h"
+
 #include <basetsd.h>
-
-#include <optional>
-
-// Forward declarations from windows headers
-typedef int BOOL;
 
 // Forward declarations.
 class Plugin;
@@ -79,7 +76,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
 
   private:
     /** Handler for unhandled messages */
-    std::optional<LONG_PTR> on_unhandled_dialogue_message(
+    Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
 

@@ -16,11 +16,12 @@
 
 #include "Plugin/Plugin.h"
 
-#include "PluginInterface.h"
-
 #include <memory>
 
+// Forward declarations
 class Goto_Dialogue;
+struct FuncItem;
+struct NppData;
 
 class Demo_Plugin : public Plugin
 {

@@ -15,15 +15,13 @@
 
 #include "Non_Modal_Dialogue_Base.h"
 
-#include <basetsd.h>
+#include "Min_Win_Defs.h"
 
-#include <optional>
-
-// Forward declarations.
+// Forward references
 class Plugin;
 
 /** This provides an abstraction for creating a non modal non docking dialogue.
- * 
+ *
  */
 class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
 {
@@ -32,7 +30,9 @@ class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
      *
      * dialogue_id is the resource number of the dialogue
      */
-    Non_Modal_Dialogue_Interface(int dialogue_id, Plugin const *plugin, HWND parent = nullptr);
+    Non_Modal_Dialogue_Interface(
+        int dialogue_id, Plugin const *plugin, HWND parent = nullptr
+    );
 
     Non_Modal_Dialogue_Interface(Non_Modal_Dialogue_Interface const &) = delete;
     Non_Modal_Dialogue_Interface(Non_Modal_Dialogue_Interface &&) = delete;
@@ -48,7 +48,7 @@ class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
      *
      * Needs to exist so it can be final.
      */
-    std::optional<LONG_PTR> on_unhandled_non_modal_dialogue_message(
+    Message_Return on_unhandled_non_modal_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept override final;
 };

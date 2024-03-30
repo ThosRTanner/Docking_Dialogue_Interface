@@ -13,6 +13,8 @@
 
 #pragma once
 
+#include "Min_Win_Defs.h"
+
 #include <basetsd.h>
 
 #include <functional>
@@ -21,15 +23,7 @@
 #include <string>
 #include <unordered_map>
 
-// Forward declarations from windows headers. Sorry.
-typedef struct tagRECT RECT;
-typedef struct HWND__ *HWND;
-typedef unsigned int UINT;
-typedef UINT_PTR WPARAM;
-typedef LONG_PTR LPARAM;
-typedef LONG_PTR LRESULT;
-typedef void *HANDLE;
-
+// Forward references
 class Plugin;
 
 class Dialogue_Interface
@@ -114,6 +108,9 @@ class Dialogue_Interface
     /** Allows you to subclass a window element, to intercept events on it */
     void add_item_callback(int item, Item_Callback_Function callback_func);
 
+    /** Return type for dialogue message callbacks */
+    typedef std::optional<INT_PTR> Message_Return;
+
   private:
     /** Implement this to handle messages.
      *
@@ -128,12 +125,12 @@ class Dialogue_Interface
      * message, wParam and lParam are the values passed to
      * process_dialogue_message by windows
      */
-    virtual std::optional<INT_PTR> on_dialogue_message(
+    virtual Message_Return on_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept(false);
 
     /** Handler for unhandled messages */
-    virtual std::optional<INT_PTR> on_unhandled_dialogue_message(
+    virtual Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept;
 

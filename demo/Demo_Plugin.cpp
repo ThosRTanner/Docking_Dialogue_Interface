@@ -19,8 +19,12 @@
 
 #include "Plugin/Callback_Context.h"
 
+#include "Notepad_plus_msgs.h"
+#include "PluginInterface.h"
 #include "Scintilla.h"
 #include "menuCmdID.h"
+
+#include <windows.h>
 
 #include <memory>
 #include <vector>
@@ -54,7 +58,11 @@ std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
             Menu_Entry_Hello_File, L"Hello Notepad++ File", hello_file
         ),
         MAKE_CALLBACK(
-            Menu_Entry_Hello_Message, L"Hello Notepad++ Message", hello_message, false, &f5
+            Menu_Entry_Hello_Message,
+            L"Hello Notepad++ Message",
+            hello_message,
+            false,
+            &f5
         ),
         MAKE_SEPARATOR(Menu_Entry_Separator_1),
         MAKE_CALLBACK(
