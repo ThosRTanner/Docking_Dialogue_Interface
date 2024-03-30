@@ -15,6 +15,7 @@
 
 #include "PluginInterface.h"
 
+#include <corecrt.h> // for _TRUNCATE
 #include <windows.h>
 
 #include <cwchar>
@@ -103,7 +104,7 @@ class Plugin
         contexts[entry] = std::make_unique<Context>(context);
         // In C++20 this could be made a little easier to read.
         FuncItem item;
-        wcsncpy_s(item._itemName, message, wcslen(message));
+        wcsncpy_s(item._itemName, message, _TRUNCATE);
         item._pFunc = contexts[entry]->reserve(self, callback);
         item._cmdID = entry;
         item._init2Check = checked;
