@@ -50,7 +50,7 @@ std::wstring Plugin::get_config_dir() const
 {
     auto const len = send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, 0, nullptr);
 #if __cplusplus >= 202002L
-    auto buff{std::make_unique_for_overwrite<wchar_t[]>(lengthDoc + 1)};
+    auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
 #else
 #pragma warning(suppress : 26409 26414)
     std::unique_ptr<wchar_t[]> buff{new wchar_t[len + 1]};
