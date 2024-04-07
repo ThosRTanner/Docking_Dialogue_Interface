@@ -20,7 +20,9 @@
 #include "DockingFeature/dockingResource.h"
 #include "Notepad_plus_msgs.h"
 
-#include <windows.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <winuser.h>
 
 #include <optional>
 

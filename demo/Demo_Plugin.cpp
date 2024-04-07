@@ -24,7 +24,9 @@
 #include "Scintilla.h"
 #include "menuCmdID.h"
 
-#include <windows.h>
+#include <windows.h>    // IWYU pragma: keep
+
+#include <winuser.h>
 
 #include <memory>
 #include <vector>

@@ -102,7 +102,8 @@ class Dialogue_Interface
      */
     virtual INT_PTR create_modal_dialogue(int dialogue) noexcept;
 
-    typedef std::function<std::optional<LRESULT>(HWND, UINT, WPARAM, LPARAM)>
+    typedef std::optional<LRESULT> Item_Callback_Return;
+    typedef std::function<Item_Callback_Return(HWND, UINT, WPARAM, LPARAM)>
         Item_Callback_Function;
 
     /** Allows you to subclass a window element, to intercept events on it */

@@ -17,7 +17,9 @@ typedef Demo_Plugin Npp_Plugin;
 
 #include "PluginInterface.h"
 
-#include <windows.h>
+#include <windows.h> // IWYU pragma: keep
+
+#include <minwindef.h>
 
 #include <memory>
 

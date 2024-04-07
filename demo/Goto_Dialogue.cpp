@@ -19,7 +19,11 @@
 
 #include "Scintilla.h"
 
-#include <windows.h>
+#include <windows.h> // IWYU pragma: keep
+
+#include <minwindef.h>
+#include <windef.h>
+#include <winuser.h>
 
 #include <optional>
 #include <sstream>
