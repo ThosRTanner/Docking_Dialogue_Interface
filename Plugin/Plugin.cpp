@@ -17,7 +17,9 @@
 #include "Scintilla.h"
 
 #include <libloaderapi.h>
-#include <windows.h>
+#include <windows.h> // IWYU pragma: keep
+
+#include <winuser.h>
 
 #include <memory>
 #include <string>

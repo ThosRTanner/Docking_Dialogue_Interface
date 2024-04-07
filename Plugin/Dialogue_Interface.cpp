@@ -20,7 +20,9 @@
 #include <comutil.h>
 #include <errhandlingapi.h>
 #include <libloaderapi.h>
-#include <windows.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <winuser.h>
 
 #include <cstdio>
 #include <exception>

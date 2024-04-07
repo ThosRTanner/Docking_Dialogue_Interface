@@ -16,7 +16,10 @@
 #include "PluginInterface.h"
 
 #include <corecrt.h> // for _TRUNCATE
-#include <windows.h>
+#include <windows.h> // IWYU pragma: keep
+
+#include <minwindef.h>
+#include <windef.h>
 
 #include <cwchar>
 #include <memory>
