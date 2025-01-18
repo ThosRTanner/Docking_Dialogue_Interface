@@ -8,7 +8,11 @@ In order to build the demo project, you will need the latest Windows SDK (10.0.2
 
 ## Project Layout
 
-This includes the notepad++ template (from https://github.com/npp-plugins/plugintemplate) as a submodule so the include path is set up for that. Projects based off of this therefore don't need to include it, but do need to set their own include path in the project settings appropriately.
+This includes the notepad++ template (from https://github.com/npp-plugins/plugintemplate) as a submodule so the include path is set up for that. Projects based off of this therefore don't *need* to include it, but should you have require it, there is a notepad++ directory which contains forwarding includes for all the headers.
+
+You will need to add the path to the project in your includes setting.
+
+It's worth using the "Forced Include File" setting in the C/C++ advanced settings pane of your project configuration, or you'll have to mark _all_ the C++ source files in this module as 'not using precompiled header files'.
 
 ## Creating the basic plugin
 

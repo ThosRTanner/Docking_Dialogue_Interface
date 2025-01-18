@@ -15,7 +15,7 @@
 
 #include "Plugin.h"
 
-#include "Notepad_plus_msgs.h"
+#include "notepad++/Notepad_plus_msgs.h"
 
 // This is because IWYU doesn't understand overrides and appears to have got
 // a very odd idea about using RECT

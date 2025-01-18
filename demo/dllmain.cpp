@@ -15,7 +15,7 @@
 #include "Demo_Plugin.h"
 typedef Demo_Plugin Npp_Plugin;
 
-#include "PluginInterface.h"
+#include "notepad++/PluginInterface.h"
 
 #include <memory>
 

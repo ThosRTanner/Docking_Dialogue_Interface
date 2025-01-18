@@ -13,13 +13,13 @@
 
 #pragma once
 
-#include "PluginInterface.h"
+#include "notepad++/PluginInterface.h"
 
-#include <corecrt.h> // for _TRUNCATE
+#include <corecrt.h>    // for _TRUNCATE
 #include <minwindef.h>
 
-//windows.h is required for subsequent headers to compile.
-#include <windows.h> // IWYU pragma: keep
+// windows.h is required for subsequent headers to compile.
+#include <windows.h>    // IWYU pragma: keep
 
 #include <windef.h>
 

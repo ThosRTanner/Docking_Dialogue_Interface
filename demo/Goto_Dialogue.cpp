@@ -17,7 +17,7 @@
 
 #include "Plugin/Plugin.h"
 
-#include "Scintilla.h"
+#include "notepad++/Scintilla.h"
 
 #include <windows.h>    // IWYU pragma: keep
 

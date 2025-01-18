@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -137,7 +137,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -167,7 +167,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -213,7 +213,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <AdditionalIncludeDirectories>.;./plugintemplate/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -245,6 +245,12 @@
     <ClInclude Include="demo\Demo_Plugin.h" />
     <ClInclude Include="demo\Goto_Dialogue.h" />
     <ClInclude Include="demo\resource.h" />
+    <ClInclude Include="notepad++\DockingFeature\Docking.h" />
+    <ClInclude Include="notepad++\DockingFeature\dockingResource.h" />
+    <ClInclude Include="notepad++\menuCmdID.h" />
+    <ClInclude Include="notepad++\Notepad_plus_msgs.h" />
+    <ClInclude Include="notepad++\PluginInterface.h" />
+    <ClInclude Include="notepad++\Scintilla.h" />
     <ClInclude Include="plugintemplate\src\DockingFeature\Docking.h" />
     <ClInclude Include="plugintemplate\src\DockingFeature\dockingResource.h" />
     <ClInclude Include="plugintemplate\src\menuCmdID.h" />
@@ -273,6 +279,10 @@
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
     <None Include="iwyu.bat" />
+    <None Include="notepad++\DockingFeature\Changes.md">
+      <SubType>
+      </SubType>
+    </None>
     <None Include="Template\dllmain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

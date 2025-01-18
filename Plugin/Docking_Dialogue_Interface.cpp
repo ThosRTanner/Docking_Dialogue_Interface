@@ -16,9 +16,9 @@
 
 #include "Plugin.h"
 
-#include "DockingFeature/Docking.h"
-#include "DockingFeature/dockingResource.h"
-#include "Notepad_plus_msgs.h"
+#include "notepad++/DockingFeature/Docking.h"
+#include "notepad++/DockingFeature/dockingResource.h"
+#include "notepad++/Notepad_plus_msgs.h"
 
 #include <minwindef.h>
 #include <windef.h>

@@ -214,7 +214,7 @@ Dialogue_Interface::Message_Return Dialogue_Interface::on_dialogue_message(
 
 Dialogue_Interface::Message_Return
 Dialogue_Interface::on_unhandled_dialogue_message(
-    UINT /*message*/, WPARAM, LPARAM 
+    UINT /*message*/, WPARAM, LPARAM
 ) noexcept
 {
     return std::nullopt;

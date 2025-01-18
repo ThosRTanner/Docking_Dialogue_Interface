@@ -13,8 +13,8 @@
 
 #include "Plugin.h"
 
-#include "Notepad_plus_msgs.h"
-#include "Scintilla.h"
+#include "notepad++/Notepad_plus_msgs.h"
+#include "notepad++/Scintilla.h"
 
 #include <libloaderapi.h>
 #include <windows.h>    // IWYU pragma: keep

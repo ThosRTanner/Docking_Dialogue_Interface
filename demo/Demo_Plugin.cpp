@@ -19,10 +19,10 @@
 
 #include "Plugin/Callback_Context.h"    // IWYU pragma: keep
 
-#include "Notepad_plus_msgs.h"
-#include "PluginInterface.h"
-#include "Scintilla.h"
-#include "menuCmdID.h"
+#include "notepad++/Notepad_plus_msgs.h"
+#include "notepad++/PluginInterface.h"
+#include "notepad++/Scintilla.h"
+#include "notepad++/menuCmdID.h"
 
 #include <windows.h>    // IWYU pragma: keep
 
