@@ -80,7 +80,7 @@
     <ClInclude Include="plugintemplate\src\DockingFeature\dockingResource.h">
       <Filter>Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
-    <ClInclude Include="Min_Win_Defs.h">
+    <ClInclude Include="Plugin\Min_Win_Defs.h">
       <Filter>Source Files\Source</Filter>
     </ClInclude>
   </ItemGroup>
@@ -124,7 +124,7 @@
       <Filter>Source Files\Template</Filter>
     </None>
     <None Include="iwyu.bat" />
-    <None Include="vc2022cpp17.imp" />
+    <None Include="vs2022cpp20.imp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="demo\icon1.ico">

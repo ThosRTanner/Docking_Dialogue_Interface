@@ -15,7 +15,7 @@
 
 #include "Min_Win_Defs.h"
 
-#include <basetsd.h>
+#include <intsafe.h>
 
 #include <functional>
 #include <list>
@@ -140,7 +140,7 @@ class Dialogue_Interface
         HWND, UINT message, WPARAM, LPARAM
     ) noexcept;
 
-    static LRESULT process_subclassed_message(
+    static LRESULT __stdcall process_subclassed_message(
         HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam
     ) noexcept;
 

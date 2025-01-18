@@ -2,7 +2,7 @@
 
 This is probably massively overengineered, but there's a lot of boilerplate in here. Heavy use is made of the Template Method design pattern, hopefully meaning there's only a few bits you'll need to implement yourself. Those bits you do need to implement are actually virtual private methods. Most of them have default empty methods, so you don't have to implement a lot of empty functions.
 
-You will require a compiler that supports C++ 17 or later to use the library.
+You will require a compiler that supports C++ 20 or later to use the library.
 
 In order to build the demo project, you will need the latest Windows SDK (10.0.22621.0 at the time of writing), as prior to that, the windows headers use non-standard extensions (or you can set Project => Properties => Configuration Properties => C/C++ => Language => Disable Language Extensions to no) 
 
@@ -335,7 +335,7 @@ In your constructor, you must
 
 ### Modal dialogues - the Modal_Dialogue_Interface class
 
-A modal dialogue doesn't return until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed so the your constructor needs to be implemented a little differently to that of a docking dialogue.
+A modal dialogue doesn't return until you have clicked the OK or cancel button (or the close button at the top right). This means that when you create the dialogue, any subsequent code will not be executed, so your constructor needs to be implemented a little differently to that of a docking dialogue.
 
 You should do all the work you *can* do before calling the `create_dialogue_window` method. Any further work needs to be done in the `on_dialogue_message` callback function.
 
@@ -343,7 +343,7 @@ The class provides default handlers for 'OK', 'Cancel' and 'Close' buttons. Thes
 
 #### Public Methods
 
-1. `Modal_Dialogue_Interface(Plugin const *)
+1. `Modal_Dialogue_Interface(Plugin const *)`
 
     The constructor. This just takes a pointer to the plugin class. It doesn't take a dialogue id, you need to pass that into `create_modal_dialogue`.
 

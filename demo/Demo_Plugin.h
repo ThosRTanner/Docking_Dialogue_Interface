@@ -18,6 +18,9 @@
 
 #include <memory>
 
+// IWYU does not understand override
+#include <vector>
+
 // Forward declarations
 class Goto_Dialogue;
 struct FuncItem;
@@ -25,6 +28,8 @@ struct NppData;
 
 class Demo_Plugin : public Plugin
 {
+    typedef Plugin Super;
+
   public:
     /** Return the plugin name */
     static wchar_t const *get_plugin_name() noexcept;

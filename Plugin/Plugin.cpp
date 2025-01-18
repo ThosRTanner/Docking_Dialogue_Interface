@@ -17,7 +17,7 @@
 #include "Scintilla.h"
 
 #include <libloaderapi.h>
-#include <windows.h> // IWYU pragma: keep
+#include <windows.h>    // IWYU pragma: keep
 
 #include <winuser.h>
 
@@ -51,12 +51,7 @@ LRESULT Plugin::send_to_notepad(UINT message, WPARAM wParam, LPARAM lParam)
 std::wstring Plugin::get_config_dir() const
 {
     auto const len = send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, 0, nullptr);
-#if __cplusplus >= 202002L
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
-#else
-#pragma warning(suppress : 26409 26414)
-    std::unique_ptr<wchar_t[]> buff{new wchar_t[len + 1]};
-#endif
     send_to_notepad(
         NPPM_GETPLUGINSCONFIGDIR, len * sizeof(wchar_t), buff.get()
     );
@@ -65,12 +60,7 @@ std::wstring Plugin::get_config_dir() const
 
 std::wstring Plugin::get_document_path() const
 {
-#if __cplusplus >= 202002L
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(MAX_PATH)};
-#else
-#pragma warning(suppress : 26409 26414)
-    std::unique_ptr<wchar_t[]> buff{new wchar_t[MAX_PATH]};
-#endif
     send_to_notepad(NPPM_GETFULLCURRENTPATH, 0, buff.get());
     return std::wstring(buff.get());
 }
@@ -91,12 +81,7 @@ LRESULT Plugin::send_to_editor(UINT Msg, WPARAM wParam, LPARAM lParam)
 std::string Plugin::get_document_text() const
 {
     LRESULT const length = send_to_editor(SCI_GETLENGTH);
-#if __cplusplus >= 202002L
     auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
-#else
-#pragma warning(suppress : 26409 26414)
-    std::unique_ptr<char[]> buff{new char[length + 1]};
-#endif
     send_to_editor(SCI_GETTEXT, length, buff.get());
     return std::string(buff.get(), length);
 }
@@ -104,12 +89,7 @@ std::string Plugin::get_document_text() const
 std::string Plugin::get_line_text(int line) const
 {
     LRESULT const length = send_to_editor(SCI_LINELENGTH, line);
-#if __cplusplus >= 202002L
     auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
-#else
-#pragma warning(suppress : 26409 26414)
-    std::unique_ptr<char[]> buff{new char[length + 1]};
-#endif
     send_to_editor(SCI_GETLINE, line, buff.get());
     return std::string(buff.get(), length);
 }
@@ -125,7 +105,7 @@ void Plugin::on_notification(SCNotification const *)
 {
 }
 
-LRESULT Plugin::on_message(UINT message, WPARAM, LPARAM)
+LRESULT Plugin::on_message(UINT /*message*/, WPARAM, LPARAM)
 {
     return TRUE;
 }
@@ -153,11 +133,21 @@ extern "C"
         plugin->on_notification(notification);
     }
 
-    LRESULT Plugin::messageProc(UINT message, WPARAM wParam, LPARAM lParam)
+    LRESULT
+    Plugin::messageProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
 #ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:messageProc=" __FUNCDNAME__)
 #endif
         return plugin->on_message(message, wParam, lParam);
+    }
+
+    /** This must be defined and must always return TRUE
+     *
+     * It dates from when notepad++ had a unicode and a non unicode version
+     */
+    __declspec(dllexport) BOOL isUnicode()
+    {
+        return TRUE;
     }
 }

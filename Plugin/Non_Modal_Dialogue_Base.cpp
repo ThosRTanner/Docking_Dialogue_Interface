@@ -17,15 +17,16 @@
 
 #include "Notepad_plus_msgs.h"
 
+// This is because IWYU doesn't understand overrides and appears to have got
+// a very odd idea about using RECT
 #include <minwindef.h>
-#include <windef.h>
 
 #include <optional>
 
 Non_Modal_Dialogue_Base::Non_Modal_Dialogue_Base(
     int dialogue_ID, Plugin const *plugin, HWND parent
 ) :
-    Dialogue_Interface(plugin)
+    Super(plugin)
 {
     create_dialogue(dialogue_ID, parent);
     send_dialogue_info(NPPM_MODELESSDIALOG, MODELESSDIALOGADD);
@@ -43,7 +44,7 @@ void Non_Modal_Dialogue_Base::send_dialogue_info(int msg, int wParam) noexcept
 
 Non_Modal_Dialogue_Base::Message_Return
 Non_Modal_Dialogue_Base::on_unhandled_non_modal_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT /*message*/, WPARAM, LPARAM
 ) noexcept
 {
     return std::nullopt;

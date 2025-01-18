@@ -3,11 +3,10 @@
 // fail to build if you add them as per suggestions...
 
 #ifndef _WINDOWS_
-#include <basetsd.h>
+#include <intsafe.h>
 
 typedef struct tagRECT RECT;
 typedef struct HWND__ *HWND;
-typedef unsigned int UINT;
 typedef UINT_PTR WPARAM;
 typedef LONG_PTR LPARAM;
 typedef LONG_PTR LRESULT;

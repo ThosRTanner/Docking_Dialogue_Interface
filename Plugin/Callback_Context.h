@@ -39,7 +39,7 @@
 #include <memory>
 #include <unordered_map>
 
-//Stolen from PluginInterface.h
+// Stolen from PluginInterface.h
 typedef void(__cdecl *PFUNCPLUGINCMD)();
 
 template <class Callback_Class>

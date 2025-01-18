@@ -17,7 +17,7 @@
 #include "About_Dialogue.h"
 #include "Goto_Dialogue.h"
 
-#include "Plugin/Callback_Context.h"
+#include "Plugin/Callback_Context.h"    // IWYU pragma: keep
 
 #include "Notepad_plus_msgs.h"
 #include "PluginInterface.h"
@@ -38,7 +38,7 @@ wchar_t const *Demo_Plugin::get_plugin_name() noexcept
     return L"Demo Notepad++ plugin";
 }
 
-Demo_Plugin::Demo_Plugin(NppData const &data) : Plugin(data, get_plugin_name())
+Demo_Plugin::Demo_Plugin(NppData const &data) : Super(data, get_plugin_name())
 {
 }
 

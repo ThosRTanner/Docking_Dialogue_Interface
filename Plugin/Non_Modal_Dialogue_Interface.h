@@ -17,6 +17,10 @@
 
 #include "Min_Win_Defs.h"
 
+// This doesn't actually provide anything useful, but IWYU can't currently
+// work out that functions declared as override don't need to a separate header
+#include <intsafe.h>
+
 // Forward references
 class Plugin;
 
@@ -25,6 +29,8 @@ class Plugin;
  */
 class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
 {
+    typedef Non_Modal_Dialogue_Base Super;
+
   public:
     /** Create a docking dialogue.
      *

@@ -19,7 +19,7 @@
 
 #include "Scintilla.h"
 
-#include <windows.h> // IWYU pragma: keep
+#include <windows.h>    // IWYU pragma: keep
 
 #include <minwindef.h>
 #include <windef.h>
@@ -29,7 +29,7 @@
 #include <sstream>
 
 Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
-    Docking_Dialogue_Interface(IDD_GOTO_DIALOGUE, plugin)
+    Super(IDD_GOTO_DIALOGUE, plugin)
 {
     register_dialogue(
         menu_entry,
@@ -49,7 +49,7 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
 Goto_Dialogue::~Goto_Dialogue() = default;
 
 Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT message, WPARAM wParam, LPARAM
 )
 {
     switch (message)

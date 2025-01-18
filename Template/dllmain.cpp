@@ -18,8 +18,6 @@ typedef My_Plugin Npp_Plugin;
 
 #include "PluginInterface.h"
 
-#include <minwindef.h>
-
 #include <memory>
 
 std::unique_ptr<Npp_Plugin> plugin;
@@ -32,13 +30,4 @@ extern "C" __declspec(dllexport) wchar_t const *getName()
 extern "C" __declspec(dllexport) void setInfo(NppData data)
 {
     plugin = std::make_unique<Npp_Plugin>(data);
-}
-
-/** This must be defined and must always return TRUE
- *
- * It dates from when notepad++ had a unicode and a non unicode version
- */
-extern "C" __declspec(dllexport) BOOL isUnicode()
-{
-    return TRUE;
 }
