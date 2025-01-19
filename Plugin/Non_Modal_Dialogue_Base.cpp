@@ -24,7 +24,7 @@
 #include <optional>
 
 Non_Modal_Dialogue_Base::Non_Modal_Dialogue_Base(
-    int dialogue_ID, Plugin const *plugin, HWND parent
+    int dialogue_ID, Plugin const &plugin, HWND parent
 ) :
     Super(plugin)
 {

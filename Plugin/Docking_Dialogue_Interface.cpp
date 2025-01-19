@@ -27,7 +27,7 @@
 #include <optional>
 
 Docking_Dialogue_Interface::Docking_Dialogue_Interface(
-    int dialogue_ID, Plugin const *plugin
+    int dialogue_ID, Plugin const &plugin
 ) :
     Super(dialogue_ID, plugin)
 {

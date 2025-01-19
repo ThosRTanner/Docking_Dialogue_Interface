@@ -20,7 +20,7 @@
 class Plugin;
 
 Non_Modal_Dialogue_Interface::Non_Modal_Dialogue_Interface(
-    int dialogue_ID, Plugin const *plugin, HWND parent
+    int dialogue_ID, Plugin const &plugin, HWND parent
 ) :
     Super(dialogue_ID, plugin, parent)
 {

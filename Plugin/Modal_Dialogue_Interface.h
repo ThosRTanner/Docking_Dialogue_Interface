@@ -29,7 +29,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
 
   public:
     /** Create a modal dialogue. */
-    Modal_Dialogue_Interface(Plugin const *plugin);
+    Modal_Dialogue_Interface(Plugin const &plugin);
 
     Modal_Dialogue_Interface(Modal_Dialogue_Interface const &) = delete;
     Modal_Dialogue_Interface(Modal_Dialogue_Interface &&) = delete;

@@ -37,7 +37,7 @@ class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
      * dialogue_id is the resource number of the dialogue
      */
     Non_Modal_Dialogue_Interface(
-        int dialogue_id, Plugin const *plugin, HWND parent = nullptr
+        int dialogue_id, Plugin const &plugin, HWND parent = nullptr
     );
 
     Non_Modal_Dialogue_Interface(Non_Modal_Dialogue_Interface const &) = delete;
