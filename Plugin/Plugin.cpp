@@ -16,7 +16,9 @@
 #include "notepad++/Notepad_plus_msgs.h"
 #include "notepad++/Scintilla.h"
 
+#include <fileapi.h>
 #include <libloaderapi.h>
+
 #include <windows.h>    // IWYU pragma: keep
 
 #include <winuser.h>
@@ -52,17 +54,38 @@ std::wstring Plugin::get_config_dir() const
 {
     auto const len = send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, 0, nullptr);
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
-    send_to_notepad(
-        NPPM_GETPLUGINSCONFIGDIR, len * sizeof(wchar_t), buff.get()
-    );
-    return std::wstring(buff.get(), len);
+    wchar_t const *const dir = buff.get();
+    send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, len * sizeof(wchar_t), dir);
+
+    // Create the config directory if it doesn't exist yet.
+    // We don't bother checking for an error, it's OK if it already exists.
+    // NB We possibly should check for errors, in case the config dir isn't
+    // writeable, but...
+    ::CreateDirectory(dir, nullptr);
+
+    return std::wstring(dir, len);
 }
 
 std::wstring Plugin::get_document_path() const
 {
+    // FIXME Can't we get the length first?
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(MAX_PATH)};
     send_to_notepad(NPPM_GETFULLCURRENTPATH, 0, buff.get());
     return std::wstring(buff.get());
+}
+
+std::wstring Plugin::get_document_path(uptr_t buffer_id) const
+{
+    std::size_t const len =
+        send_to_notepad(NPPM_GETFULLPATHFROMBUFFERID, buffer_id, nullptr);
+    if (len == -1)
+    {
+        // This isn't very satisfactory. Possibly we should throw an error?
+        return L"";
+    }
+    auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
+    send_to_notepad(NPPM_GETFULLPATHFROMBUFFERID, buffer_id, buff.get());
+    return std::wstring(buff.get(), len);
 }
 
 HWND Plugin::get_scintilla_window() const noexcept
