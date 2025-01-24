@@ -162,7 +162,7 @@ class Plugin
      * We use them to bounce into a class method.
      */
     static FuncItem *getFuncsArray(int *);
-    static void beNotified(SCNotification *);
+    static void beNotified(SCNotification const *);
     static LRESULT messageProc(UINT, WPARAM, LPARAM);
 
     HINSTANCE module_;

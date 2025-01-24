@@ -138,6 +138,7 @@ LRESULT Plugin::on_message(UINT /*message*/, WPARAM, LPARAM)
 // the hard work myself
 extern "C"
 {
+#pragma warning(suppress : 26429)
     FuncItem *Plugin::getFuncsArray(int *nbF)
     {
 #ifdef __FUNCDNAME__
@@ -148,7 +149,7 @@ extern "C"
         return &*res.begin();
     }
 
-    void Plugin::beNotified(SCNotification *notification)
+    void Plugin::beNotified(SCNotification const *notification)
     {
 #ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:beNotified=" __FUNCDNAME__)
