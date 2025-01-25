@@ -278,11 +278,8 @@
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Base.cpp" />
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
+    <None Include="Changes.md" />
     <None Include="iwyu.bat" />
-    <None Include="notepad++\DockingFeature\Changes.md">
-      <SubType>
-      </SubType>
-    </None>
     <None Include="Template\dllmain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

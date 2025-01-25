@@ -149,9 +149,7 @@
     </None>
     <None Include="iwyu.bat" />
     <None Include="vs2022cpp20.imp" />
-    <None Include="notepad++\DockingFeature\Changes.md">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="Changes.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="demo\icon1.ico">
