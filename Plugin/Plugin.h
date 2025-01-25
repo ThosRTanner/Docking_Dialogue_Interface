@@ -14,6 +14,8 @@
 #pragma once
 
 #include "notepad++/PluginInterface.h"
+//Not entirely sure why include-what-you use decides you need this
+//rather than a forward reference to struct SCNotification.
 #include "notepad++/Scintilla.h"
 
 #include <corecrt.h>    // for _TRUNCATE
@@ -29,8 +31,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
-struct SCNotification;
 
 class Plugin
 {

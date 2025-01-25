@@ -28,7 +28,7 @@ class Goto_Dialogue : public Docking_Dialogue_Interface
     typedef Docking_Dialogue_Interface Super;
 
   public:
-    Goto_Dialogue(int menu_entry, Plugin const *plugin);
+    Goto_Dialogue(int menu_entry, Plugin const &plugin);
 
     ~Goto_Dialogue();
 

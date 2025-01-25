@@ -120,14 +120,14 @@ void Demo_Plugin::goto_dialogue()
     if (! goto_dialogue_)
     {
         goto_dialogue_ =
-            std::make_unique<Goto_Dialogue>(Menu_Entry_Goto_Dialogue, this);
+            std::make_unique<Goto_Dialogue>(Menu_Entry_Goto_Dialogue, *this);
     }
     goto_dialogue_->display();
 }
 
 void Demo_Plugin::about_dialogue() const
 {
-    About_Dialogue dialogue(this);
+    About_Dialogue dialogue(*this);
     auto const res = dialogue.get_result();
     if (res == About_Dialogue::Clicked_OK)
     {

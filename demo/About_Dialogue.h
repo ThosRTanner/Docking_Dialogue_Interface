@@ -28,7 +28,7 @@ class About_Dialogue : public Modal_Dialogue_Interface
     typedef Modal_Dialogue_Interface Super;
 
   public:
-    About_Dialogue(Plugin const *);
+    About_Dialogue(Plugin const &);
 
     ~About_Dialogue();
 

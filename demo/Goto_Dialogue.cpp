@@ -28,14 +28,14 @@
 #include <optional>
 #include <sstream>
 
-Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
+Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const &plugin) :
     Super(IDD_GOTO_DIALOGUE, plugin)
 {
     register_dialogue(
         menu_entry,
         Position::Dock_Bottom,
         static_cast<HICON>(::LoadImage(
-            plugin->module(),
+            plugin.module(),
             MAKEINTRESOURCE(IDI_ICON1),
             IMAGE_ICON,
             0,

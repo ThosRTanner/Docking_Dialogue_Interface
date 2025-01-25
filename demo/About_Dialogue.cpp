@@ -23,7 +23,7 @@
 
 #include <optional>
 
-About_Dialogue::About_Dialogue(Plugin const *plugin) : Super(plugin)
+About_Dialogue::About_Dialogue(Plugin const &plugin) : Super(plugin)
 {
     create_modal_dialogue(IDD_ABOUT_DIALOG);
 }
