@@ -58,8 +58,8 @@ std::wstring get_dialogue_name(HWND dialog_handle)
 
 }    // namespace
 
-Dialogue_Interface::Dialogue_Interface(Plugin const *plugin) :
-    plugin_(plugin),
+Dialogue_Interface::Dialogue_Interface(Plugin const &plugin) :
+    plugin_(&plugin),
     module_name_(get_module_name(plugin_->module())),
     dialogue_window_()
 {

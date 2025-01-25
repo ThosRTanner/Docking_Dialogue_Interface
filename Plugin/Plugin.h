@@ -14,6 +14,7 @@
 #pragma once
 
 #include "notepad++/PluginInterface.h"
+#include "notepad++/Scintilla.h"
 
 #include <corecrt.h>    // for _TRUNCATE
 #include <minwindef.h>
@@ -69,11 +70,17 @@ class Plugin
         return send_to_notepad(message, wParam, reinterpret_cast<LPARAM>(buff));
     }
 
-    /** Get the config directory */
+    /** Get the config directory.
+
+    This will create the directory if it doesn't exist.
+    */
     std::wstring get_config_dir() const;
 
     /** Get the current document path */
     std::wstring get_document_path() const;
+
+    /** Get the full path of a file from the buffer ID. */
+    std::wstring get_document_path(uptr_t) const;
 
     // Scintilla wrappers
 
@@ -155,7 +162,7 @@ class Plugin
      * We use them to bounce into a class method.
      */
     static FuncItem *getFuncsArray(int *);
-    static void beNotified(SCNotification *);
+    static void beNotified(SCNotification const *);
     static LRESULT messageProc(UINT, WPARAM, LPARAM);
 
     HINSTANCE module_;

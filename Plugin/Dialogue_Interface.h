@@ -29,7 +29,7 @@ class Plugin;
 class Dialogue_Interface
 {
   public:
-    Dialogue_Interface(Plugin const *plugin);
+    Dialogue_Interface(Plugin const &plugin);
 
     Dialogue_Interface(Dialogue_Interface const &) = delete;
     Dialogue_Interface(Dialogue_Interface &&) = delete;

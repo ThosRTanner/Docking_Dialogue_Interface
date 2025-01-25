@@ -24,7 +24,7 @@
 
 #include <optional>
 
-Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const *plugin) :
+Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const &plugin) :
     Super(plugin),
     result_()
 {
