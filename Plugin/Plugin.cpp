@@ -50,39 +50,32 @@ LRESULT Plugin::send_to_notepad(UINT message, WPARAM wParam, LPARAM lParam)
     return ::SendMessage(npp_data_._nppHandle, message, wParam, lParam);
 }
 
-std::wstring Plugin::get_config_dir() const
+std::filesystem::path Plugin::get_config_dir() const
 {
     auto const len = send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, 0, nullptr);
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
     wchar_t const *const dir = buff.get();
     send_to_notepad(NPPM_GETPLUGINSCONFIGDIR, len * sizeof(wchar_t), dir);
-
-    // Create the config directory if it doesn't exist yet.
-    // We don't bother checking for an error, it's OK if it already exists.
-    // NB We possibly should check for errors, in case the config dir isn't
-    // writeable, but...
-    ::CreateDirectory(dir, nullptr);
-
     return std::wstring(dir, len);
 }
 
-std::wstring Plugin::get_document_path() const
+std::filesystem::path Plugin::get_plugin_config_dir() const
 {
-    // FIXME Can't we get the length first?
-    auto buff{std::make_unique_for_overwrite<wchar_t[]>(MAX_PATH)};
-    send_to_notepad(NPPM_GETFULLCURRENTPATH, 0, buff.get());
-    return std::wstring(buff.get());
+    auto cfg_dir = get_config_dir();
+    cfg_dir.append(name_);
+    std::filesystem::create_directories(cfg_dir);
+    return cfg_dir;
 }
 
-std::wstring Plugin::get_document_path(uptr_t buffer_id) const
+std::filesystem::path Plugin::get_document_path() const
 {
-    std::size_t const len =
+    return get_document_path(send_to_notepad(NPPM_GETCURRENTBUFFERID));
+}
+
+std::filesystem::path Plugin::get_document_path(uptr_t buffer_id) const
+{
+    auto const len =
         send_to_notepad(NPPM_GETFULLPATHFROMBUFFERID, buffer_id, nullptr);
-    if (len == -1)
-    {
-        // This isn't very satisfactory. Possibly we should throw an error?
-        return L"";
-    }
     auto buff{std::make_unique_for_overwrite<wchar_t[]>(len + 1)};
     send_to_notepad(NPPM_GETFULLPATHFROMBUFFERID, buffer_id, buff.get());
     return std::wstring(buff.get(), len);
@@ -103,7 +96,7 @@ LRESULT Plugin::send_to_editor(UINT Msg, WPARAM wParam, LPARAM lParam)
 
 std::string Plugin::get_document_text() const
 {
-    LRESULT const length = send_to_editor(SCI_GETLENGTH);
+    auto const length = send_to_editor(SCI_GETLENGTH);
     auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
     send_to_editor(SCI_GETTEXT, length, buff.get());
     return std::string(buff.get(), length);
@@ -111,7 +104,7 @@ std::string Plugin::get_document_text() const
 
 std::string Plugin::get_line_text(int line) const
 {
-    LRESULT const length = send_to_editor(SCI_LINELENGTH, line);
+    auto const length = send_to_editor(SCI_LINELENGTH, line);
     auto buff{std::make_unique_for_overwrite<char[]>(length + 1)};
     send_to_editor(SCI_GETLINE, line, buff.get());
     return std::string(buff.get(), length);

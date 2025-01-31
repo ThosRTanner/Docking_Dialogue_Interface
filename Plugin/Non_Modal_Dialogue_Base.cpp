@@ -14,12 +14,10 @@
 #include "Non_Modal_Dialogue_Base.h"
 
 #include "Plugin.h"
+// IWYU not understanding overrides:
+// #include Min_Win_Defs.h"
 
 #include "notepad++/Notepad_plus_msgs.h"
-
-// This is because IWYU doesn't understand overrides and appears to have got
-// a very odd idea about using RECT
-#include <minwindef.h>
 
 #include <optional>
 
