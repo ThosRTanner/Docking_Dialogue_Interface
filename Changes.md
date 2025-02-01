@@ -1,6 +1,6 @@
 ﻿Change log:
 
-# 2025-01-25:
+# 2025-02-01:
 
 Important notes - Changes to API
 1. This now requires you to build with a C++ 20 compatible compiler.
