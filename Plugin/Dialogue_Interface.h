@@ -115,13 +115,12 @@ class Dialogue_Interface
   private:
     /** Implement this to handle messages.
      *
-     * Return std::nullopt to return FALSE to windows dialog processing, or
-     * a value to be set with SetWindowLongPtr (in which case TRUE will be
-     * returned). Note that some messages require you to return FALSE
-     * (std::nullopt) even if you do handle them.
+     * Return std::nullopt to indicate you haven't handled the message (in which
+     * case FALSE will be returned to windows), or a value to be returned via
+     * SetWindowLongPtr (in which case TRUE will be returned to windows).
      *
-     * If you don't handle the message, you MUST call the base class version of
-     * this.
+     * Note that some messages require you to return std::nullopt even if you
+     * have handled them.
      *
      * message, wParam and lParam are the values passed to
      * process_dialogue_message by windows
@@ -130,7 +129,13 @@ class Dialogue_Interface
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept(false);
 
-    /** Handler for unhandled messages */
+    /** Handler for unhandled messages
+     *
+     * This is called if on_dialogue_message returns std::nullopt
+     * and is used by the higher level Dialogue classes to provide
+     * some default handling for some messages.
+     *
+     */
     virtual Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
     ) noexcept;

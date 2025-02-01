@@ -12,7 +12,7 @@ Other:
 1. It is no longer necessary to supply a stub `isUnicode` function - it is supplied in the `Plugin` class.
 1. Changes to the `Plugin` class:
 	1. `get_document_path` can now be supplied with a scintilla buffer ID. This will get the document path associated with the specified buffer.
-	1. `get_config_dir` will now create the config directory if it doesn't exist
+	1. A new function `get_plugin_config_dir` has been added which will, if necessary, create a directory inside the Notepad++ config directory with the name of your plugin.
 
 
 # 2024-02-29 ish

@@ -108,13 +108,21 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 
    Same, but avoids messy reinterpret_casts round the windows API
     
-1. `std::wstring get_config_dir() const`
+1. `std::filesystem::path get_config_dir() const`
 
-    Get the notepad++ config directory.
+    Get the path to the notepad++ config directory.
 
-1. `std::wstring get_document_path() const`
+1. `std::filesystem::path get_plugin_config_dir() const`
+
+    Get a path to a directory with the name of your plugin in the notepad++ config_directory. The directory will be created if necessary.
+
+1. `std::filesystem::path get_document_path() const`
 
     Get the current document path.
+
+1. `std::filesystem::path get_document_path(uptr_t buffer_id) const`
+
+    Get the path to the document in the specified buffer.
 
 1. `HWND get_scintilla_window() const noexcept`
 
@@ -199,7 +207,9 @@ This is a base class to all of the dialogue classes, and so all the protected me
 
 ##### (Private) Virtual Methods you should implement
 
-1. `virtual std::optional<LONG_PTR> on_dialogue_message(UINT message, WPARAM wParam, LPARAM lParam)`
+1. `virtual Message_Return on_dialogue_message(UINT message, WPARAM wParam, LPARAM lParam)`
+
+    `Message_Return` is a typdef for `std::optional<INT_PTR>` but it's astonishingly easy to get that wrong if you look at stackoverflow, hence the typedef.
 
      Return `std::nullopt` (to return `FALSE` to windows dialog processing), or a value to be set with `::SetWindowLongPtr` (in which case `TRUE` will be returned to windows).
      Note that some messages require you to return `FALSE` (`std::nullopt`) even if you do handle them.
@@ -249,9 +259,10 @@ Most of these are wrappers round windows functions (or macros) of the same or si
 1. `void add_item_callback(int item, Item_Callback_Function callback_func)`
     This allows you to "subclass" (the phrase windows uses) a window element, to intercept events on it.
 
-    Item_Callback_Function is defined as:
+    `Item_Callback_Function` is defined as:
 
-    `typedef std::function<std::optional<LRESULT>(HWND, UINT, WPARAM, LPARAM)> Item_Callback_Function`
+    `typedef std::optional<LRESULT> Item_Callback_Return`;
+    `typedef std::function<Item_Callback_Return(HWND, UINT, WPARAM, LPARAM)> Item_Callback_Function`
 
     This behaves in much the same way as `on_dialogue_message`, in that you return `std::nullopt` if you've not handled the callback. Note that because it is a std::function, if you're using a class instance method, you will need to wrap it with std::bind and 4 placeholders...
 

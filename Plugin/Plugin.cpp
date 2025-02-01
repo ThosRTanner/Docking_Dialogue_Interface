@@ -16,7 +16,6 @@
 #include "notepad++/Notepad_plus_msgs.h"
 #include "notepad++/Scintilla.h"
 
-#include <fileapi.h>
 #include <libloaderapi.h>
 
 #include <windows.h>    // IWYU pragma: keep
