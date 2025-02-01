@@ -11,18 +11,24 @@
     <Filter Include="Source Files\Source">
       <UniqueIdentifier>{254660fe-9ef9-4ed6-93f0-f7f0b7c6b893}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Notepad++ Headers">
-      <UniqueIdentifier>{3748ec16-8109-4976-9ad2-3d15a7c59f26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Notepad++ Headers\DockingFeature">
-      <UniqueIdentifier>{9f890e2e-622f-499a-b1fa-4a019f89f63e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Demo\Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\Template">
       <UniqueIdentifier>{fe0129bc-5ee8-4172-9ff4-a3ae995e572b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raw Notepad++ Headers">
+      <UniqueIdentifier>{3748ec16-8109-4976-9ad2-3d15a7c59f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raw Notepad++ Headers\DockingFeature">
+      <UniqueIdentifier>{9f890e2e-622f-499a-b1fa-4a019f89f63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notepad++ Headers">
+      <UniqueIdentifier>{fa8cadce-43aa-41d5-8aff-bd9cc8940954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notepad++ Headers\DockingFeature">
+      <UniqueIdentifier>{bfbf5ceb-5e6c-4c99-aebf-d3f34571557b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,28 +66,46 @@
       <Filter>Source Files\Source</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\menuCmdID.h">
-      <Filter>Notepad++ Headers</Filter>
+      <Filter>Raw Notepad++ Headers</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\Notepad_plus_msgs.h">
-      <Filter>Notepad++ Headers</Filter>
+      <Filter>Raw Notepad++ Headers</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\PluginInterface.h">
-      <Filter>Notepad++ Headers</Filter>
+      <Filter>Raw Notepad++ Headers</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\Sci_Position.h">
-      <Filter>Notepad++ Headers</Filter>
+      <Filter>Raw Notepad++ Headers</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\Scintilla.h">
-      <Filter>Notepad++ Headers</Filter>
+      <Filter>Raw Notepad++ Headers</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\DockingFeature\Docking.h">
-      <Filter>Notepad++ Headers\DockingFeature</Filter>
+      <Filter>Raw Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
     <ClInclude Include="plugintemplate\src\DockingFeature\dockingResource.h">
+      <Filter>Raw Notepad++ Headers\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Min_Win_Defs.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="notepad++\PluginInterface.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="notepad++\Notepad_plus_msgs.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="notepad++\Scintilla.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="notepad++\menuCmdID.h">
+      <Filter>Notepad++ Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="notepad++\DockingFeature\Docking.h">
       <Filter>Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
-    <ClInclude Include="Min_Win_Defs.h">
-      <Filter>Source Files\Source</Filter>
+    <ClInclude Include="notepad++\DockingFeature\dockingResource.h">
+      <Filter>Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +148,8 @@
       <Filter>Source Files\Template</Filter>
     </None>
     <None Include="iwyu.bat" />
-    <None Include="vc2022cpp17.imp" />
+    <None Include="vs2022cpp20.imp" />
+    <None Include="Changes.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="demo\icon1.ico">

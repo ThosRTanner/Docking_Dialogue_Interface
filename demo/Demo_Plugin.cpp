@@ -17,12 +17,12 @@
 #include "About_Dialogue.h"
 #include "Goto_Dialogue.h"
 
-#include "Plugin/Callback_Context.h"
+#include "Plugin/Callback_Context.h"    // IWYU pragma: keep
 
-#include "Notepad_plus_msgs.h"
-#include "PluginInterface.h"
-#include "Scintilla.h"
-#include "menuCmdID.h"
+#include "notepad++/Notepad_plus_msgs.h"
+#include "notepad++/PluginInterface.h"
+#include "notepad++/Scintilla.h"
+#include "notepad++/menuCmdID.h"
 
 #include <windows.h>    // IWYU pragma: keep
 
@@ -38,7 +38,7 @@ wchar_t const *Demo_Plugin::get_plugin_name() noexcept
     return L"Demo Notepad++ plugin";
 }
 
-Demo_Plugin::Demo_Plugin(NppData const &data) : Plugin(data, get_plugin_name())
+Demo_Plugin::Demo_Plugin(NppData const &data) : Super(data, get_plugin_name())
 {
 }
 
@@ -120,14 +120,14 @@ void Demo_Plugin::goto_dialogue()
     if (! goto_dialogue_)
     {
         goto_dialogue_ =
-            std::make_unique<Goto_Dialogue>(Menu_Entry_Goto_Dialogue, this);
+            std::make_unique<Goto_Dialogue>(Menu_Entry_Goto_Dialogue, *this);
     }
     goto_dialogue_->display();
 }
 
 void Demo_Plugin::about_dialogue() const
 {
-    About_Dialogue dialogue(this);
+    About_Dialogue dialogue(*this);
     auto const res = dialogue.get_result();
     if (res == About_Dialogue::Clicked_OK)
     {

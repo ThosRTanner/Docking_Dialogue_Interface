@@ -14,16 +14,18 @@
 
 #include "Modal_Dialogue_Interface.h"
 
-#include <windows.h>   // IWYU pragma: keep
+#include <basetsd.h>
 
+#include <windows.h>    // IWYU pragma: keep
+// Windows.h is required for the following to compile:
 #include <minwindef.h>
 #include <windef.h>
 #include <winuser.h>
 
 #include <optional>
 
-Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const *plugin) :
-    Dialogue_Interface(plugin),
+Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const &plugin) :
+    Super(plugin),
     result_()
 {
 }
@@ -54,7 +56,7 @@ BOOL Modal_Dialogue_Interface::centre_dialogue() const noexcept
 
 Modal_Dialogue_Interface::Message_Return
 Modal_Dialogue_Interface::on_unhandled_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT message, WPARAM wParam, LPARAM
 ) noexcept
 {
     // This provides default handlers for OK, cancel, and close clicks.
@@ -100,7 +102,7 @@ Modal_Dialogue_Interface::on_unhandled_dialogue_message(
 INT_PTR Modal_Dialogue_Interface::create_modal_dialogue(int dialogID) noexcept
 {
     HWND focus = ::GetFocus();
-    result_ = Dialogue_Interface::create_modal_dialogue(dialogID);
+    result_ = Super::create_modal_dialogue(dialogID);
     ::SetFocus(focus);
     return result_;
 }

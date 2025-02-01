@@ -17,7 +17,7 @@
 
 #include "Min_Win_Defs.h"
 
-#include <basetsd.h>
+#include <intsafe.h>
 
 // Forward declarations.
 class Plugin;
@@ -25,9 +25,11 @@ class Plugin;
 /** This provides an abstraction for creating a docking dialogue. */
 class Modal_Dialogue_Interface : public Dialogue_Interface
 {
+    typedef Dialogue_Interface Super;
+
   public:
     /** Create a modal dialogue. */
-    Modal_Dialogue_Interface(Plugin const *plugin);
+    Modal_Dialogue_Interface(Plugin const &plugin);
 
     Modal_Dialogue_Interface(Modal_Dialogue_Interface const &) = delete;
     Modal_Dialogue_Interface(Modal_Dialogue_Interface &&) = delete;

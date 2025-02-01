@@ -17,19 +17,24 @@
 
 #include "Min_Win_Defs.h"
 
+// IWYU doesn't understand override keyword properly
+#include <intsafe.h>
+
 // Forward declarations.
 class Plugin;
 
 /** This provides the base abstraction for creating a non modal dialogue. */
 class Non_Modal_Dialogue_Base : public Dialogue_Interface
 {
+    typedef Dialogue_Interface Super;
+
   public:
     /** Create a docking dialogue.
      *
      * dialogue_id is the resource number of the dialogue
      */
     Non_Modal_Dialogue_Base(
-        int dialogue_id, Plugin const *plugin, HWND parent = nullptr
+        int dialogue_id, Plugin const &plugin, HWND parent = nullptr
     );
 
     Non_Modal_Dialogue_Base(Non_Modal_Dialogue_Base const &) = delete;

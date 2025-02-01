@@ -16,9 +16,9 @@
 
 #include "Plugin.h"
 
-#include "DockingFeature/Docking.h"
-#include "DockingFeature/dockingResource.h"
-#include "Notepad_plus_msgs.h"
+#include "notepad++/DockingFeature/Docking.h"
+#include "notepad++/DockingFeature/dockingResource.h"
+#include "notepad++/Notepad_plus_msgs.h"
 
 #include <minwindef.h>
 #include <windef.h>
@@ -27,9 +27,9 @@
 #include <optional>
 
 Docking_Dialogue_Interface::Docking_Dialogue_Interface(
-    int dialogue_ID, Plugin const *plugin
+    int dialogue_ID, Plugin const &plugin
 ) :
-    Non_Modal_Dialogue_Base(dialogue_ID, plugin)
+    Super(dialogue_ID, plugin)
 {
 }
 

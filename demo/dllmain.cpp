@@ -15,31 +15,21 @@
 #include "Demo_Plugin.h"
 typedef Demo_Plugin Npp_Plugin;
 
-#include "PluginInterface.h"
-
-#include <windows.h> // IWYU pragma: keep
-
-#include <minwindef.h>
+#include "notepad++/PluginInterface.h"
 
 #include <memory>
 
 std::unique_ptr<Npp_Plugin> plugin;
 
-extern "C" __declspec(dllexport) wchar_t const *getName()
+extern "C"
 {
-    return Npp_Plugin::get_plugin_name();
-}
+    __declspec(dllexport) wchar_t const *getName()
+    {
+        return Npp_Plugin::get_plugin_name();
+    }
 
-extern "C" __declspec(dllexport) void setInfo(NppData data)
-{
-    plugin = std::make_unique<Npp_Plugin>(data);
-}
-
-/** This must be defined and must always return TRUE
- *
- * It dates from when notepad++ had a unicode and a non unicode version
- */
-extern "C" __declspec(dllexport) BOOL isUnicode()
-{
-    return TRUE;
+    __declspec(dllexport) void setInfo(NppData data)
+    {
+        plugin = std::make_unique<Npp_Plugin>(data);
+    }
 }

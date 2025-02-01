@@ -15,15 +15,15 @@
 
 #include "resource.h"
 
-#include <windows.h>  // IWYU pragma: keep
-
+// Need windows.h for winuser.h to compile
+#include <windows.h>    // IWYU pragma: keep
+#include <winuser.h>    // For WM_INITDIALOG
+// And this is IWYU not being able to understand 'override'
 #include <minwindef.h>
-#include <winuser.h>
 
 #include <optional>
 
-About_Dialogue::About_Dialogue(Plugin const *plugin) :
-    Modal_Dialogue_Interface(plugin)
+About_Dialogue::About_Dialogue(Plugin const &plugin) : Super(plugin)
 {
     create_modal_dialogue(IDD_ABOUT_DIALOG);
 }
@@ -31,7 +31,7 @@ About_Dialogue::About_Dialogue(Plugin const *plugin) :
 About_Dialogue::~About_Dialogue() = default;
 
 About_Dialogue::Message_Return About_Dialogue::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT message, WPARAM, LPARAM
 ) noexcept
 {
     switch (message)

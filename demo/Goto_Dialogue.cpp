@@ -17,9 +17,9 @@
 
 #include "Plugin/Plugin.h"
 
-#include "Scintilla.h"
+#include "notepad++/Scintilla.h"
 
-#include <windows.h> // IWYU pragma: keep
+#include <windows.h>    // IWYU pragma: keep
 
 #include <minwindef.h>
 #include <windef.h>
@@ -28,14 +28,14 @@
 #include <optional>
 #include <sstream>
 
-Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
-    Docking_Dialogue_Interface(IDD_GOTO_DIALOGUE, plugin)
+Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const &plugin) :
+    Super(IDD_GOTO_DIALOGUE, plugin)
 {
     register_dialogue(
         menu_entry,
         Position::Dock_Bottom,
         static_cast<HICON>(::LoadImage(
-            plugin->module(),
+            plugin.module(),
             MAKEINTRESOURCE(IDI_ICON1),
             IMAGE_ICON,
             0,
@@ -49,7 +49,7 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const *plugin) :
 Goto_Dialogue::~Goto_Dialogue() = default;
 
 Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT message, WPARAM wParam, LPARAM
 )
 {
     switch (message)

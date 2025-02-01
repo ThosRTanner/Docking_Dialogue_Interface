@@ -13,21 +13,25 @@
 
 #pragma once
 
-#include "PluginInterface.h"
+#include "notepad++/PluginInterface.h"
+// Not entirely sure why include-what-you use decides you need this
+// rather than a forward reference to struct SCNotification.
+#include "notepad++/Scintilla.h"
 
-#include <corecrt.h> // for _TRUNCATE
-#include <windows.h> // IWYU pragma: keep
-
+#include <corecrt.h>    // for _TRUNCATE
 #include <minwindef.h>
+
+// windows.h is required for subsequent headers to compile.
+#include <windows.h>    // IWYU pragma: keep
+
 #include <windef.h>
 
 #include <cwchar>
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
-
-struct SCNotification;
 
 class Plugin
 {
@@ -67,11 +71,25 @@ class Plugin
         return send_to_notepad(message, wParam, reinterpret_cast<LPARAM>(buff));
     }
 
-    /** Get the config directory */
-    std::wstring get_config_dir() const;
+    /** Get the notepad++ config directory. */
+    std::filesystem::path get_config_dir() const;
+
+    /** Get the plugin config directory.
+
+    This will return the path to a directory in the notepad++
+    config directory with the name of the current plugin, creating
+    it if it doesn't exist.
+
+    It is generally preferable to use this as, while plugin names are guaranteed
+    unique, filenames generally aren't.
+    */
+    std::filesystem::path get_plugin_config_dir() const;
 
     /** Get the current document path */
-    std::wstring get_document_path() const;
+    std::filesystem::path get_document_path() const;
+
+    /** Get the full path of a file from the buffer ID. */
+    std::filesystem::path get_document_path(uptr_t) const;
 
     // Scintilla wrappers
 
@@ -106,12 +124,13 @@ class Plugin
     {
         contexts[entry] = std::make_unique<Context>(context);
         // In C++20 this could be made a little easier to read.
-        FuncItem item;
+        FuncItem item{
+            ._pFunc = contexts[entry]->reserve(self, callback),
+            ._cmdID = entry,
+            ._init2Check = checked,
+            ._pShKey = key
+        };
         wcsncpy_s(item._itemName, message, _TRUNCATE);
-        item._pFunc = contexts[entry]->reserve(self, callback);
-        item._cmdID = entry;
-        item._init2Check = checked;
-        item._pShKey = key;
         return item;
     }
 
@@ -153,7 +172,7 @@ class Plugin
      * We use them to bounce into a class method.
      */
     static FuncItem *getFuncsArray(int *);
-    static void beNotified(SCNotification *);
+    static void beNotified(SCNotification const *);
     static LRESULT messageProc(UINT, WPARAM, LPARAM);
 
     HINSTANCE module_;

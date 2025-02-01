@@ -15,12 +15,20 @@
 
 #include "Plugin/Docking_Dialogue_Interface.h"
 
+// These 2 don't actually provide anything useful, but IWYU can't currently
+// work out that functions declared as override don't need to a separate header
+#include "Plugin/Min_Win_Defs.h"
+
+#include <intsafe.h>
+
 class Plugin;
 
 class Goto_Dialogue : public Docking_Dialogue_Interface
 {
+    typedef Docking_Dialogue_Interface Super;
+
   public:
-    Goto_Dialogue(int menu_entry, Plugin const *plugin);
+    Goto_Dialogue(int menu_entry, Plugin const &plugin);
 
     ~Goto_Dialogue();
 

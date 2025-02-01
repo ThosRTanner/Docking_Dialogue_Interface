@@ -58,8 +58,8 @@ std::wstring get_dialogue_name(HWND dialog_handle)
 
 }    // namespace
 
-Dialogue_Interface::Dialogue_Interface(Plugin const *plugin) :
-    plugin_(plugin),
+Dialogue_Interface::Dialogue_Interface(Plugin const &plugin) :
+    plugin_(&plugin),
     module_name_(get_module_name(plugin_->module())),
     dialogue_window_()
 {
@@ -206,7 +206,7 @@ void Dialogue_Interface::add_item_callback(
 }
 
 Dialogue_Interface::Message_Return Dialogue_Interface::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT /*message*/, WPARAM, LPARAM
 ) noexcept(false)
 {
     return std::nullopt;
@@ -214,7 +214,7 @@ Dialogue_Interface::Message_Return Dialogue_Interface::on_dialogue_message(
 
 Dialogue_Interface::Message_Return
 Dialogue_Interface::on_unhandled_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM lParam
+    UINT /*message*/, WPARAM, LPARAM
 ) noexcept
 {
     return std::nullopt;
