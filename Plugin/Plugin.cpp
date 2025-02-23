@@ -22,6 +22,7 @@
 
 #include <winuser.h>
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -38,6 +39,21 @@ Plugin::Plugin(NppData const &data, std::wstring_view name) :
         L"",
         &module_
     );
+
+    //Windows is evil and there's no way to determine the number of characters
+    //required to hold  name. Therefore this pure ghastliness results:
+    std::wstring module_path;
+    DWORD copied = 0;
+    DWORD new_size = 0;
+    do
+    {
+        new_size += _MAX_PATH;
+        module_path.resize(new_size);
+        copied = GetModuleFileName(module_, &*module_path.begin(), new_size);
+    } while (copied >= new_size);
+
+    module_path_ = &*module_path.begin();
+
     plugin = this;
 }
 

@@ -51,6 +51,18 @@ class Plugin
         return module_;
     }
 
+    /** Get the plugin name. */
+    std::wstring get_name() const
+    {
+        return name_;
+    }
+
+    /** Get the current modules path. */
+    std::filesystem::path get_module_path() const
+    {
+        return module_path_;
+    }
+
     // Notepad++ wrappers
 
     /** Get the notepad++ window */
@@ -178,6 +190,7 @@ class Plugin
     HINSTANCE module_;
     NppData npp_data_;
     std::wstring name_;
+    std::filesystem::path module_path_;
 };
 
 #define DEFINE_PLUGIN_MENU_CALLBACKS(class)         \

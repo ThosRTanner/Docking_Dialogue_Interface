@@ -1,5 +1,10 @@
 ﻿Change log:
 
+# 2025-02-23
+1. Changes to the `Plugin` class:
+   1. Addded `get_name` which returns the name with which you registered.
+   1. Added `get_module_path` which returns the path to the module .dll.
+
 # 2025-02-01:
 
 Important notes - Changes to API

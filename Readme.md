@@ -90,11 +90,17 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 
 1. `Plugin(NppData const &, std::wstring_view name)`
 
-    This takes the pointer to the notepad++ data which your constructor is passed, and the name of your plugin. This should be the same as your `get_name()` method returns.
+   This takes the pointer to the notepad++ data which your constructor is passed, and the name of your plugin. This should be the same as your `get_name()` method returns.
 
 1. `HINSTANCE module() const noexcept`
 
    Gets your module handle.
+
+1. `std::wstring get_name() const`
+   This returns the name with which you constructed the plugin.
+
+1. `std::filesystem::path get_module_path() const`
+   This returns the path to the module .dll.
 
 1. `HWND get_notepad_window() const noexcept`
 
