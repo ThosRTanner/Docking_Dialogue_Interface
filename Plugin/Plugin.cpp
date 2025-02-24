@@ -22,6 +22,8 @@
 
 #include <winuser.h>
 
+#include <stdlib.h>
+
 #include <filesystem>
 #include <memory>
 #include <string>
