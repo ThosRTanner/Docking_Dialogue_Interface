@@ -1,11 +1,12 @@
 ﻿Change log:
 
 # 2025-02-23
+
 1. Changes to the `Plugin` class:
    1. Addded `get_name` which returns the name with which you registered.
    1. Added `get_module_path` which returns the path to the module .dll.
 
-# 2025-02-01:
+# 2025-02-01
 
 Important notes - Changes to API
 1. This now requires you to build with a C++ 20 compatible compiler.
@@ -18,7 +19,6 @@ Other:
 1. Changes to the `Plugin` class:
 	1. `get_document_path` can now be supplied with a scintilla buffer ID. This will get the document path associated with the specified buffer.
 	1. A new function `get_plugin_config_dir` has been added which will, if necessary, create a directory inside the Notepad++ config directory with the name of your plugin.
-
 
 # 2024-02-29 ish
 
