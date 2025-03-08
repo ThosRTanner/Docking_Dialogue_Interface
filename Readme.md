@@ -176,10 +176,18 @@ Note that these are public mainly so that dialogue classes can get hold of usefu
 1. `template <typename Callbacks, typename Context, typename Class, typename Callback>
     FuncItem make_callback(
         int entry, wchar_t const *message, Callbacks &contexts, Context context,
-        Class self, Callback callback, bool check = false, ShortcutKey *key = nullptr
+        Class self, Callback callback, bool check = false, ShortcutKey const *key = nullptr
     )`
 
    This is a utility function to aid setting up notepad++ menu definition. You are strongly advised to use the `PLUGIN_MENU_MAKE_CALLBACK` macro for this.
+
+1. `template <typename Callbacks, typename Context, typename Class, typename Callback>
+    FuncItem make_callback(
+        int entry, std::wstring const &message, Callbacks &contexts, Context context,
+        Class self, Callback callback, bool check = false, ShortcutKey const *key = nullptr
+    )`
+
+   An overload of the above. Note that although it would be possible to use std::wstring_view to make these 2 back into one, wstring_views are not guaranteed null terminated, and I do not want to have to code round that.
 
 1. `template <typename Callbacks, typename Context, typename Class>
     FuncItem make_separator(int entry, Callbacks &contexts, Context context, Class self)`
@@ -219,8 +227,7 @@ This is a base class to all of the dialogue classes, and so all the protected me
 
    `Message_Return` is a typdef for `std::optional<INT_PTR>` but it's astonishingly easy to get that wrong if you look at stackoverflow, hence the typedef.
 
-   Return `std::nullopt` (to return `FALSE` to windows dialog processing), or a value to be set with `::SetWindowLongPtr` (in which case `TRUE` will be returned to windows).
-   Note that some messages require you to return `FALSE` (`std::nullopt`) even if you do handle them.
+   Return `std::nullopt` (to return `FALSE` to windows dialog processing), or a value to be set with `::SetWindowLongPtr` (in which case `TRUE` will be returned to windows). Note that some messages require you to return `FALSE` (`std::nullopt`) even if you do handle them.
 
    `message`, `wParam` and `lParam` are the values passed to a `DLGPROC` function by windows,
 

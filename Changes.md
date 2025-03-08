@@ -1,5 +1,11 @@
 ﻿Change log:
 
+# 2025-03-08
+
+1. Changes to the `Plugin` class:
+   1. Add an override to `make_callback` to allow passing a `std::wstring`` as the menu text.
+   1. Make `make_callback` take `const` pointers to the shortcut key definitions.
+
 # 2025-02-23
 
 1. Changes to the `Plugin` class:
