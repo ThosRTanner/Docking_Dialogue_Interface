@@ -131,19 +131,47 @@ class Plugin
     FuncItem make_callback(
         int entry, wchar_t const *message, Callbacks &contexts, Context context,
         Class self, Callback callback, bool checked = false,
-        ShortcutKey *key = nullptr
+        ShortcutKey const *key = nullptr
     )
     {
         contexts[entry] = std::make_unique<Context>(context);
-        // In C++20 this could be made a little easier to read.
         FuncItem item{
             ._pFunc = contexts[entry]->reserve(self, callback),
             ._cmdID = entry,
             ._init2Check = checked,
-            ._pShKey = key
+#pragma warning(suppress : 26492)
+            ._pShKey = const_cast<ShortcutKey *>(key)
         };
         wcsncpy_s(item._itemName, message, _TRUNCATE);
         return item;
+    }
+
+    /* Ditto, taking std::wstring.
+
+    You may well ask why, when a wstring_view would work for both.
+
+    Because wstring_view isn't guaranteed to be null terminated and there's no
+    simple API to copy n characters to a buffer of length m and null terminate
+    the buffer.
+    */
+    template <
+        typename Callbacks, typename Context, typename Class, typename Callback>
+    FuncItem make_callback(
+        int entry, std::wstring const &message, Callbacks &contexts,
+        Context context, Class self, Callback callback, bool checked = false,
+        ShortcutKey const *key = nullptr
+    )
+    {
+        return make_callback(
+            entry,
+            message.c_str(),
+            contexts,
+            context,
+            self,
+            callback,
+            checked,
+            key
+        );
     }
 
     /** Wrapper around make_callback for separators */

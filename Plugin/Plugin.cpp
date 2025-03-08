@@ -155,6 +155,7 @@ extern "C"
 #pragma comment(linker, "/EXPORT:getFuncsArray=" __FUNCDNAME__)
 #endif
         auto &res = plugin->on_get_menu_entries();
+#pragma warning(suppress : 26472)
         *nbF = static_cast<int>(res.size());
         return &*res.begin();
     }
