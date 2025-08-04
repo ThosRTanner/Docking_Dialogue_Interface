@@ -42,8 +42,8 @@ Plugin::Plugin(NppData const &data, std::wstring_view name) :
         &module_
     );
 
-    //Windows is evil and there's no way to determine the number of characters
-    //required to hold  name. Therefore this pure ghastliness results:
+    // Windows is evil and there's no way to determine the number of characters
+    // required to hold  name. Therefore this pure ghastliness results:
     std::wstring module_path;
     DWORD copied = 0;
     DWORD new_size = 0;

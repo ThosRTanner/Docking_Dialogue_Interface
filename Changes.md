@@ -1,4 +1,8 @@
-﻿# Change log
+# Change log
+
+## 2025-08-04
+
+Update to latest plugintemplate version.
 
 ## 2025-03-08
 
