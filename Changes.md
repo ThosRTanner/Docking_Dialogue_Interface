@@ -1,5 +1,12 @@
 # Change log
 
+## 2025-11-07
+
+1. Update to latest plugintemplate version.
+1. Use clang-tidy.
+   1. This has changed the dllmain template a little.
+1. Adds a header "Casts.h" which contain some casts that suppress the warnings.
+
 ## 2025-08-04
 
 Update to latest plugintemplate version.
@@ -13,7 +20,7 @@ Update to latest plugintemplate version.
 ## 2025-02-23
 
 1. Changes to the `Plugin` class:
-   1. Addded `get_name` which returns the name with which you registered.
+   1. Added `get_name` which returns the name with which you registered.
    1. Added `get_module_path` which returns the path to the module .dll.
 
 ## 2025-02-01

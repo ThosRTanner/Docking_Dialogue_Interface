@@ -14,6 +14,7 @@
 
 #include "Docking_Dialogue_Interface.h"
 
+#include "Casts.h"
 #include "Plugin.h"
 
 #include "notepad++/DockingFeature/Docking.h"
@@ -33,9 +34,7 @@ Docking_Dialogue_Interface::Docking_Dialogue_Interface(
 {
 }
 
-Docking_Dialogue_Interface::~Docking_Dialogue_Interface()
-{
-}
+Docking_Dialogue_Interface::~Docking_Dialogue_Interface() = default;
 
 void Docking_Dialogue_Interface::display() noexcept
 {
@@ -109,8 +108,7 @@ Docking_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(
     {
         case WM_NOTIFY:
         {
-#pragma warning(suppress : 26490)
-            NMHDR const *pnmh = reinterpret_cast<LPNMHDR>(lParam);
+            NMHDR const *pnmh = windows_cast_to<LPNMHDR, LPARAM>(lParam);
 
             if (pnmh->hwndFrom == plugin()->get_notepad_window())
             {

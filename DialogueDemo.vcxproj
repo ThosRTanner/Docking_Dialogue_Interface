@@ -77,18 +77,33 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <ClangTidyPrependExtraArgs>-Wno-unused-command-line-argument</ClangTidyPrependExtraArgs>
+    <OutDir>$(SolutionDir)$(ShortProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <OutDir>$(SolutionDir)$(ShortProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <ClangTidyPrependExtraArgs>-Wno-unused-command-line-argument</ClangTidyPrependExtraArgs>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <OutDir>$(SolutionDir)$(ShortProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\build\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <OutDir>$(SolutionDir)$(ShortProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -106,7 +121,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions> /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <EnablePREfast>true</EnablePREfast>
-      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
@@ -135,7 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
@@ -176,7 +191,7 @@
       <AdditionalOptions> /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <EnablePREfast>true</EnablePREfast>
-      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
@@ -184,6 +199,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
+      <AdditionalOptions>/NOIMPLIB /NOEXP %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File post-build.ps1  $(OutDir)</Command>
@@ -211,7 +227,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
@@ -259,6 +275,7 @@
     <ClInclude Include="plugintemplate\src\Scintilla.h" />
     <ClInclude Include="plugintemplate\src\Sci_Position.h" />
     <ClInclude Include="Plugin\Callback_Context.h" />
+    <ClInclude Include="Plugin\Casts.h" />
     <ClInclude Include="Plugin\Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Docking_Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Min_Win_Defs.h" />
@@ -266,6 +283,12 @@
     <ClInclude Include="Plugin\Non_Modal_Dialogue_Base.h" />
     <ClInclude Include="Plugin\Non_Modal_Dialogue_Interface.h" />
     <ClInclude Include="Plugin\Plugin.h" />
+    <ClInclude Include="Template\My_Plugin.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo\About_Dialogue.cpp" />
@@ -278,6 +301,8 @@
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Base.cpp" />
     <ClCompile Include="Plugin\Non_Modal_Dialogue_Interface.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
+    <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
     <None Include="Changes.md" />
     <None Include="iwyu.bat" />
     <None Include="Template\dllmain.cpp">
@@ -302,4 +327,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <!-- The following will move the code analysis output files and put them in the intermediate folder -->
+  <PropertyGroup>
+    <CodeAnalysisLogFile>$(IntermediateOutputPath)$(TargetFileName).CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisSucceededFile>$(IntermediateOutputPath)$(TargetFileName).lastcodeanalysissucceeded</CodeAnalysisSucceededFile>
+  </PropertyGroup>
 </Project>

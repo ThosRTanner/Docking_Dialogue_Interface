@@ -18,6 +18,8 @@
 // rather than a forward reference to struct SCNotification.
 #include "notepad++/Scintilla.h"
 
+#include "Casts.h"
+
 #include <corecrt.h>    // for _TRUNCATE
 #include <minwindef.h>
 
@@ -79,8 +81,7 @@ class Plugin
     LRESULT send_to_notepad(UINT message, WPARAM wParam, void const *buff)
         const noexcept
     {
-#pragma warning(suppress : 26490)
-        return send_to_notepad(message, wParam, reinterpret_cast<LPARAM>(buff));
+        return send_to_notepad(message, wParam, windows_cast_to<LPARAM, void const *>(buff));
     }
 
     /** Get the notepad++ config directory. */
@@ -109,13 +110,12 @@ class Plugin
     HWND get_scintilla_window() const noexcept;
 
     /** Send a message to the current editor window */
-    LRESULT send_to_editor(UINT message, WPARAM = 0, LPARAM = 0) const noexcept;
+    LRESULT send_to_editor(UINT, WPARAM = 0, LPARAM = 0) const noexcept;
 
     LRESULT send_to_editor(UINT message, WPARAM wParam, void const *buff)
         const noexcept
     {
-#pragma warning(suppress : 26490)
-        return send_to_editor(message, wParam, reinterpret_cast<LPARAM>(buff));
+        return send_to_editor(message, wParam, windows_cast_to<LPARAM, void const *>(buff));
     }
 
     /** Get the contents of the current document */
@@ -139,8 +139,7 @@ class Plugin
             ._pFunc = contexts[entry]->reserve(self, callback),
             ._cmdID = entry,
             ._init2Check = checked,
-#pragma warning(suppress : 26492)
-            ._pShKey = const_cast<ShortcutKey *>(key)
+            ._pShKey = windows_const_cast<ShortcutKey *>(key)
         };
         wcsncpy_s(item._itemName, message, _TRUNCATE);
         return item;
@@ -219,6 +218,8 @@ class Plugin
     NppData npp_data_;
     std::wstring name_;
     std::filesystem::path module_path_;
+
+    static Plugin *plugin_;
 };
 
 #define DEFINE_PLUGIN_MENU_CALLBACKS(class)         \

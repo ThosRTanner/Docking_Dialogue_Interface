@@ -42,7 +42,7 @@ Demo_Plugin::Demo_Plugin(NppData const &data) : Super(data, get_plugin_name())
 {
 }
 
-Demo_Plugin::~Demo_Plugin()
+Demo_Plugin::~Demo_Plugin()    // NOLINT(*-use-equals-default)
 {
     // Remember to deallocate any assigned memory here.
 }
@@ -53,7 +53,9 @@ std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
     PLUGIN_MENU_MAKE_CALLBACK(Demo_Plugin, entry, text, method, __VA_ARGS__)
 #define MAKE_SEPARATOR(entry) PLUGIN_MENU_MAKE_SEPARATOR(Demo_Plugin, entry)
 
-    static ShortcutKey f5 = {true, false, true, VK_F5};
+    static ShortcutKey const fk5 = {
+        ._isCtrl = true, ._isAlt = false, ._isShift = true, ._key = VK_F5
+    };
 
     static std::vector<FuncItem> res = {
         MAKE_CALLBACK(
@@ -64,7 +66,7 @@ std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
             L"Hello Notepad++ Message",
             hello_message,
             false,
-            &f5
+            &fk5
         ),
         MAKE_SEPARATOR(Menu_Entry_Separator_1),
         MAKE_CALLBACK(
@@ -78,10 +80,9 @@ std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
     return res;
 }
 
-#if 0
-void Demo_Plugin::on_notification(
-    SCNotification const *notification
-) noexcept
+#if 0    // NOLINT
+// Need some slightly better examples of how to use these two!
+void Demo_Plugin::on_notification(SCNotification const *notification) noexcept
 {
     switch (notification->nmhdr.code)
     {
@@ -89,9 +90,7 @@ void Demo_Plugin::on_notification(
             return;
     }
 }
-#endif
 
-#if 0
 LRESULT Demo_Plugin::on_message(
     UINT /*message*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 ) noexcept
@@ -127,7 +126,7 @@ void Demo_Plugin::goto_dialogue()
 
 void Demo_Plugin::about_dialogue() const
 {
-    About_Dialogue dialogue(*this);
+    About_Dialogue const dialogue(*this);
     auto const res = dialogue.get_result();
     if (res == About_Dialogue::Clicked_OK)
     {

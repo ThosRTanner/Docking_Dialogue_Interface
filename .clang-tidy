@@ -1,0 +1,64 @@
+---
+Checks:
+- bugprone-*
+- cert-*
+- clang-analyzer-*
+- concurrency-*
+- cppcoreguidelines-*
+
+- hicpp-*
+# Windows macros often break these checks
+- -hicpp-signed-bitwise
+
+- misc-*
+# Disagrees with IWYU tool
+- -misc-include-cleaner
+# complains about templates being defined in headers
+- -misc-use-internal-linkage
+
+- modernize-*
+# This looks somehow illegible, and creates casting problems as well.
+- -modernize-return-braced-init-list
+# It's horrible with templates and makes code less readable
+- -modernize-use-trailing-return-type
+# This one is arguably overkill. There are some functions for which it makes
+# sense, but not for most.
+- -modernize-use-nodiscard
+
+- performance-*
+# Makes no sense unless memory size is hugely critical.
+- -performance-enum-size
+
+- portability-*
+
+- readability-*
+# Windows BOOL type breaks this check
+- -readability-implicit-bool-conversion
+# Ugh. Really?
+- -readability-math-missing-parentheses
+
+# ---- clang-diagnostics exceptions ----
+
+# complains when we miss an initialiser for something thas has a default initialiser
+- -clang-diagnostic-missing-designated-field-initializers
+
+# clang doesn't like the includes of poppack.h. Given these are in windows
+# includes, I'm not sure why it's complaining about them.
+- -clang-diagnostic-pragma-pack
+
+# appears to be completedly broken when done dynamically from visual studio
+- -clang-diagnostic-pragma-once-outside-header
+
+# ---- General exceptions to the rules ----
+
+# Still using printf family in some places for simplicity.
+- -*-vararg
+
+# Disabling magic numbers for now, as there are too many to fix
+- -*-magic-numbers
+
+# Currently have too many C-style arrays to enable this check.
+- -*-avoid-c-arrays
+
+# Unnamed parameters are often useful in overrides.
+- -*-named-parameter

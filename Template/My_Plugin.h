@@ -12,20 +12,28 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-// Modify these 2 lines as appropriate for your plugin.
-#include "My_Plugin.h"
-using Npp_Plugin = My_Plugin;
+#pragma once
 
-#include "notepad++/PluginInterface.h"
+// Note: This header is purely here for dllmain not to produce odd warnings if
+// looked at in visual studio. Do NOT copy it.
 
-#include <memory>
+#include "Plugin/Plugin.h"
 
-extern "C" __declspec(dllexport) wchar_t const *getName()
+class My_Plugin : public Plugin
 {
-    return Npp_Plugin::get_plugin_name();
-}
+  public:
+    /** Return the plugin name */
+    static wchar_t const *get_plugin_name() noexcept;
 
-extern "C" __declspec(dllexport) void setInfo(NppData data)
-{
-    static auto const plugin{std::make_unique<Npp_Plugin>(data)};
-}
+    /** The object is created when notepad++ initialises your plugin */
+    explicit My_Plugin(NppData const &data) : Plugin(data, L"")
+    {
+    }
+
+    ~My_Plugin() override = default;
+
+    My_Plugin(My_Plugin const &) = delete;
+    My_Plugin(My_Plugin &&) = delete;
+    My_Plugin &operator=(My_Plugin const &) = delete;
+    My_Plugin &operator=(My_Plugin &&) = delete;
+};

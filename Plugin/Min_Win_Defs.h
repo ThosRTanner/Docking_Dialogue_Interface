@@ -3,7 +3,8 @@
 // fail to build if you add them as per suggestions...
 
 #ifndef _WINDOWS_
-#include <intsafe.h>
+// NOLINTBEGIN
+#include <intsafe.h>    // IWYU pragma: export
 
 typedef struct tagRECT RECT;
 typedef struct HWND__ *HWND;
@@ -13,4 +14,5 @@ typedef LONG_PTR LRESULT;
 typedef void *HANDLE;
 typedef struct HICON__ *HICON;
 typedef int BOOL;
+// NOLINTEND
 #endif

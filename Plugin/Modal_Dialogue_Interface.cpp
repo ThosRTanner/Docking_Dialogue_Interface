@@ -30,9 +30,7 @@ Modal_Dialogue_Interface::Modal_Dialogue_Interface(Plugin const &plugin) :
 {
 }
 
-Modal_Dialogue_Interface::~Modal_Dialogue_Interface()
-{
-}
+Modal_Dialogue_Interface::~Modal_Dialogue_Interface() = default;
 
 BOOL Modal_Dialogue_Interface::EndDialog(INT_PTR retval) const noexcept
 {
@@ -46,17 +44,17 @@ BOOL Modal_Dialogue_Interface::centre_dialogue() const noexcept
     int const height = rect.bottom - rect.top;
 
     RECT const rect_npp = getParentRect();
-    int const x =
+    int const x_pos =
         ((rect_npp.right - rect_npp.left) - width) / 2 + rect_npp.left;
-    int const y =
+    int const y_pos =
         ((rect_npp.bottom - rect_npp.top) - height) / 2 + rect_npp.top;
 
-    return ::MoveWindow(window(), x, y, width, height, TRUE);
+    return ::MoveWindow(window(), x_pos, y_pos, width, height, TRUE);
 }
 
 Modal_Dialogue_Interface::Message_Return
 Modal_Dialogue_Interface::on_unhandled_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM
+    UINT message, WPARAM wParam, LPARAM    // NOLINT
 ) noexcept
 {
     // This provides default handlers for OK, cancel, and close clicks.

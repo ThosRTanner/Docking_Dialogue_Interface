@@ -34,7 +34,7 @@ About_Dialogue::Message_Return About_Dialogue::on_dialogue_message(
     UINT message, WPARAM, LPARAM
 ) noexcept
 {
-    switch (message)
+    switch (message) //NOLINT
     {
         case WM_INITDIALOG:
         {

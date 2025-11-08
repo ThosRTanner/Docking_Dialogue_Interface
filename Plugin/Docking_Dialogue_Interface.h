@@ -17,17 +17,13 @@
 
 #include "Min_Win_Defs.h"
 
-// This doesn't actually provide anything useful, but IWYU can't currently
-// work out that functions declared as override don't need to a separate header
-#include <intsafe.h>
-
 // Forward refs
 class Plugin;
 
 /** This provides an abstraction for creating a docking dialogue. */
 class Docking_Dialogue_Interface : public Non_Modal_Dialogue_Base
 {
-    typedef Non_Modal_Dialogue_Base Super;
+    using Super = Non_Modal_Dialogue_Base;
 
   public:
     /** Create a docking dialogue.
@@ -43,7 +39,7 @@ class Docking_Dialogue_Interface : public Non_Modal_Dialogue_Base
     Docking_Dialogue_Interface &operator=(Docking_Dialogue_Interface &&) =
         delete;
 
-    virtual ~Docking_Dialogue_Interface() = 0;
+    ~Docking_Dialogue_Interface() override = 0;
 
     /** Call this to display the dialogue. */
     void display() noexcept;
@@ -95,7 +91,7 @@ class Docking_Dialogue_Interface : public Non_Modal_Dialogue_Base
     /** Handler for unhandled messages */
     Message_Return on_unhandled_non_modal_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
-    ) noexcept override final;
+    ) noexcept final;
 
     int docked_pos_ = 0;
     bool is_floating_ = true;

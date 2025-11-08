@@ -40,16 +40,16 @@
 #include <unordered_map>
 
 // Stolen from PluginInterface.h
-typedef void(__cdecl *PFUNCPLUGINCMD)();
+using PFUNCPLUGINCMD = void(__cdecl *)();
 
 template <class Callback_Class>
 class Callback_Context_Base
 {
-    typedef void (Callback_Class::*Callback_Type)();
-    typedef void (Callback_Class::*Const_Callback_Type)() const;
+    using Callback_Type = void (Callback_Class::*)();
+    using Const_Callback_Type = void (Callback_Class::*)() const;
 
   public:
-    Callback_Context_Base(PFUNCPLUGINCMD callback) noexcept :
+    explicit Callback_Context_Base(PFUNCPLUGINCMD callback) noexcept :
         callback_(callback),
         instance_(nullptr),
         method_(nullptr)
@@ -70,7 +70,7 @@ class Callback_Context_Base
         }
 
         instance_ = instance;
-        method_ = method;
+        method_ = method;    // NOLINT(cppcoreguidelines-pro-type-union-access)
         return callback_;
     }
 
@@ -84,6 +84,7 @@ class Callback_Context_Base
         }
 
         instance_ = instance;
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
         const_method_ = method;
         return callback_;
     }
@@ -101,6 +102,7 @@ class Callback_Context_Base
         }
 
         instance_ = instance;
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
         const_method_ = method;
         return nullptr;
     }
@@ -134,15 +136,15 @@ class Callback_Context_Base
     };
 
   public:
-    typedef std::unordered_map<int, std::unique_ptr<Callback_Context_Base>>
-        Contexts;
+    using Contexts =
+        std::unordered_map<int, std::unique_ptr<Callback_Context_Base>>;
     static Contexts contexts;
 };
 
 template <class Callback_Class, int context>
 class Callback_Context : public Callback_Context_Base<Callback_Class>
 {
-    typedef Callback_Context_Base<Callback_Class> Super;
+    using Super = Callback_Context_Base<Callback_Class>;
 
   public:
     Callback_Context() noexcept : Super(&GeneratedStaticFunction)

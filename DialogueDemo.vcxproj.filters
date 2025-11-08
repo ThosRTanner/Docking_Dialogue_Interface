@@ -107,6 +107,12 @@
     <ClInclude Include="notepad++\DockingFeature\dockingResource.h">
       <Filter>Notepad++ Headers\DockingFeature</Filter>
     </ClInclude>
+    <ClInclude Include="Template\My_Plugin.h">
+      <Filter>Source Files\Template</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin\Casts.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo\Demo_Plugin.cpp">
@@ -150,6 +156,8 @@
     <None Include="iwyu.bat" />
     <None Include="vs2022cpp20.imp" />
     <None Include="Changes.md" />
+    <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="demo\icon1.ico">

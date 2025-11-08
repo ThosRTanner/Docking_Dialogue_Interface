@@ -17,8 +17,7 @@
 
 #include "Min_Win_Defs.h"
 
-// IWYU doesn't understand override keyword properly
-#include <intsafe.h>
+// IWYU pragma: no_include <windef.h>
 
 // Forward declarations.
 class Plugin;
@@ -26,7 +25,7 @@ class Plugin;
 /** This provides the base abstraction for creating a non modal dialogue. */
 class Non_Modal_Dialogue_Base : public Dialogue_Interface
 {
-    typedef Dialogue_Interface Super;
+    using Super = Dialogue_Interface;
 
   public:
     /** Create a docking dialogue.
@@ -43,7 +42,7 @@ class Non_Modal_Dialogue_Base : public Dialogue_Interface
         delete;
     Non_Modal_Dialogue_Base &operator=(Non_Modal_Dialogue_Base &&) = delete;
 
-    virtual ~Non_Modal_Dialogue_Base() = 0;
+    ~Non_Modal_Dialogue_Base() override = 0;
 
   protected:
     /** Utility wrapper round SendMessage to send pointers to our self */
@@ -58,7 +57,7 @@ class Non_Modal_Dialogue_Base : public Dialogue_Interface
     /** Handler for unhandled messages */
     Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
-    ) noexcept override final;
+    ) noexcept final;
 
     /** Hide the other creation method */
     using Dialogue_Interface::create_modal_dialogue;
