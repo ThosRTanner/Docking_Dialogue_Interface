@@ -16,10 +16,13 @@
 #include "resource.h"
 
 #include "Plugin/Plugin.h"
+#include "Plugin/Casts.h"
 
 #include "notepad++/Scintilla.h"
 
 #include <windows.h>    // IWYU pragma: keep
+
+// IWYU pragma: no_include <memory>
 
 #include <minwindef.h>
 #include <windef.h>
@@ -49,22 +52,22 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const &plugin) :
 Goto_Dialogue::~Goto_Dialogue() = default;
 
 Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM
+    UINT message, WPARAM wParam, LPARAM //NOLINT
 )
 {
-    switch (message)
+    switch (message) //NOLINT
     {
         case WM_COMMAND:
         {
-            switch (wParam)
+            switch (wParam) //NOLINT
             {
                 case IDC_GO_BUTTON:
                 {
-                    BOOL successful;
+                    BOOL successful; //NOLINT
                     int const line =
-                        ::GetDlgItemInt(
+                        windows_static_cast<int, UINT>(::GetDlgItemInt(
                             window(), IDC_LINE_NUMBER, &successful, FALSE
-                        )
+                        ))
                         - 1;
                     if (successful)
                     {

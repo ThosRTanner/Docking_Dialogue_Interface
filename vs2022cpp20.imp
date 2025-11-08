@@ -5,6 +5,7 @@
 	{ include: ["<xstring>", "private", "<string>", "public"] },
 	{ include: ["<__msvc_ostream.hpp>", "private", "<ostream>", "public"] },
 	{ symbol: ["memcpy", "private", "<string.h>", "public"] },
+	{ symbol: ["std::move", "private", "<utility>", "public"] },
 	{ symbol: ["std::string_view", "private", "<string_view>", "public"] },
 	{ symbol: ["std::wstring_view", "private", "<string_view>", "public"] },
 	{ symbol: ["_countof", "private", "<vcruntime.h>", "public" ] }

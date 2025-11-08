@@ -15,9 +15,11 @@
 
 #include "Plugin.h"
 // IWYU not understanding overrides:
-// #include Min_Win_Defs.h"
+//#include "Min_Win_Defs.h"
 
 #include "notepad++/Notepad_plus_msgs.h"
+
+// IWYU pragma: no_include <minwindef.h>
 
 #include <optional>
 

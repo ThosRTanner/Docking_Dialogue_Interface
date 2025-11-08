@@ -19,18 +19,21 @@
 // work out that functions declared as override don't need to a separate header
 #include "Plugin/Min_Win_Defs.h"
 
-#include <intsafe.h>
-
 class Plugin;
 
 class Goto_Dialogue : public Docking_Dialogue_Interface
 {
-    typedef Docking_Dialogue_Interface Super;
+    using Super = Docking_Dialogue_Interface;
 
   public:
     Goto_Dialogue(int menu_entry, Plugin const &plugin);
 
-    ~Goto_Dialogue();
+    Goto_Dialogue(Goto_Dialogue const &) = delete;
+    Goto_Dialogue &operator=(Goto_Dialogue const &) = delete;
+    Goto_Dialogue(Goto_Dialogue &&) = delete;
+    Goto_Dialogue &operator=(Goto_Dialogue &&) = delete;
+
+    ~Goto_Dialogue() override;
 
   private:
     Message_Return on_dialogue_message(

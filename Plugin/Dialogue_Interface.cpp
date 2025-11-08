@@ -13,6 +13,7 @@
 
 #include "Dialogue_Interface.h"
 
+#include "Casts.h"
 #include "Plugin.h"
 
 #include <ShlwApi.h>
@@ -30,6 +31,7 @@
 #include <stdexcept>
 #include <string>
 #include <system_error>
+#include <utility>    // For std::move, std::ignore
 #include <vector>
 
 #ifdef _DEBUG
@@ -80,23 +82,23 @@ void Dialogue_Interface::InvalidateRect(RECT const *rect) const noexcept
 
 RECT Dialogue_Interface::getClientRect() const noexcept
 {
-    RECT rc;
-    ::GetClientRect(dialogue_window_, &rc);
-    return rc;
+    RECT rect;
+    ::GetClientRect(dialogue_window_, &rect);
+    return rect;
 }
 
 RECT Dialogue_Interface::getWindowRect() const noexcept
 {
-    RECT rc;
-    ::GetWindowRect(dialogue_window_, &rc);
-    return rc;
+    RECT rect;
+    ::GetWindowRect(dialogue_window_, &rect);
+    return rect;
 }
 
 RECT Dialogue_Interface::getParentRect() const noexcept
 {
-    RECT rc;
-    ::GetWindowRect(plugin_->get_notepad_window(), &rc);
-    return rc;
+    RECT rect;
+    ::GetWindowRect(plugin_->get_notepad_window(), &rect);
+    return rect;
 }
 
 HWND Dialogue_Interface::GetDlgItem(int item, HWND window) const noexcept
@@ -106,7 +108,7 @@ HWND Dialogue_Interface::GetDlgItem(int item, HWND window) const noexcept
 
 std::wstring Dialogue_Interface::get_window_text(int item, HWND window) const
 {
-    auto handle = GetDlgItem(item, window);
+    HWND handle = GetDlgItem(item, window);
     int length = GetWindowTextLength(handle) + 1;
     std::vector<wchar_t> buffer;
     buffer.resize(length);
@@ -119,8 +121,9 @@ void Dialogue_Interface::SetFocus(int item) const noexcept
     ::SetFocus(GetDlgItem(item));
 }
 
-int Dialogue_Interface::message_box(wchar_t const *message, UINT type)
-    const noexcept
+int Dialogue_Interface::message_box(
+    wchar_t const *message, UINT type
+) const noexcept
 {
     return ::MessageBox(
         dialogue_window_, message, dialogue_name_.c_str(), type
@@ -131,13 +134,12 @@ HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
     false
 )
 {
-#pragma warning(suppress : 26490)
-    auto dialogue_window = ::CreateDialogParam(
+    HWND dialogue_window = ::CreateDialogParam(
         plugin()->module(),
         MAKEINTRESOURCE(dialogue),
         parent == nullptr ? plugin()->get_notepad_window() : parent,
         process_dialogue_message,
-        reinterpret_cast<LPARAM>(this)
+        windows_cast_to<LPARAM, Dialogue_Interface *>(this)
     );
     if (dialogue_window == nullptr)
     {
@@ -145,17 +147,19 @@ HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
         auto const err = GetLastError();
         try
         {
-            std::snprintf(
+            std::ignore = std::snprintf(
                 &buff[0],
                 sizeof(buff),
                 "Could not create dialogue: %s",
-                std::generic_category().message(err).c_str()
+                std::generic_category()
+                    .message(windows_static_cast<int>(err))
+                    .c_str()
             );
         }
         catch (std::exception const &e)
         {
 #pragma warning(suppress : 26447)    // MS Bug with e.what() decl
-            std::snprintf(
+            std::ignore = std::snprintf(
                 &buff[0],
                 sizeof(buff),
                 "Could not create dialogue: Error code %08lx then got %s",
@@ -171,13 +175,12 @@ HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
 
 INT_PTR Dialogue_Interface::create_modal_dialogue(int dialogue) noexcept
 {
-#pragma warning(suppress : 26490)
     return ::DialogBoxParam(
         plugin()->module(),
         MAKEINTRESOURCE(dialogue),
         plugin()->get_notepad_window(),
         process_dialogue_message,
-        reinterpret_cast<LPARAM>(this)
+        windows_cast_to<LPARAM, Dialogue_Interface *>(this)
     );
 }
 
@@ -191,17 +194,19 @@ void Dialogue_Interface::add_item_callback(
         ::SetWindowLongPtr(
             handle,
             GWLP_USERDATA,
-#pragma warning(suppress : 26490)
-            reinterpret_cast<LONG_PTR>(this)
+            windows_cast_to<LONG_PTR, Dialogue_Interface *>(this)
         );
     }
-#pragma warning(suppress : 26490)
     auto const old_proc = SetWindowLongPtr(
         handle,
         GWLP_WNDPROC,
-        reinterpret_cast<LONG_PTR>(process_subclassed_message)
+        windows_cast_to<LONG_PTR, decltype(process_subclassed_message)>(
+            process_subclassed_message
+        )
     );
-    Callback_Info info{old_proc, callback_func};
+    Callback_Info const info{
+        .old_proc = old_proc, .callback_func = std::move(callback_func)
+    };
     callbacks_[handle].push_back(info);
 }
 
@@ -226,8 +231,8 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
 {
     if (message == WM_INITDIALOG)
     {
-#pragma warning(suppress : 26490)
-        auto const instance = reinterpret_cast<Dialogue_Interface *>(lParam);
+        auto *const instance =
+            windows_cast_to<Dialogue_Interface *, LPARAM>(lParam);
         instance->dialogue_window_ = window_handle;
         try
         {
@@ -243,15 +248,10 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
             );
         }
 
-        ::SetWindowLongPtr(
-            window_handle,
-            GWLP_USERDATA,
-#pragma warning(suppress : 26472)
-            static_cast<LONG_PTR>(lParam)
-        );
+        ::SetWindowLongPtr(window_handle, GWLP_USERDATA, lParam);
     }
-#pragma warning(suppress : 26490)
-    auto const instance = reinterpret_cast<Dialogue_Interface *>(
+
+    auto *const instance = windows_cast_to<Dialogue_Interface *, LONG_PTR>(
         ::GetWindowLongPtr(window_handle, GWLP_USERDATA)
     );
     if (instance == nullptr)
@@ -297,21 +297,28 @@ LRESULT CALLBACK Dialogue_Interface::process_subclassed_message(
     HWND handle, UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
-#pragma warning(suppress : 26490)
-    auto const instance = reinterpret_cast<Dialogue_Interface *>(
+    auto *const instance = windows_cast_to<Dialogue_Interface *, LONG_PTR>(
         ::GetWindowLongPtr(handle, GWLP_USERDATA)
     );
+    if (instance == nullptr)
+    {
+        return false;
+    }
+
     try
     {
-        Callback_Info info = instance->callbacks_.at(handle).back();
+        Callback_Info const info = instance->callbacks_.at(handle).back();
         auto res = (info.callback_func)(handle, message, wParam, lParam);
         if (res.has_value())
         {
             return res.value();
         }
-#pragma warning(suppress : 26490)
-        return (*reinterpret_cast<WNDPROC>(info.old_proc))(
-            handle, message, wParam, lParam
+        return CallWindowProc(
+            *windows_cast_to<WNDPROC, LONG_PTR>(info.old_proc),
+            handle,
+            message,
+            wParam,
+            lParam
         );
     }
     catch (std::exception const &e)

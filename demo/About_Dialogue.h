@@ -14,23 +14,30 @@
 #pragma once
 #include "Plugin/Modal_Dialogue_Interface.h"
 
-// These 2 don't actually provide anything useful, but IWYU can't currently
-// work out that functions declared as override don't need to a separate header
-#include "Plugin/Min_Win_Defs.h"
+// These don't actually provide anything useful, but IWYU can't currently work
+// out that functions declared as override don't need to have a separate header
 
-#include <intsafe.h>
+#include <windows.h>    // IWYU pragma: keep
+
+#include <minwindef.h>
 
 // Forward references
 class Plugin;
 
 class About_Dialogue : public Modal_Dialogue_Interface
 {
-    typedef Modal_Dialogue_Interface Super;
+    using Super = Modal_Dialogue_Interface;
 
   public:
-    About_Dialogue(Plugin const &);
+    explicit About_Dialogue(Plugin const &);
 
-    ~About_Dialogue();
+    About_Dialogue(About_Dialogue const &) = delete;
+    About_Dialogue &operator=(About_Dialogue const &) = delete;
+
+    About_Dialogue(About_Dialogue &&) = delete;
+    About_Dialogue &operator=(About_Dialogue &&) = delete;
+
+    ~About_Dialogue() override;
 
   private:
     Message_Return on_dialogue_message(

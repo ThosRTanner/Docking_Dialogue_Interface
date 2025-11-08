@@ -15,8 +15,6 @@
 
 #include "Min_Win_Defs.h"
 
-#include <intsafe.h>
-
 #include <functional>
 #include <list>
 #include <optional>
@@ -29,7 +27,7 @@ class Plugin;
 class Dialogue_Interface
 {
   public:
-    Dialogue_Interface(Plugin const &plugin);
+    explicit Dialogue_Interface(Plugin const &plugin);
 
     Dialogue_Interface(Dialogue_Interface const &) = delete;
     Dialogue_Interface(Dialogue_Interface &&) = delete;
@@ -102,15 +100,15 @@ class Dialogue_Interface
      */
     virtual INT_PTR create_modal_dialogue(int dialogue) noexcept;
 
-    typedef std::optional<LRESULT> Item_Callback_Return;
-    typedef std::function<Item_Callback_Return(HWND, UINT, WPARAM, LPARAM)>
-        Item_Callback_Function;
+    using Item_Callback_Return = std::optional<LRESULT>;
+    using Item_Callback_Function =
+        std::function<Item_Callback_Return(HWND, UINT, WPARAM, LPARAM)>;
 
     /** Allows you to subclass a window element, to intercept events on it */
     void add_item_callback(int item, Item_Callback_Function callback_func);
 
     /** Return type for dialogue message callbacks */
-    typedef std::optional<INT_PTR> Message_Return;
+    using Message_Return = std::optional<INT_PTR>;
 
   private:
     /** Implement this to handle messages.
@@ -125,9 +123,9 @@ class Dialogue_Interface
      * message, wParam and lParam are the values passed to
      * process_dialogue_message by windows
      */
-    virtual Message_Return on_dialogue_message(
-        UINT message, WPARAM wParam, LPARAM lParam
-    ) noexcept(false);
+    virtual Message_Return on_dialogue_message(UINT, WPARAM, LPARAM) noexcept(
+        false
+    );
 
     /** Handler for unhandled messages
      *
@@ -137,16 +135,16 @@ class Dialogue_Interface
      *
      */
     virtual Message_Return on_unhandled_dialogue_message(
-        UINT message, WPARAM wParam, LPARAM lParam
+        UINT, WPARAM, LPARAM
     ) noexcept;
 
     /** Callback handler for messages */
     static INT_PTR __stdcall process_dialogue_message(
-        HWND, UINT message, WPARAM, LPARAM
+        HWND, UINT, WPARAM, LPARAM
     ) noexcept;
 
     static LRESULT __stdcall process_subclassed_message(
-        HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam
+        HWND, UINT, WPARAM, LPARAM
     ) noexcept;
 
     Plugin const *plugin_;

@@ -26,9 +26,7 @@ Non_Modal_Dialogue_Interface::Non_Modal_Dialogue_Interface(
 {
 }
 
-Non_Modal_Dialogue_Interface::~Non_Modal_Dialogue_Interface()
-{
-}
+Non_Modal_Dialogue_Interface::~Non_Modal_Dialogue_Interface() = default;
 
 Non_Modal_Dialogue_Interface::Message_Return
 Non_Modal_Dialogue_Interface::on_unhandled_non_modal_dialogue_message(

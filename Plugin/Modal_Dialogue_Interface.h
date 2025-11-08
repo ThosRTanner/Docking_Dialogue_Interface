@@ -15,9 +15,10 @@
 
 #include "Dialogue_Interface.h"
 
+#include "Casts.h"
 #include "Min_Win_Defs.h"
 
-#include <intsafe.h>
+// IWYU pragma: no_include <windef.h>
 
 // Forward declarations.
 class Plugin;
@@ -25,11 +26,11 @@ class Plugin;
 /** This provides an abstraction for creating a docking dialogue. */
 class Modal_Dialogue_Interface : public Dialogue_Interface
 {
-    typedef Dialogue_Interface Super;
+    using Super = Dialogue_Interface;
 
   public:
     /** Create a modal dialogue. */
-    Modal_Dialogue_Interface(Plugin const &plugin);
+    explicit Modal_Dialogue_Interface(Plugin const &plugin);
 
     Modal_Dialogue_Interface(Modal_Dialogue_Interface const &) = delete;
     Modal_Dialogue_Interface(Modal_Dialogue_Interface &&) = delete;
@@ -37,7 +38,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
         delete;
     Modal_Dialogue_Interface &operator=(Modal_Dialogue_Interface &&) = delete;
 
-    virtual ~Modal_Dialogue_Interface() = 0;
+    ~Modal_Dialogue_Interface() override = 0;
 
     /** Special return values for get_result if the default handler is used. */
     enum Return_Values
@@ -69,8 +70,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     /** Wrapper round ::EndDialog that takes a pointer */
     BOOL EndDialog(void *retval) const noexcept
     {
-#pragma warning(suppress : 26490)
-        return EndDialog(reinterpret_cast<INT_PTR>(retval));
+        return EndDialog(windows_cast_to<INT_PTR, void *>(retval));
     }
 
     /** Centre the dialogue on the Notepad++ window */
@@ -80,7 +80,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     /** Handler for unhandled messages */
     Message_Return on_unhandled_dialogue_message(
         UINT message, WPARAM wParam, LPARAM lParam
-    ) noexcept override final;
+    ) noexcept final;
 
     /** Hide the other creation method */
     using Dialogue_Interface::create_dialogue;

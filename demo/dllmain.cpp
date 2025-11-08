@@ -13,13 +13,11 @@
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "Demo_Plugin.h"
-typedef Demo_Plugin Npp_Plugin;
+using Npp_Plugin = Demo_Plugin;
 
 #include "notepad++/PluginInterface.h"
 
 #include <memory>
-
-std::unique_ptr<Npp_Plugin> plugin;
 
 extern "C"
 {
@@ -30,6 +28,6 @@ extern "C"
 
     __declspec(dllexport) void setInfo(NppData data)
     {
-        plugin = std::make_unique<Npp_Plugin>(data);
+        static auto plugin = std::make_unique<Npp_Plugin>(data);
     }
 }

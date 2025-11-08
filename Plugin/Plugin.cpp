@@ -22,15 +22,16 @@
 
 #include <winuser.h>
 
-#include <stdlib.h>
+#include <cstdlib>     // for _MAX_PATH
 
 #include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
 
-static Plugin *plugin;
+Plugin *Plugin::plugin_;
 
+// NOLINTNEXTLINE(*-member-init)
 Plugin::Plugin(NppData const &data, std::wstring_view name) :
     npp_data_(data),
     name_(name)
@@ -43,11 +44,12 @@ Plugin::Plugin(NppData const &data, std::wstring_view name) :
     );
 
     // Windows is evil and there's no way to determine the number of characters
-    // required to hold  name. Therefore this pure ghastliness results:
+    // required to hold the module name. Therefore this pure ghastliness
+    // results:
     std::wstring module_path;
     DWORD copied = 0;
     DWORD new_size = 0;
-    do
+    do  // NOLINT(cppcoreguidelines-avoid-do-while)
     {
         new_size += _MAX_PATH;
         module_path.resize(new_size);
@@ -56,13 +58,14 @@ Plugin::Plugin(NppData const &data, std::wstring_view name) :
 
     module_path_ = &*module_path.begin();
 
-    plugin = this;
+    plugin_ = this;
 }
 
 Plugin::~Plugin() = default;
 
-LRESULT Plugin::send_to_notepad(UINT message, WPARAM wParam, LPARAM lParam)
-    const noexcept
+LRESULT Plugin::send_to_notepad(
+    UINT message, WPARAM wParam, LPARAM lParam
+) const noexcept
 {
     return ::SendMessage(npp_data_._nppHandle, message, wParam, lParam);
 }
@@ -105,10 +108,11 @@ HWND Plugin::get_scintilla_window() const noexcept
                      : npp_data_._scintillaSecondHandle;
 }
 
-LRESULT Plugin::send_to_editor(UINT Msg, WPARAM wParam, LPARAM lParam)
-    const noexcept
+LRESULT Plugin::send_to_editor(
+    UINT msg, WPARAM wparam, LPARAM lparam
+) const noexcept
 {
-    return SendMessage(get_scintilla_window(), Msg, wParam, lParam);
+    return SendMessage(get_scintilla_window(), msg, wparam, lparam);
 }
 
 std::string Plugin::get_document_text() const
@@ -154,7 +158,7 @@ extern "C"
 #ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:getFuncsArray=" __FUNCDNAME__)
 #endif
-        auto &res = plugin->on_get_menu_entries();
+        auto &res = plugin_->on_get_menu_entries();
 #pragma warning(suppress : 26472)
         *nbF = static_cast<int>(res.size());
         return &*res.begin();
@@ -165,7 +169,7 @@ extern "C"
 #ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:beNotified=" __FUNCDNAME__)
 #endif
-        plugin->on_notification(notification);
+        plugin_->on_notification(notification);
     }
 
     LRESULT
@@ -174,7 +178,7 @@ extern "C"
 #ifdef __FUNCDNAME__
 #pragma comment(linker, "/EXPORT:messageProc=" __FUNCDNAME__)
 #endif
-        return plugin->on_message(message, wParam, lParam);
+        return plugin_->on_message(message, wParam, lParam);
     }
 
     /** This must be defined and must always return TRUE

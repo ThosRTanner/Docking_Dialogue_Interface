@@ -28,16 +28,16 @@ struct NppData;
 
 class Demo_Plugin : public Plugin
 {
-    typedef Plugin Super;
+    using Super = Plugin;
 
   public:
     /** Return the plugin name */
     static wchar_t const *get_plugin_name() noexcept;
 
     /** The object is created when notepad++ initialises your plugin */
-    Demo_Plugin(NppData const &);
+    explicit Demo_Plugin(NppData const &);
 
-    ~Demo_Plugin();
+    ~Demo_Plugin() override;
 
     Demo_Plugin(Demo_Plugin const &) = delete;
     Demo_Plugin(Demo_Plugin &&) = delete;
@@ -57,7 +57,8 @@ class Demo_Plugin : public Plugin
   private:
     std::vector<FuncItem> &on_get_menu_entries() override;
 
-#if 0
+// You don't need to supply these 2 if they don't do anything
+#if 0    // NOLINT
     void on_notification(SCNotification const *) noexcept override;
 
     LRESULT on_message(UINT, WPARAM, LPARAM) noexcept override;
