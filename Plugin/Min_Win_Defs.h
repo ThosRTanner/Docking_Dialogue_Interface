@@ -2,7 +2,12 @@
 // Forward declarations from windows windef.h / minwindef.h (mostly) which
 // fail to build if you add them as per suggestions...
 
-#ifndef _WINDOWS_
+#ifdef _WINDOWS_
+#include <basetsd.h>      // IWYU pragma: export
+#include <minwindef.h>    // IWYU pragma: export
+#include <windef.h>       // IWYU pragma: export
+#include <winnt.h>        // IWYU pragma: export
+#else
 // NOLINTBEGIN
 #include <intsafe.h>    // IWYU pragma: export
 

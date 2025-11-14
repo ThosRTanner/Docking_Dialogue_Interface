@@ -31,6 +31,7 @@
 #include <memory>
 #include <vector>
 
+// NOLINTNEXTLINE(cert-err58-cpp)
 DEFINE_PLUGIN_MENU_CALLBACKS(Demo_Plugin);
 
 wchar_t const *Demo_Plugin::get_plugin_name() noexcept
@@ -49,8 +50,11 @@ Demo_Plugin::~Demo_Plugin()    // NOLINT(*-use-equals-default)
 
 std::vector<FuncItem> &Demo_Plugin::on_get_menu_entries()
 {
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define MAKE_CALLBACK(entry, text, method, ...) \
     PLUGIN_MENU_MAKE_CALLBACK(Demo_Plugin, entry, text, method, __VA_ARGS__)
+
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define MAKE_SEPARATOR(entry) PLUGIN_MENU_MAKE_SEPARATOR(Demo_Plugin, entry)
 
     static ShortcutKey const fk5 = {

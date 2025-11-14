@@ -143,6 +143,7 @@ HWND Dialogue_Interface::create_dialogue(int dialogue, HWND parent) noexcept(
     );
     if (dialogue_window == nullptr)
     {
+#pragma warning(suppress : 26494)
         char buff[2048];
         auto const err = GetLastError();
         try

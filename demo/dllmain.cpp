@@ -19,15 +19,12 @@ using Npp_Plugin = Demo_Plugin;
 
 #include <memory>
 
-extern "C"
+extern "C" __declspec(dllexport) wchar_t const *getName()
 {
-    __declspec(dllexport) wchar_t const *getName()
-    {
-        return Npp_Plugin::get_plugin_name();
-    }
+    return Npp_Plugin::get_plugin_name();
+}
 
-    __declspec(dllexport) void setInfo(NppData data)
-    {
-        static auto plugin = std::make_unique<Npp_Plugin>(data);
-    }
+extern "C" __declspec(dllexport) void setInfo(NppData data)
+{
+    static auto const plugin = std::make_unique<Npp_Plugin>(data);
 }
