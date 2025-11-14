@@ -13,13 +13,14 @@
 
 #include "Non_Modal_Dialogue_Base.h"
 
-#include "Plugin.h"
-// IWYU not understanding overrides:
-//#include "Min_Win_Defs.h"
-
-#include "notepad++/Notepad_plus_msgs.h"
+// IWYU seems to get its trunks in a turmoil for some reason, and
+// decides Min_Win_Defs.h is unnecessary but you should have <minwindef.h>
 
 // IWYU pragma: no_include <minwindef.h>
+#include "Min_Win_Defs.h"    // IWYU pragma: keep
+#include "Plugin.h"
+
+#include "notepad++/Notepad_plus_msgs.h"
 
 #include <optional>
 
@@ -52,6 +53,7 @@ Non_Modal_Dialogue_Base::on_unhandled_non_modal_dialogue_message(
 
 Non_Modal_Dialogue_Base::Message_Return
 Non_Modal_Dialogue_Base::on_unhandled_dialogue_message(
+    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
     UINT message, WPARAM wParam, LPARAM lParam
 ) noexcept
 {
