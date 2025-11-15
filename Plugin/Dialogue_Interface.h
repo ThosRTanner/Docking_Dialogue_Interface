@@ -149,7 +149,7 @@ class Dialogue_Interface
 
     Plugin const *plugin_;
     std::wstring module_name_;
-    HWND dialogue_window_;
+    HWND dialogue_window_{};
     std::wstring dialogue_name_;
 
     struct Callback_Info

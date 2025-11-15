@@ -15,8 +15,8 @@
 
 #include "resource.h"
 
-#include "Plugin/Plugin.h"
 #include "Plugin/Casts.h"
+#include "Plugin/Plugin.h"
 
 #include "notepad++/Scintilla.h"
 
@@ -52,24 +52,30 @@ Goto_Dialogue::Goto_Dialogue(int menu_entry, Plugin const &plugin) :
 Goto_Dialogue::~Goto_Dialogue() = default;
 
 Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
-    UINT message, WPARAM wParam, LPARAM //NOLINT
+    UINT message, WPARAM wParam, LPARAM    // NOLINT
 )
 {
-    switch (message) //NOLINT
+    switch (message)    // NOLINT
     {
         case WM_COMMAND:
         {
-            switch (wParam) //NOLINT
+            switch (wParam)    // NOLINT
             {
                 case IDC_GO_BUTTON:
                 {
-                    BOOL successful; //NOLINT
+                    BOOL successful;    // NOLINT
                     int const line =
                         windows_static_cast<int, UINT>(::GetDlgItemInt(
                             window(), IDC_LINE_NUMBER, &successful, FALSE
                         ))
                         - 1;
-                    if (successful)
+                    if (successful == FALSE)
+                    {
+                        message_box(
+                            L"Not a valid line number", MB_ICONERROR | MB_OK
+                        );
+                    }
+                    else
                     {
                         LRESULT const lines =
                             plugin()->send_to_editor(SCI_GETLINECOUNT);
@@ -87,12 +93,6 @@ Goto_Dialogue::Message_Return Goto_Dialogue::on_dialogue_message(
                             plugin()->send_to_editor(SCI_ENSUREVISIBLE, line);
                             plugin()->send_to_editor(SCI_GOTOLINE, line);
                         }
-                    }
-                    else
-                    {
-                        message_box(
-                            L"Not a valid line number", MB_ICONERROR | MB_OK
-                        );
                     }
                     return TRUE;
                 }

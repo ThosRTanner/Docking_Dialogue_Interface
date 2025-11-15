@@ -222,6 +222,7 @@ class Plugin
     static Plugin *plugin_;
 };
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define DEFINE_PLUGIN_MENU_CALLBACKS(class)         \
     typedef Callback_Context_Base<class> Callbacks; \
     template <>                                     \
@@ -230,6 +231,7 @@ class Plugin
 // Warning - this won't work if you have /Zc:preprocessor set
 // Could try __VA_OPT__ and C++20
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PLUGIN_MENU_MAKE_CALLBACK(class, entry, text, method, ...) \
     make_callback(                                                 \
         entry,                                                     \
@@ -241,6 +243,7 @@ class Plugin
         __VA_ARGS__                                                \
     )
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PLUGIN_MENU_MAKE_SEPARATOR(class, entry)                           \
     make_separator(                                                        \
         entry, Callbacks::contexts, Callback_Context<class, entry>(), this \

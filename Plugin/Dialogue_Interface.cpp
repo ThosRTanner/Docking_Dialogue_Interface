@@ -62,8 +62,7 @@ std::wstring get_dialogue_name(HWND dialog_handle)
 
 Dialogue_Interface::Dialogue_Interface(Plugin const &plugin) :
     plugin_(&plugin),
-    module_name_(get_module_name(plugin_->module())),
-    dialogue_window_()
+    module_name_(get_module_name(plugin_->module()))
 {
 }
 
@@ -273,7 +272,7 @@ INT_PTR __stdcall Dialogue_Interface::process_dialogue_message(
         {
             SetWindowLongPtr(window_handle, DWLP_MSGRESULT, retval.value());
         }
-        return retval.has_value();
+        return retval.has_value()? TRUE : FALSE;
     }
     catch (std::exception const &e)
     {
@@ -303,7 +302,7 @@ LRESULT CALLBACK Dialogue_Interface::process_subclassed_message(
     );
     if (instance == nullptr)
     {
-        return false;
+        return FALSE;
     }
 
     try
