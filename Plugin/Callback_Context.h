@@ -120,9 +120,11 @@ class Callback_Context_Base
     {
 #pragma warning(push)
 #pragma warning(disable : 26446 26482)
+        // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access)
         return std::invoke(
             contexts[context]->method_, contexts[context]->instance_
         );
+        // NOLINTEND(cppcoreguidelines-pro-type-union-access)
 #pragma warning(pop)
     }
 

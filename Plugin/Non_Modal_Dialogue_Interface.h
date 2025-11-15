@@ -43,7 +43,7 @@ class Non_Modal_Dialogue_Interface : public Non_Modal_Dialogue_Base
     Non_Modal_Dialogue_Interface &operator=(Non_Modal_Dialogue_Interface &&) =
         delete;
 
-    virtual ~Non_Modal_Dialogue_Interface() = 0;
+    ~Non_Modal_Dialogue_Interface() override = 0;
 
   private:
     /** Handler for unhandled messages

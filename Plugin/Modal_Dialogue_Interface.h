@@ -70,9 +70,7 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     /** Wrapper round ::EndDialog that takes a pointer */
     BOOL EndDialog(void *retval) const noexcept
     {
-        // I don't think the this-> is necessary but clang-tidy gets confused if
-        // you don't have it.
-        return this->EndDialog(windows_cast_to<INT_PTR, void *>(retval));
+        return EndDialog(windows_cast_to<INT_PTR, void *>(retval));
     }
 
     /** Centre the dialogue on the Notepad++ window */
@@ -87,5 +85,5 @@ class Modal_Dialogue_Interface : public Dialogue_Interface
     /** Hide the other creation method */
     using Dialogue_Interface::create_dialogue;
 
-    INT_PTR result_;
+    INT_PTR result_{};
 };
